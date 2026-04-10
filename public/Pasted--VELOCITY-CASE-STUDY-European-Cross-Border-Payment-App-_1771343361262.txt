@@ -1,0 +1,98 @@
+# **VELOCITY - CASE STUDY**
+
+## European Cross-Border Payment App
+
+**Role:** UX Designer & Ethics AI Designer
+
+**Timeline:** January 2026 – Present
+
+**Tools:** Replit , Figma, Perplexity AI 
+
+**Live Prototype:** [Replit Project Link]
+
+**Status:** Interactive prototype complete, user-tested
+
+## The Problem
+
+Growing up in Greece means experiencing banking as punishment. Traditional banks hide fees, take days to transfer, and treat users like suspects. Fintech apps solved speed but replaced bank jargon with crypto jargon. Neither serves the 95% of people who just want to send money without confusion or exploitation.
+
+**Core insight:** "Banking shouldn't feel like punishment. Financial apps should be designed for humans, not the 1% who already get it."
+
+---
+
+## The Opportunity
+
+The European cross-border payment market is projected to reach €587.95 billion by 2031 at a 27.55% CAGR. Regulatory tailwinds — SEPA Instant Payments (sub-10-second settlement), the EU Digital Markets Act, and the upcoming Digital Euro — create a window where a new, ethics-first entrant can compete.
+
+---
+
+## Research
+
+**Market analysis:** Analyzed 4 competitors (Wise, Revolut, PayPal, Wero) across FX transparency, speed, accessibility, and cost.
+
+**Key competitive gap identified:**
+
+| **Dimension** | **Competitors** | **Velocity** |
+| --- | --- | --- |
+| Speed | 1–3 days (Wise, PayPal) | <10 seconds (SEPA Instant) |
+| Transparency | Hidden markups | Full fee breakdown + real FX |
+| Accessibility | Poor / nonexistent | WCAG AAA compliant |
+| Cost | 1–3% fees | 0.18–0.25% FX + €0–2.50 |
+
+**User personas defined:** 4 segments validated through research — Freelancers & Remote Workers (5M EU), Small Business Owners (2M EU), Digital Nomads & Expats (1M EU), and SME Finance Managers (500K EU).
+
+## Design System
+
+Design System
+Primary: Velocity Teal (#208c8d) — WCAG AA
+Secondary: Soft Teal (#e0f2f1) — WCAG AAA
+Background: Pure White (#ffffff)
+Typography: DM Sans (Body) & DM Sans (Display)
+Spacing: 4px Base Grid (4 / 8 / 16 / 24 / 32 / 48 / 64)
+Radius:6px (Standard) / 9px (Large)
+Targets: 44px Minimum (Mobile-First)
+Principle: A calm, trustworthy financial experience built on transparency, clarity, and intentional white space.
+
+---
+
+## User Testing Results
+
+**Participant 1 — George (52, driver, non-expert English speaker):**
+
+- Clearly understood purpose, total cost, and fees
+- Completed full navigation and transfer flow without help
+- Described the app as "more ethical and transparent than other Greek and European money apps"
+- Especially appreciated the theme/lighting toggle for comfort
+
+**Participant 2 — Alex (29, history teacher):**
+
+- Reported immediate clarity and trust; UI made fees feel "correct and transparent"
+- Said no other money/transaction app he uses feels this transparent
+- Always understood what was happening during the transaction in real time
+
+---
+
+![velocity_user 1.png](attachment:f084e966-58bf-4330-b176-5bca0b86b570:2cf24c6d-eac3-4bae-9855-79ead8b59b44.png)
+
+## Key Outcomes
+
+- **0 navigation failures** across both test sessions
+- **100% task completion** for core transfer flow
+- **Both users independently positioned Velocity as "more ethical"** than competitors without prompting
+- **Language-supportive UX validated:** Non-English-expert user completed full flow
+
+---
+
+## Ethics & Accessibility
+
+- WCAG AAA compliance target on all screens
+- No dark patterns: users always in control, easy cancellation, no urgency tactics
+- Transparent decision-making: all fees explained in plain language
+- Data minimization: only collect data necessary for service
+- Algorithmic explainability: all recommendations include "why?" links
+
+---
+
+## What I Learned
+
+Designing for accessibility is not a compliance checkbox — it's a competitive advantage. When both test participants independently called the app "more ethical" than existing alternatives, it confirmed that transparency and dignity are user-facing features, not back-office concerns. The Replit Design Mode workflow allowed me to iterate the prototype at €0.05–0.10 per change, making ethical design economically viable.

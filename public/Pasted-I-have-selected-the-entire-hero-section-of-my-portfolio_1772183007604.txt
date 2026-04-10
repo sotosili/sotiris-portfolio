@@ -1,0 +1,64 @@
+I have selected the entire hero section of my portfolio.
+
+YOUR GOAL: Create a cinematic, storytelling entrance animation that feels like an Awwwards-level portfolio. I'm giving you creative freedom on exact timing, positioning, and animation details — but you MUST follow these core requirements:
+
+ANIMATION SEQUENCE (the story I want to tell):
+
+1. Page loads with a brief moment of blank white space (0.3–0.5 seconds pause for dramatic effect)
+
+2. My name "ILIADIS SOTIRIS" and the orange accent line appear first at the BOTTOM of the viewport (below the visible hero section, off-screen) and slowly rise upward over 1.5–2.5 seconds, traveling to their final position. This should feel elegant and cinematic, like a signature ascending.
+
+3. As the name rises, the "IS." logo at the top should fade in subtly, creating the visual impression that the name is "ascending to meet" the logo.
+
+4. Once the name reaches its final position, the rest of the hero content reveals in a cascading sequence:
+   - Navigation links stagger in from top
+   - Portrait photo slides in from the right with a slight scale effect
+   - "UX & AI Ethics" heading fades up (this is the dominant element, make it dramatic)
+   - Subtitle fades up
+   - Description text fades up
+   - CTA button bounces in with a playful ease (like back.out or elastic)
+   - Optional: scroll indicator fades in at the bottom
+
+5. The entire sequence should take roughly 3–4 seconds total (not too slow, not rushed).
+
+6. Add a scroll-away parallax effect: when the user scrolls down past the hero, the content fades to 30–40% opacity and moves up slightly, while the photo scales down and blurs a bit.
+
+LAYOUT & POSITIONING (you have freedom here):
+
+- You decide the final position for "ILIADIS SOTIRIS" + orange line. Options:
+  • Bottom-left corner of hero (signature style — unconventional, editorial)
+  • Top-left next to "IS." logo (unified branding block)
+  • Choose whichever feels more premium and unique to you.
+
+- Make the "UX & AI Ethics" heading the dominant visual element — it should be significantly larger than it is now (30–40% size increase).
+
+- You can adjust spacing, hierarchy, and layout details to make the animation feel polished.
+
+- Portrait photo: consider adding a subtle clip-path or border-radius to make it less generic (diagonal cut, rounded corners, organic shape — your choice). OR keep it as-is if that looks better.
+
+TECHNICAL REQUIREMENTS (must follow exactly):
+
+- Use GSAP library (load via CDN: gsap.min.js and ScrollTrigger.min.js from jsdelivr)
+- Use gsap.timeline() for the entrance sequence with overlapping animations
+- Use gsap.to() with ScrollTrigger for the scroll-away parallax
+- Include accessibility: detect prefers-reduced-motion media query — if user has reduced motion enabled, skip all animations and show all content immediately at full opacity
+- Set all animated elements to opacity: 0 initially (so they're hidden before animation plays)
+- Animation should trigger on window "load" event
+
+CONSTRAINTS (do NOT change):
+
+- Keep all existing text content unchanged (name, heading, subtitle, description, button text)
+- Keep my color palette: blue accent on "AI Ethics" in the heading, orange accent line/elements, neutral grays
+- Keep the existing font system (serif for headings, sans-serif for body — you can adjust sizes/weights)
+- Do NOT change navigation structure or links
+- Mobile responsive: animation should work smoothly on mobile, with simpler timing if needed (reduce duration, disable parallax on small screens)
+
+OUTPUT:
+
+A fully animated, premium-feeling hero section with:
+- Clean, cinematic entrance sequence (name ascends first)
+- Polished scroll-away effect
+- Accessible (respects reduced motion preference)
+- Layout refinements that make it feel more editorial and less template-like
+
+You have creative freedom on exact easing curves, timing offsets, final name position, photo treatment, and spacing refinements. Focus on making it feel like a high-end design portfolio, not a corporate website.

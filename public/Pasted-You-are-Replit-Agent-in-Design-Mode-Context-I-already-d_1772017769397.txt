@@ -1,0 +1,47 @@
+You are Replit Agent in Design Mode.
+
+Context:
+- I already designed my own case study mockup images outside Replit.
+- All images are LANDSCAPE ratio, and I want to use them exactly as they are.
+- I do NOT want you to generate new images or modify the files, only place them and style them.
+- I have already selected the correct case study image container <div> in the canvas.
+
+Task:
+1. Inside ONLY the selected div, insert an <img> element that uses my existing landscape case study image.
+2. Use this pattern (adapt the src to match my file and folder structure):
+   <img src="public/images/CASE-STUDY-FILENAME.jpg" alt="CASE STUDY NAME mockup" class="case-study-image" />
+
+Layout & styling requirements:
+- Treat this as a horizontal, landscape mockup thumbnail for the case study.
+- Make the image responsive:
+  - max-width: 100%;
+  - height: auto;
+  - display: block;
+- Keep the aspect ratio of the original file. Do NOT crop or stretch it.
+- Center the image in the container (use margin: 0 auto or flexbox, whichever fits the existing code).
+- Add a CSS class (or reuse an existing one) e.g. .case-study-image with:
+  - border-radius: 12px;
+  - object-fit: cover;
+  - box-shadow: subtle, portfolio-appropriate (e.g. 0 12px 40px rgba(0,0,0,0.18));
+- On small screens (mobile):
+  - The image should be full width of the container.
+  - Maintain at least 16px padding around the image.
+- On desktop:
+  - The image should feel like the main visual for this case study card/section but stay within the selected div, no overflow.
+
+Constraints:
+- Do NOT generate any new images, placeholders, or backgrounds.
+- Do NOT change any text, buttons, or layout outside the selected div.
+- Do NOT touch navigation, footer, or other sections.
+- Only update:
+  - The HTML inside the selected container to include the <img>.
+  - The CSS needed to make this landscape image look good and responsive.
+
+Accessibility:
+- Keep or add a meaningful alt attribute that describes the case study mockup (e.g. “Velocity fintech app case study mockup”).
+- Ensure sufficient contrast between any overlay elements and the image (if you add overlays, use at least 4.5:1 contrast).
+- Do NOT place text directly on top of the image unless you also add a semi-transparent overlay to meet WCAG AA contrast. If this is required, create a simple overlay + text system with readable font sizes (min 16px).
+
+Now:
+- Use the image I will upload and wire it into this selected div following the rules above.
+- If there is already an <img> here, simply replace its src and classes instead of rebuilding the entire layout.
