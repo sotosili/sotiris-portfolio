@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme {
+  --font-geist: 'Geist', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --color-brand-orange: #F26C0D;
+  --color-brand-blue: #0D5EAF;
+}
+
+/* ── Design token CSS custom properties ────────────────────────── */
+:root {
+  --background: #0A0A0A;
+  --foreground: #FFFFFF;
+  --primary: #F26C0D;
+  --primary-rgb: 242, 108, 13;
+  --accent: #0D5EAF;
+  --muted-foreground: #666666;
+  --border: #222222;
+  --secondary: #111111;
+}
+
+/* ── Tailwind utility mappings for semantic tokens ──────────────── */
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
+
+@layer utilities {
+  .bg-background   { background-color: var(--background); }
+  .bg-secondary    { background-color: var(--secondary); }
+  .bg-primary      { background-color: var(--primary); }
+  .text-foreground { color: var(--foreground); }
+  .text-primary    { color: var(--primary); }
+  .text-accent     { color: var(--accent); }
+  .text-muted-foreground { color: var(--muted-foreground); }
+  .border-border   { border-color: var(--border); }
+  .border-primary  { border-color: var(--primary); }
+  .border-accent   { border-color: var(--accent); }
+
+  /* opacity variants used in the codebase */
+  .bg-primary\/\[0\.02\]  { background-color: color-mix(in srgb, var(--primary) 2%,  transparent); }
+  .bg-primary\/\[0\.03\]  { background-color: color-mix(in srgb, var(--primary) 3%,  transparent); }
+  .bg-primary\/\[0\.04\]  { background-color: color-mix(in srgb, var(--primary) 4%,  transparent); }
+  .bg-primary\/\[0\.05\]  { background-color: color-mix(in srgb, var(--primary) 5%,  transparent); }
+  .bg-accent\/\[0\.03\]   { background-color: color-mix(in srgb, var(--accent)  3%,  transparent); }
+  .bg-accent\/5           { background-color: color-mix(in srgb, var(--accent)  5%,  transparent); }
+}
