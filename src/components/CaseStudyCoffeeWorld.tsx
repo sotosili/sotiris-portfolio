@@ -1,495 +1,554 @@
-import { motion, useReducedMotion } from "framer-motion";
+/**
+ * CaseStudyCoffeeWorld.tsx
+ * Design: Adrián Somoza (bold hierarchy, colonize canvas) +
+ *         Tristan Harris (purposeful animation, no dark patterns)
+ * WCAG 2.1 AA — non-negotiable
+ */
+
 import { useEffect } from "react";
-import { ArrowLeft, ArrowRight, Search, Zap, Smartphone, ShieldCheck, Handshake } from "lucide-react";
-import React from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
+import { setupScrollAnimations, setupHeroCounters } from "../utils/animations";
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" }
-  }
-};
+// ── Data ─────────────────────────────────────────────────────────
 
-const staggerContainer = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.15 }
-  }
-};
+const HERO_METRICS = [
+  { val: "94", sup: "/100", label: "Lighthouse Score", countable: true },
+  { val: "AA", sup: "", label: "WCAG Accessibility" },
+  { val: "2s", sup: "", label: "Menu Load Time" },
+];
 
-const SectionHeading = ({ number, title }: { number: string, title: string | React.ReactNode }) => (
-  <div className="space-y-6 reveal-section">
-    <div className="flex items-center gap-4">
-      <span className="h-[1px] w-12 bg-primary/40 inline-block" />
-      <span className="text-accent text-xs font-bold tracking-[0.3em] uppercase">{number}</span>
-    </div>
-    <h2 className="text-5xl md:text-7xl font-serif font-light leading-[0.9] text-balance">
-      {title}
-    </h2>
-  </div>
-);
+const SOLUTION_PILLARS = [
+  {
+    num: "01",
+    title: "QR-First Access",
+    desc: "Instant digital menu — no app, no friction. Scan, read, order. QR code to category selection in under 2 seconds.",
+  },
+  {
+    num: "02",
+    title: "Bilingual by Default",
+    desc: "Greek and English with full content parity. Not a lesser translation — every item, every description, first-class in both languages.",
+  },
+  {
+    num: "03",
+    title: "Boutique Dark System",
+    desc: "Gold accents, deep forest tones, Playfair Display headlines. Premium that matches and amplifies the physical café atmosphere.",
+  },
+];
+
+const PROCESS_STEPS = [
+  {
+    num: "01",
+    title: "Field Research",
+    desc: "Immersed in the Ladadika café scene. Identified PDF menus as the primary friction point for international guests scanning at night.",
+  },
+  {
+    num: "02",
+    title: "Information Architecture",
+    desc: "Mapped the discovery flow: QR scan → category → item in under 2 seconds. Structure mirrors the physical menu experience.",
+  },
+  {
+    num: "03",
+    title: "Visual Language",
+    desc: "Developed the Boutique Dark system: deep forest greens, gold accents, Playfair Display for headlines, GFS Neohellenic for Greek body text.",
+  },
+  {
+    num: "04",
+    title: "Testing & Refinement",
+    desc: "Validated with Participant Ioanna (46). Premium aesthetic established immediate trust. Horizontal scroll affordance required a second iteration.",
+  },
+];
+
+const ETHICAL_PRINCIPLES = [
+  {
+    title: "No Manipulation",
+    desc: "No upselling, forced highlighting, or artificial scarcity. The menu is a utility, not a sales funnel.",
+  },
+  {
+    title: "Price Integrity",
+    desc: "All prices visible immediately — no interaction required, no 'price on request' patterns, no hidden costs.",
+  },
+  {
+    title: "Inclusive by Default",
+    desc: "Greek and English with full parity. Both languages are first-class citizens, not one primary and one afterthought.",
+  },
+  {
+    title: "Utility Over Performance",
+    desc: "Beautiful design is worthless if it cannot be used. Every aesthetic choice was validated against real-world usability.",
+  },
+];
+
+const RESULTS = [
+  { val: "94", sup: "/100", label: "Lighthouse Score", countable: true },
+  { val: "AA", sup: "", label: "WCAG Accessibility" },
+  { val: "2s", sup: "", label: "Menu Load Time" },
+  { val: "100%", sup: "", label: "Bilingual Parity" },
+];
+
+// ── Component ─────────────────────────────────────────────────────
 
 export default function CaseStudyCoffeeWorld() {
   const shouldReduceMotion = useReducedMotion();
 
-  useEffect(() => {
-    // Smooth scroll for anchor links
-    const handleAnchorClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const anchor = target.closest('a');
-      if (anchor && anchor.hash && (anchor.origin === window.location.origin)) {
-        const targetId = anchor.hash.replace('#', '');
-        const element = document.getElementById(targetId);
-        if (element) {
-          e.preventDefault();
-          element.scrollIntoView({ behavior: 'smooth' });
-          window.history.pushState(null, '', anchor.hash);
-        }
-      }
-    };
-
-    document.addEventListener('click', handleAnchorClick);
-    return () => document.removeEventListener('click', handleAnchorClick);
-  }, []);
-
+  // Scroll to top
   useEffect(() => {
     window.scrollTo(0, 0);
-    if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual';
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
     }
-
-    const timer = setTimeout(() => {
-      window.scrollTo(0, 0);
-
-      const hide = (el: HTMLElement) => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(40px)';
-        el.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
-      };
-      const show = (el: HTMLElement) => {
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0)';
-      };
-      const getOwnItems = (container: Element) =>
-        Array.from(container.querySelectorAll('.stagger-item')).filter(
-          (item) => item.closest('.stagger-container') === container
-        );
-
-      document.querySelectorAll('.reveal-section').forEach((el) => hide(el as HTMLElement));
-      document.querySelectorAll('.stagger-item').forEach((el) => hide(el as HTMLElement));
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const el = entry.target as HTMLElement;
-
-          if (el.classList.contains('stagger-container')) {
-            getOwnItems(el).forEach((item, i) => {
-              setTimeout(() => show(item as HTMLElement), i * 150);
-            });
-          }
-
-          if (el.classList.contains('reveal-section')) {
-            show(el);
-            Array.from(el.querySelectorAll('.stagger-item')).filter(
-              (item) => {
-                const parentContainer = item.closest('.stagger-container');
-                return !parentContainer || !el.contains(parentContainer);
-              }
-            ).forEach((item, i) => {
-              setTimeout(() => show(item as HTMLElement), i * 150);
-            });
-          }
-
-          observer.unobserve(el);
-        });
-      }, { rootMargin: '-100px' });
-
-      document.querySelectorAll('.reveal-section').forEach((el) => observer.observe(el));
-      document.querySelectorAll('.stagger-container').forEach((el) => observer.observe(el));
-    }, 100);
-
-    return () => clearTimeout(timer);
   }, []);
 
+  // Unified GSAP scroll animations
+  useEffect(() => {
+    let cleanup: (() => void) | undefined;
+    const timer = setTimeout(() => {
+      cleanup = setupScrollAnimations(document.body, shouldReduceMotion ?? false);
+    }, 150);
+    return () => {
+      clearTimeout(timer);
+      cleanup?.();
+    };
+  }, [shouldReduceMotion]);
+
+  // Hero metric counters — fire after entry animation completes
+  useEffect(() => {
+    const cleanup = setupHeroCounters(shouldReduceMotion ?? false);
+    return cleanup;
+  }, [shouldReduceMotion]);
+
   return (
-    <div id="smooth-wrapper">
-      {/* Global Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background z-10" />
-        <img 
-          src="/images/greek-hero-bg.png" 
-          alt="Marble Texture" 
-          className="w-full h-full object-cover opacity-20"
-        />
+    <div className="bg-[#0A0A0A] text-white min-h-screen overflow-x-hidden selection:bg-[#F26C0D]/20">
+      {/* Skip link */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:bg-[#F26C0D] focus:text-white focus:text-sm focus:font-bold"
+      >
+        Skip to main content
+      </a>
+
+      {/* CSS noise grain */}
+      <div
+        className="fixed inset-0 pointer-events-none select-none"
+        style={{ zIndex: 999, opacity: 0.04 }}
+        aria-hidden="true"
+      >
+        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <filter id="cw-grain">
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#cw-grain)" />
+        </svg>
       </div>
 
-      <div id="smooth-content" className="relative z-10">
-        <div className="min-h-screen bg-transparent text-foreground overflow-x-hidden selection:bg-accent/20 selection:text-white">
-          
-          {/* Navigation */}
-          <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-8 md:px-12 flex justify-between items-center pointer-events-none">
-            <a href="/" className="pointer-events-auto font-serif text-2xl font-bold tracking-tighter text-foreground hover:text-accent transition-colors">IS.</a>
-            <div className="pointer-events-auto">
-              <a href="/#work" className="group flex items-center gap-2 text-[10px] tracking-[0.3em] uppercase font-bold text-foreground/60 hover:text-primary transition-colors">
-                <ArrowLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
-                Back to Work
-              </a>
-            </div>
-          </nav>
+      {/* ── Navigation ── */}
+      <nav
+        className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 flex justify-between items-center"
+        aria-label="Page navigation"
+      >
+        <a
+          href="/"
+          className="font-serif text-2xl font-bold tracking-tighter text-white hover:text-[#F26C0D] transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
+          aria-label="Sotiris Iliadis — home"
+        >
+          IS.
+        </a>
+        <a
+          href="/#work"
+          className="group flex items-center gap-2.5 text-[10px] tracking-[0.35em] uppercase font-bold text-white/40 hover:text-white transition-colors duration-300 min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        >
+          <ArrowLeft
+            className="w-3 h-3 group-hover:-translate-x-0.5 transition-transform"
+            aria-hidden="true"
+          />
+          Back to Work
+        </a>
+      </nav>
 
-          {/* Hero Section */}
-          <header className="pt-32 pb-16 px-6 md:px-12 max-w-7xl mx-auto border-b border-border/60">
-            <motion.div 
-              initial={shouldReduceMotion ? "visible" : "hidden"}
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={fadeInUp}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-end"
-            >
-              <div className="lg:col-span-8 space-y-6">
-                <div className="flex items-center gap-4">
-                  <span className="text-accent text-[10px] tracking-[0.4em] uppercase font-black bg-accent/5 px-2 py-1">Case Study — 2026</span>
-                </div>
-                <h1 className="text-6xl md:text-[8vw] font-serif font-bold tracking-tighter uppercase leading-[0.85] text-balance">
-                  Coffee <span className="text-primary italic font-light lowercase">World</span>
-                </h1>
-                <p className="text-lg md:text-2xl text-[#333e4d] font-serif italic max-w-2xl text-balance">
-                  "A premium digital menu experience for a luxury coffee boutique in Thessaloniki, featuring a sophisticated dark aesthetic and seamless bilingual navigation."
-                </p>
-              </div>
-              <div className="lg:col-span-4 grid grid-cols-2 gap-8 border-l border-accent/20 pl-8 py-4">
-                <div className="space-y-1">
-                  <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60 font-bold">Role</span>
-                  <p className="text-sm font-bold uppercase tracking-widest">UX Designer</p>
-                </div>
-                <div className="space-y-1">
-                  <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60 font-bold">Context</span>
-                  <p className="text-sm font-bold uppercase tracking-widest">Digital Menu</p>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.4, duration: 1.2, ease: "easeOut" }}
-              className="mt-12 aspect-[21/9] bg-secondary border border-border/40 overflow-hidden relative"
-            >
-              <img 
-                src="/images/coffee-world-mockup.png" 
-                alt="Coffee World Preview" 
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
-              />
-            </motion.div>
-          </header>
-
-          {/* Context Section */}
-          <section className="py-12 md:py-16 px-6 md:px-12 max-w-7xl mx-auto reveal-section">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 stagger-container">
-              <div className="lg:col-span-4 stagger-item">
-                <SectionHeading number="01" title="Context" />
-              </div>
-              <div className="lg:col-span-8 space-y-6">
-                <p className="text-xl md:text-2xl font-light text-foreground leading-relaxed text-balance stagger-item">
-                  Real café in Ladadika, Thessaloniki — designed for QR code scanning at the table. The project focused on creating a high-end digital touchpoint that complements the physical atmosphere of a luxury boutique.
-                </p>
-                <div className="p-8 md:p-10 bg-primary/[0.03] border-l border-primary/20 mt-4 stagger-item hover:bg-primary/[0.05] transition-colors duration-500 cursor-default">
-                  <p className="italic font-serif text-xl md:text-3xl text-primary/80 leading-relaxed">
-                    "A premium, print-inspired interface that balances Swiss typographic precision with the warmth of carved wood and golden hour light."
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Goals Section */}
-          <section className="py-12 md:py-16 px-6 md:px-12 max-w-7xl mx-auto border-t border-border/40 reveal-section">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 stagger-container">
-              <div className="lg:col-span-4 stagger-item">
-                <SectionHeading number="02" title={<>The <span className="italic">Problem</span></>} />
-              </div>
-              <div className="lg:col-span-8 space-y-8">
-                <p className="text-lg text-muted-foreground font-light leading-relaxed max-w-2xl stagger-item">
-                  Café customers in Ladadika scan a QR code expecting a fast, clear menu. Instead, they get PDFs that are hard to read at night, don't switch languages, and don't show clear pricing.
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 stagger-container">
-                  <div className="p-8 bg-background/40 backdrop-blur-sm border border-border/20 space-y-4 stagger-item hover:border-primary/30 hover:bg-background/60 transition-all duration-500 group/goal">
-                    <span className="text-[10px] font-bold text-accent uppercase tracking-[0.4em] group-hover/goal:text-primary transition-colors">Goal 01</span>
-                    <h3 className="font-serif text-xl md:text-2xl leading-tight">Bilingual support (Greek/English) that doesn't break the layout.</h3>
-                  </div>
-                  <div className="p-8 bg-background/40 backdrop-blur-sm border border-border/20 space-y-4 stagger-item hover:border-primary/30 hover:bg-background/60 transition-all duration-500 group/goal">
-                    <span className="text-[10px] font-bold text-accent uppercase tracking-[0.4em] group-hover/goal:text-primary transition-colors">Goal 02</span>
-                    <h3 className="font-serif text-xl md:text-2xl leading-tight">Dark, premium aesthetic suited for evening ambiance.</h3>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Process Section */}
-          <section className="py-12 md:py-16 px-6 md:px-12 max-w-7xl mx-auto border-t border-border/40 reveal-section">
-            <div className="stagger-item">
-              <SectionHeading number="03" title={<>The <span className="italic">Process</span></>} />
-            </div>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mt-12 stagger-container">
-              <div className="lg:col-span-5 space-y-8 stagger-item">
-                <div className="space-y-6">
-                  <div className="space-y-4">
-                    <h3 className="text-xs font-bold tracking-[0.4em] text-accent uppercase">Design System</h3>
-                    <div className="h-px w-full bg-border/40" />
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-6">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="group p-6 border border-border/40 bg-background/20 hover:bg-background/40 transition-colors">
-                        <div className="w-full h-12 bg-[#B89760] mb-4 shadow-inner" />
-                        <p className="text-[10px] uppercase tracking-widest font-bold text-accent">Gold</p>
-                        <p className="text-xs text-muted-foreground mt-1">#B89760</p>
-                      </div>
-                      <div className="group p-6 border border-border/40 bg-background/20 hover:bg-background/40 transition-colors">
-                        <div className="w-full h-12 bg-[#353F33] mb-4 shadow-inner" />
-                        <p className="text-[10px] uppercase tracking-widest font-bold text-accent">Green</p>
-                        <p className="text-xs text-muted-foreground mt-1">#353F33</p>
-                      </div>
-                    </div>
-                    <div className="p-10 border border-border/40 bg-background/10 space-y-6 hover:bg-background/20 transition-colors duration-500 group/typo">
-                      <div className="space-y-4">
-                        <p className="text-[10px] uppercase tracking-widest font-bold text-primary group-hover/typo:tracking-[0.3em] transition-all duration-500">Typography</p>
-                        <p className="text-4xl font-serif leading-none italic text-foreground">Playfair Display</p>
-                        <p className="text-sm font-light text-muted-foreground tracking-[0.2em] uppercase">GFS Neohellenic</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="lg:col-span-7">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 stagger-container">
-                  {[
-                    { title: "Research", icon: <Search className="w-5 h-5" />, desc: "Focused on the Thessaloniki market, specifically Ladadika. Identified that PDF menus are the primary friction point." },
-                    { title: "IA & Flows", icon: <Smartphone className="w-5 h-5" />, desc: "Clear category navigation: Coffees, Teas, Tea Odyssey. Consistent model: Name → Description → Price." },
-                    { title: "UI Design", icon: <Zap className="w-5 h-5" />, desc: "Dark mode by default to suit evening ambiance. Gold accent for active elements and prices." },
-                    { title: "Testing", icon: <Handshake className="w-5 h-5" />, desc: "Tested with Participant Ioanna (46). Validated readability and trust, but found horizontal scroll issues." }
-                  ].map((item, idx) => (
-                    <div key={idx} className="space-y-4 group p-8 border border-transparent hover:border-border/40 hover:bg-background/5 transition-all duration-500 stagger-item">
-                      <div className="text-primary group-hover:scale-110 transition-transform duration-500 origin-left">
-                        {item.icon}
-                      </div>
-                      <h4 className="font-serif text-3xl text-foreground italic">{item.title}</h4>
-                      <p className="text-muted-foreground font-light leading-relaxed text-sm">
-                        {item.desc}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Timeline-style Process Section */}
-            <div className="relative mt-12 reveal-section">
-              {/* Main Timeline Line */}
-              <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[2px] bg-primary/20 stagger-item" />
-              
-              <div className="space-y-12 relative stagger-container">
-                {[
-                  { 
-                    step: "01", 
-                    title: "Research & Empathy", 
-                    desc: "Deep diving into the Ladadika café scene. Identified that PDF menus are the primary friction point for international tourists.",
-                    side: "left"
-                  },
-                  { 
-                    step: "02", 
-                    title: "Information Architecture", 
-                    desc: "Mapping the 'Discovery Flow'. Ensuring the transition from QR scan to category selection is under 2 seconds.",
-                    side: "right"
-                  },
-                  { 
-                    step: "03", 
-                    title: "Visual Language", 
-                    desc: "Crafting the 'Boutique Dark' aesthetic. Balancing gold accents with deep forest greens for an evening ambiance.",
-                    side: "left"
-                  },
-                  { 
-                    step: "04", 
-                    title: "Prototyping & Testing", 
-                    desc: "Rapid iteration in Replit Design Mode. Tested with real users to solve the horizontal category scroll affordance issue.",
-                    side: "right"
-                  }
-                ].map((item, idx) => (
-                  <div key={idx} className={`flex items-center w-full stagger-item ${item.side === "left" ? "flex-row-reverse" : ""}`}>
-                    <div className="w-1/2" />
-                    
-                    {/* Timeline Node */}
-                    <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-primary border-4 border-background z-20 group-hover:scale-150 transition-transform duration-500" />
-                    
-                    <div className={`w-1/2 ${item.side === "left" ? "pr-12 md:pr-24 text-right" : "pl-12 md:pl-24"}`}>
-                      <div className="space-y-4 group">
-                        <span className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase group-hover:text-primary transition-colors">Phase {item.step}</span>
-                        <h3 className="text-3xl md:text-5xl font-serif italic text-foreground leading-none">{item.title}</h3>
-                        <p className="text-muted-foreground font-light leading-relaxed max-w-md ml-auto mr-0 md:mr-0 group-hover:text-foreground transition-colors duration-500">
-                          {item.desc}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-12 md:mt-16 border-t border-border/40 pt-16 reveal-section">
-              <div className="flex items-center gap-4 mb-10 stagger-item">
-                <ShieldCheck className="w-5 h-5 text-accent" />
-                <h3 className="text-xs font-bold tracking-[0.4em] text-accent uppercase">Ethical Framework</h3>
-              </div>
-              <ul className="list-disc list-inside space-y-2 text-muted-foreground font-light text-sm mb-10 stagger-item" data-testid="text-ethical-summary">
-                <li>Accessibility-first design ensuring readability for all users</li>
-                <li>Bilingual inclusion with equal content parity in Greek and English</li>
-                <li>No dark patterns — prices always visible, no manipulative upselling</li>
-              </ul>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-border/40 border border-border/40 overflow-hidden stagger-container">
-                {[
-                  { title: "No Manipulation", desc: "No manipulative upselling or forced item highlighting." },
-                  { title: "Price Integrity", desc: "Prices always visible, never hidden behind interaction." },
-                  { title: "Inclusive Design", desc: "Bilingual support ensures tourists are not disadvantaged." },
-                  { title: "Utility First", desc: "The menu is a utility, not a sales funnel. No dark patterns." }
-                ].map((item, i) => (
-                  <div key={i} className="p-10 bg-background/80 hover:bg-primary/[0.04] transition-all duration-700 stagger-item border-b border-r border-border/10 last:border-0 group/principle">
-                    <h4 className="font-bold text-[10px] uppercase tracking-[0.3em] text-accent mb-4 group-hover/principle:text-primary transition-colors">Principle 0{i+1}</h4>
-                    <h5 className="font-serif text-xl text-foreground mb-3">{item.title}</h5>
-                    <p className="text-sm text-muted-foreground leading-relaxed font-light">{item.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Outcome Section */}
-          <section className="py-16 md:py-20 px-6 md:px-12 max-w-7xl mx-auto border-t border-border/40 reveal-section">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-              {/* Sticky Sidebar Header */}
-              <div className="lg:col-span-4 lg:sticky lg:top-32 self-start stagger-item">
-                <SectionHeading number="04" title="Outcome" />
-                <div className="mt-12 space-y-6">
-                  <div className="space-y-4">
-                    <p className="text-[10px] uppercase font-bold tracking-[0.4em] text-accent">Key Metrics</p>
-                    <div className="h-px w-full bg-border/40" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3" data-testid="metrics-grid-coffeeworld">
-                    {[
-                      { val: "94/100", label: "Lighthouse Score" },
-                      { val: "AA", label: "WCAG Accessibility" },
-                      { val: "2s", label: "Menu Load Time" },
-                      { val: "100%", label: "Bilingual Parity" }
-                    ].map((stat, i) => (
-                      <div key={i} className="group/stat p-5 bg-[#B89760]/[0.06] border border-[#B89760]/20 hover:bg-[#B89760]/[0.12] transition-colors duration-500">
-                        <p className="text-3xl md:text-4xl font-bold text-[#F26C0D] leading-none">{stat.val}</p>
-                        <div className="h-px w-full bg-[#B89760]/30 my-3" />
-                        <p className="text-[9px] uppercase font-bold tracking-[0.3em] text-muted-foreground/60">{stat.label}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Main Outcome Narrative */}
-              <div className="lg:col-span-8 stagger-container space-y-16">
-                
-                {/* The "User Observation" Editorial Block */}
-                <div className="relative group/observation reveal-section">
-                  <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                    {/* The Image - Offset & Styled */}
-                    <div className="md:col-span-7 relative z-10">
-                      <div className="aspect-[4/5] overflow-hidden border border-border/40 relative">
-                        <img 
-                          src="/images/coffee-world-testing.jpg" 
-                          alt="User testing session" 
-                          className="w-full h-full object-cover grayscale group-hover/observation:grayscale-0 transition-all duration-1000 scale-105 group-hover/observation:scale-100"
-                        />
-                        <div className="absolute inset-0 bg-primary/10 group-hover/observation:opacity-0 transition-opacity duration-700" />
-                      </div>
-                      {/* Caption as an "Artifact Tag" */}
-                      <div className="absolute -bottom-6 -left-6 bg-background border border-border/60 p-4 md:p-6 z-20 max-w-[200px] -rotate-2 group-hover/observation:rotate-0 transition-transform duration-500">
-                        <span className="text-[8px] uppercase tracking-[0.3em] font-bold text-accent block mb-2">Field Observation</span>
-                        <p className="text-[10px] leading-relaxed font-bold text-muted-foreground uppercase tracking-widest">User testing session, Thessaloniki, Feb 2026</p>
-                      </div>
-                    </div>
-
-                    {/* The Insight - Overlapping Content */}
-                    <div className="md:col-span-5 md:-ml-24 relative z-20 space-y-8 bg-white p-8 md:p-12 border border-border/40">
-                      <div className="w-12 h-1 bg-primary mb-8" />
-                      <h3 className="text-xs font-bold tracking-[0.4em] text-accent uppercase">User Insight</h3>
-                      <p className="text-3xl md:text-4xl font-serif italic text-foreground leading-tight text-balance">
-                        "The biggest issue was not the visual design — it was <span className="text-primary">affordance</span>."
-                      </p>
-                      <div className="h-px w-12 bg-border/60" />
-                      <p className="text-muted-foreground font-light text-base leading-relaxed">
-                        Testing with Ioanna (46) revealed that while the premium aesthetic established immediate trust, the "invisible" horizontal categories needed clearer signifiers to be discovered.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Final Conclusion */}
-                <div className="p-12 md:p-20 border border-border/40 bg-primary/[0.02] relative overflow-hidden reveal-section group/closing">
-                  {/* Decorative background mark */}
-                  <div className="absolute -top-24 -right-24 text-[200px] font-serif italic text-primary/5 select-none pointer-events-none group-hover/closing:text-primary/10 transition-colors duration-700">
-                    CW
-                  </div>
-                  
-                  <div className="relative z-10 max-w-2xl space-y-8">
-                    <h4 className="text-2xl md:text-4xl font-serif font-light text-foreground">The Lesson</h4>
-                    <p className="text-xl text-muted-foreground font-light leading-relaxed">
-                      This project reinforced that for a luxury digital product, <span className="text-foreground font-normal italic">usability is the highest form of luxury</span>. A beautiful menu means nothing if it isn't intuitive enough to be ignored.
-                    </p>
-                    <div className="pt-8">
-                      <div className="inline-flex items-center gap-4 text-xs font-bold tracking-[0.3em] text-primary uppercase">
-                        <div className="w-8 h-px bg-primary" />
-                        Validated for Production
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </section>
-
-          {/* Footer CTA */}
-          <footer className="py-16 border-t border-border/40 reveal-section">
-            <div className="max-w-7xl mx-auto px-6 md:px-12 text-center space-y-12">
-              <div className="space-y-4">
-                <span className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase">Explore More</span>
-                <h2 className="text-5xl md:text-8xl font-serif font-light">Next Chapter</h2>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <a href="/work/velocity" className="group flex flex-col items-center gap-4 opacity-40 hover:opacity-100 transition-opacity duration-500">
-                  <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground">Previous</span>
-                  <span className="text-4xl md:text-5xl font-serif italic text-foreground group-hover:text-primary transition-colors">Velocity</span>
-                  <ArrowLeft className="w-5 h-5 group-hover:-translate-x-2 transition-transform" />
-                </a>
-
-                <a href="/work/gmap" className="group flex flex-col items-center gap-4">
-                  <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-accent">Next</span>
-                  <span className="text-6xl md:text-8xl font-serif italic text-primary group-hover:text-accent transition-all duration-700 leading-none">G-MAP</span>
-                  <div className="w-16 h-16 rounded-full border border-border flex items-center justify-center group-hover:border-accent group-hover:scale-110 transition-all duration-500">
-                    <ArrowRight className="w-8 h-8 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </a>
-              </div>
-
-              <div className="pt-12">
-                <a href="/" className="text-[10px] uppercase tracking-[0.5em] font-bold text-muted-foreground hover:text-primary transition-colors">Back to Overview</a>
-              </div>
-            </div>
-          </footer>
+      {/* ══════════════════════════════════════════════════
+          HERO — Full viewport, mockup background
+      ══════════════════════════════════════════════════ */}
+      <header
+        className="relative min-h-screen flex flex-col justify-end pb-20 md:pb-28 overflow-hidden"
+        aria-label="Coffee World case study overview"
+      >
+        {/* Background: mockup + layered gradients */}
+        <div className="absolute inset-0 z-0" aria-hidden="true">
+          <img
+            src="/images/coffee-world-mockup.png"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/60 to-[#0A0A0A]/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A]/50 to-transparent" />
         </div>
-      </div>
+
+        <motion.div
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
+          className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full"
+        >
+          {/* Eyebrow */}
+          <p className="text-[10px] font-bold tracking-[0.5em] uppercase text-[#F26C0D] mb-8">
+            Case Study — 2026
+          </p>
+
+          {/* Giant title — Somoza colonizes the canvas */}
+          <h1
+            className="font-serif font-bold leading-[0.82] tracking-tighter text-white mb-16"
+            style={{ fontSize: "clamp(72px, 11vw, 176px)" }}
+          >
+            Coffee
+            <br />
+            <span className="italic text-[#F26C0D]">World</span>
+          </h1>
+
+          {/* 3 hero metrics — prominent numbers */}
+          <div
+            className="grid grid-cols-3 gap-6 md:gap-12 pt-10 border-t border-white/10"
+            role="list"
+            aria-label="Key project metrics"
+          >
+            {HERO_METRICS.map((m, i) => (
+              <div key={i} role="listitem">
+                <p
+                  className="font-bold text-white leading-none tabular-nums"
+                  style={{ fontSize: "clamp(36px, 5.5vw, 80px)" }}
+                >
+                  {m.countable ? (
+                    <span className="anim-hero-count" data-target={m.val}>{m.val}</span>
+                  ) : (
+                    m.val
+                  )}
+                  {m.sup && (
+                    <span
+                      className="text-[#888888] font-normal"
+                      style={{ fontSize: "0.42em" }}
+                    >
+                      {m.sup}
+                    </span>
+                  )}
+                </p>
+                <p className="text-[9px] uppercase tracking-[0.4em] font-bold text-[#888888] mt-3">
+                  {m.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </header>
+
+      <main id="main">
+
+        {/* ══════════════════════════════════════════════════
+            01 — PROBLEM
+        ══════════════════════════════════════════════════ */}
+        <section
+          className="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto"
+          aria-labelledby="problem-heading"
+        >
+          <div className="bg-[#111111] border border-[#1E1E1E] p-10 md:p-16 anim-fade-up">
+            <p className="text-[10px] font-bold tracking-[0.45em] uppercase text-[#F26C0D] mb-8">
+              01 — The Problem
+            </p>
+            <h2
+              id="problem-heading"
+              className="font-serif font-bold leading-[0.88] tracking-tighter text-white"
+              style={{ fontSize: "clamp(28px, 4.5vw, 60px)" }}
+            >
+              Café menus are PDF prisons.
+              <br />
+              Tourists scan QR codes and find nothing legible.
+            </h2>
+
+            <blockquote className="border-l-2 border-[#0D5EAF] pl-8 mt-12">
+              <p className="font-serif text-xl md:text-2xl italic text-white/70 leading-relaxed">
+                "I just wanted to know what the drinks were, but the PDF was too dark to read on my phone."
+              </p>
+              <cite className="block mt-5 text-[10px] uppercase tracking-[0.35em] text-[#888888] not-italic">
+                — Field observation, Ladadika, Thessaloniki
+              </cite>
+            </blockquote>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
+              <div className="p-6 border border-[#1E1E1E] bg-[#0A0A0A]/60">
+                <p className="text-[10px] uppercase tracking-[0.3em] text-[#0D5EAF] font-bold mb-3">
+                  Goal 01
+                </p>
+                <p className="font-serif text-lg text-white leading-snug">
+                  Bilingual support (Greek/English) that never breaks the layout.
+                </p>
+              </div>
+              <div className="p-6 border border-[#1E1E1E] bg-[#0A0A0A]/60">
+                <p className="text-[10px] uppercase tracking-[0.3em] text-[#0D5EAF] font-bold mb-3">
+                  Goal 02
+                </p>
+                <p className="font-serif text-lg text-white leading-snug">
+                  Dark, premium aesthetic that suits evening café ambiance.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════
+            02 — SOLUTION
+        ══════════════════════════════════════════════════ */}
+        <section
+          className="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto border-t border-white/[0.06]"
+          aria-labelledby="solution-heading"
+        >
+          <div className="mb-16 md:mb-20">
+            <p className="text-[10px] font-bold tracking-[0.45em] uppercase text-[#F26C0D] mb-6 anim-fade-up">
+              02 — The Solution
+            </p>
+            <h2
+              id="solution-heading"
+              className="font-serif font-bold leading-[0.88] tracking-tighter text-white anim-fade-up"
+              style={{ fontSize: "clamp(36px, 6vw, 88px)" }}
+            >
+              A mobile-first digital menu,
+              <br />
+              <span className="italic text-white/30">built for the night.</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 anim-stagger">
+            {SOLUTION_PILLARS.map((p, i) => (
+              <div key={i}>
+                {/* Somoza-style ghost number */}
+                <div
+                  className="font-serif font-black text-[#F26C0D]/[0.09] leading-none select-none mb-6"
+                  style={{ fontSize: "clamp(80px, 10vw, 120px)" }}
+                  aria-hidden="true"
+                >
+                  {p.num}
+                </div>
+                <h3 className="font-serif text-2xl md:text-3xl text-white mb-4">{p.title}</h3>
+                <p className="text-sm text-[#888888] leading-relaxed">{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════
+            03 — PROCESS (GSAP scroll activation)
+        ══════════════════════════════════════════════════ */}
+        <section
+          className="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto border-t border-white/[0.06]"
+          aria-labelledby="process-heading"
+        >
+          <div className="mb-16 md:mb-20">
+            <p className="text-[10px] font-bold tracking-[0.45em] uppercase text-[#F26C0D] mb-6 anim-fade-up">
+              03 — The Process
+            </p>
+            <h2
+              id="process-heading"
+              className="font-serif font-bold leading-[0.88] tracking-tighter text-white anim-fade-up"
+              style={{ fontSize: "clamp(36px, 6vw, 88px)" }}
+            >
+              Four phases,
+              <br />
+              <span className="italic text-white/30">one direction.</span>
+            </h2>
+          </div>
+
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-6"
+            role="list"
+            aria-label="Design process phases"
+          >
+            {PROCESS_STEPS.map((step, i) => (
+              <div
+                key={i}
+                className="anim-step anim-fade-up"
+                role="listitem"
+              >
+                {/* Number lights up orange on scroll via GSAP */}
+                <div
+                  className="anim-step-num font-serif font-black text-white/[0.06] leading-none select-none mb-8 transition-colors duration-700"
+                  style={{ fontSize: "clamp(64px, 8vw, 104px)" }}
+                  aria-hidden="true"
+                >
+                  {step.num}
+                </div>
+                <h3 className="font-serif text-xl md:text-2xl text-white mb-4">{step.title}</h3>
+                <p className="text-sm text-[#888888] leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Field evidence */}
+          <figure className="mt-16 md:mt-20 anim-fade-up">
+            <div className="relative overflow-hidden">
+              <img
+                src="/images/coffee-world-testing.jpg"
+                alt="Coffee World usability testing — participant reviewing the digital menu on mobile at a café table"
+                className="w-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                style={{ maxHeight: "420px", objectPosition: "center" }}
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/60 to-transparent pointer-events-none" />
+            </div>
+            <figcaption className="mt-4 text-[10px] uppercase tracking-[0.35em] font-bold text-[#888888]">
+              Field testing — Ladadika, Thessaloniki · 2026
+            </figcaption>
+          </figure>
+        </section>
+
+        {/* ══════════════════════════════════════════════════
+            04 — ETHICAL PRINCIPLES
+        ══════════════════════════════════════════════════ */}
+        <section
+          className="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto border-t border-white/[0.06]"
+          aria-labelledby="ethics-heading"
+        >
+          <div className="mb-16 md:mb-20">
+            <p className="text-[10px] font-bold tracking-[0.45em] uppercase text-[#0D5EAF] mb-6 anim-fade-up">
+              04 — Ethical Framework
+            </p>
+            <h2
+              id="ethics-heading"
+              className="font-serif font-bold leading-[0.88] tracking-tighter text-white anim-fade-up"
+              style={{ fontSize: "clamp(36px, 6vw, 88px)" }}
+            >
+              Design without
+              <br />
+              <span className="italic text-[#0D5EAF]">manipulation.</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 anim-stagger">
+            {ETHICAL_PRINCIPLES.map((p, i) => (
+              <div
+                key={i}
+                className="bg-[#111111] border border-[#1E1E1E] p-8 md:p-10 flex gap-6 group hover:bg-[#141414] transition-colors duration-300"
+                style={{ borderLeft: "4px solid #0D5EAF" }}
+              >
+                <ShieldCheck
+                  className="w-5 h-5 text-[#0D5EAF] flex-shrink-0 mt-1"
+                  aria-hidden="true"
+                />
+                <div>
+                  <h3 className="font-serif text-xl text-white mb-3 group-hover:text-[#F26C0D] transition-colors duration-300">
+                    {p.title}
+                  </h3>
+                  <p className="text-sm text-[#888888] leading-relaxed">{p.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════
+            05 — RESULTS
+        ══════════════════════════════════════════════════ */}
+        <section
+          className="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto border-t border-[#F26C0D]/30"
+          aria-labelledby="results-heading"
+        >
+          <div className="mb-16 md:mb-20">
+            <p className="text-[10px] font-bold tracking-[0.45em] uppercase text-[#F26C0D] mb-6 anim-fade-up">
+              05 — Results
+            </p>
+            <h2
+              id="results-heading"
+              className="font-serif font-bold leading-[0.88] tracking-tighter text-white anim-fade-up"
+              style={{ fontSize: "clamp(36px, 6vw, 88px)" }}
+            >
+              Measured impact.
+            </h2>
+          </div>
+
+          {/* Giant result numbers — Somoza scale */}
+          <div
+            className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 anim-stagger"
+            role="list"
+            aria-label="Project results"
+          >
+            {RESULTS.map((r, i) => (
+              <div key={i} role="listitem">
+                <p
+                  className="font-bold text-white leading-none tabular-nums"
+                  style={{ fontSize: "clamp(56px, 9vw, 120px)" }}
+                >
+                  {r.countable ? (
+                    <span className="anim-count" data-target={r.val}>{r.val}</span>
+                  ) : (
+                    r.val
+                  )}
+                  {r.sup && (
+                    <span
+                      className="text-[#888888] font-normal"
+                      style={{ fontSize: "0.42em" }}
+                    >
+                      {r.sup}
+                    </span>
+                  )}
+                </p>
+                <div className="h-px w-full bg-[#F26C0D]/40 my-4" aria-hidden="true" />
+                <p className="text-[9px] uppercase tracking-[0.4em] font-bold text-[#888888]">
+                  {r.label}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* The Lesson */}
+          <div className="mt-20 p-10 md:p-16 bg-[#111111] border border-[#1E1E1E] relative overflow-hidden anim-fade-up">
+            <div
+              className="absolute -top-12 -right-12 font-serif italic text-[#F26C0D]/[0.04] select-none leading-none pointer-events-none"
+              style={{ fontSize: "clamp(120px, 18vw, 240px)" }}
+              aria-hidden="true"
+            >
+              CW
+            </div>
+            <div className="relative z-10 max-w-2xl">
+              <h3 className="font-serif text-2xl md:text-4xl text-white mb-6">The Lesson</h3>
+              <p className="text-lg text-[#888888] leading-relaxed">
+                For a luxury product,{" "}
+                <span className="text-white italic">
+                  usability is the highest form of luxury
+                </span>
+                . A beautiful menu means nothing if it cannot be discovered.
+              </p>
+              <div className="inline-flex items-center gap-3 mt-8 text-[10px] font-bold uppercase tracking-[0.35em] text-[#F26C0D]">
+                <div className="w-8 h-px bg-[#F26C0D]" aria-hidden="true" />
+                Validated for Production
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      {/* ── Footer navigation ── */}
+      <footer className="py-16 border-t border-white/[0.06]">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-8">
+          <a
+            href="/"
+            className="text-[9px] uppercase tracking-[0.5em] font-bold text-[#888888] hover:text-[#F26C0D] transition-colors min-h-[44px] flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
+          >
+            ← Back to Portfolio
+          </a>
+          <a
+            href="/work/gmap"
+            className="group flex items-center gap-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F26C0D]"
+            aria-label="Next case study: G-MAP"
+          >
+            <span
+              className="font-serif font-light text-white/25 group-hover:text-[#F26C0D] transition-colors duration-500 leading-none"
+              style={{ fontSize: "clamp(32px, 6vw, 72px)" }}
+            >
+              G-MAP
+            </span>
+            <div className="w-14 h-14 rounded-full border border-white/15 flex items-center justify-center group-hover:border-[#F26C0D] group-hover:scale-110 transition-all duration-300 flex-shrink-0">
+              <ArrowRight className="w-5 h-5" aria-hidden="true" />
+            </div>
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }

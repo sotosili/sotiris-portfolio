@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import ClientRouter from 'astro/components/ClientRouter.astro';
+import Cursor from '../components/Cursor';
 
 interface Props {
   title?: string;
@@ -10,7 +12,7 @@ interface Props {
 const {
   title = 'Sotiris Iliadis — AI Ethical Designer',
   description = 'AI Ethical Designer with 13+ years of experience. Specialising in EU AI Act compliance, WCAG 2.1 AA, and ethical design systems.',
-  ogImage = '/og-image.png',
+  ogImage = '/og-image.svg',
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://sotosili.com');
@@ -44,6 +46,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://sotosili
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/favicon.png" />
 
+    <!-- View Transitions (Astro 6 ClientRouter) -->
+    <ClientRouter />
+
     <!-- Fonts: Geist (sans) + Playfair Display (serif) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -53,6 +58,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://sotosili
     />
   </head>
   <body class="bg-[#0A0A0A] text-white font-geist antialiased">
+    <Cursor client:only="react" />
     <slot />
   </body>
 </html>

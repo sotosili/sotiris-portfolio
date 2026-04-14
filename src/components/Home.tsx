@@ -6,7 +6,7 @@
  */
 
 import { useRef, useEffect, useState, useCallback } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import emailjs from "@emailjs/browser";
 import {
   ArrowRight,
@@ -26,6 +26,7 @@ import {
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
+import { setupScrollAnimations, navigateWithTransition } from "../utils/animations";
 
 // ── Brand icons (not in lucide-react v1.x) ──────────────────────
 
@@ -75,16 +76,16 @@ const LinkedinIcon = ({
 
 // ── Framer Motion variants ───────────────────────────────────────
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
   },
 };
 
-const stagger = {
+const stagger: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
 };
@@ -348,14 +349,14 @@ const Hero = ({
             href="#work"
             className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] bg-[#F26C0D] text-white text-[11px] font-geist font-bold uppercase tracking-[0.32em] hover:bg-white hover:text-[#0A0A0A] transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
           >
-            View Work
+            3 Case Studies
             <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
           </a>
           <a
             href="#process"
             className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] border border-white/25 text-white text-[11px] font-geist font-bold uppercase tracking-[0.32em] hover:border-white hover:bg-white/5 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
-            My Process
+            How I Work
           </a>
         </div>
 
@@ -421,7 +422,7 @@ const PROJECTS = [
     metrics: ["96/100 Lighthouse", "WCAG AA", "0 dark patterns"],
     image: "/images/velocity-mockup.png",
     link: "/work/velocity",
-    year: "2025",
+    year: "2026",
     category: "Research & UX",
     full: false,
   },
@@ -582,65 +583,18 @@ export default function Home() {
     return () => document.removeEventListener("click", onClick);
   }, []);
 
-  // ScrollTrigger reveals + process step lighting
+  // Unified GSAP scroll animations — waits for intro overlay to complete
   useEffect(() => {
     if (!introComplete) return;
-
+    let cleanup: (() => void) | undefined;
     const timer = setTimeout(() => {
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-
-      // Section reveals
-      gsap.utils.toArray<HTMLElement>(".reveal-section").forEach((el) => {
-        gsap.fromTo(
-          el,
-          { y: 50, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1.2,
-            ease: "power4.out",
-            scrollTrigger: { trigger: el, start: "top 88%", once: true },
-          }
-        );
-      });
-
-      // Process steps light up sequentially on scroll
-      gsap.utils.toArray<HTMLElement>(".process-step").forEach((step, i) => {
-        ScrollTrigger.create({
-          trigger: step,
-          start: "top 72%",
-          once: true,
-          onEnter: () => {
-            gsap.to(step.querySelector(".step-number"), {
-              color: "#F26C0D",
-              duration: 0.6,
-              ease: "power2.out",
-              delay: i * 0.12,
-            });
-            gsap.to(step.querySelector(".step-line"), {
-              scaleX: 1,
-              duration: 0.7,
-              ease: "power3.out",
-              delay: i * 0.12,
-            });
-            gsap.to(step.querySelector(".step-icon"), {
-              color: "#F26C0D",
-              duration: 0.4,
-              ease: "power2.out",
-              delay: i * 0.12 + 0.2,
-            });
-          },
-        });
-      });
-
-      ScrollTrigger.refresh();
+      cleanup = setupScrollAnimations(document.body, shouldReduceMotion ?? false);
     }, 600);
-
     return () => {
       clearTimeout(timer);
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      cleanup?.();
     };
-  }, [introComplete]);
+  }, [introComplete, shouldReduceMotion]);
 
   // Logo reveal on hover
   const triggerLogoReveal = (entering: boolean) => {
@@ -684,22 +638,31 @@ export default function Home() {
         <IntroOverlay onComplete={handleIntroComplete} />
       )}
 
-      {/* Subtle global texture */}
-      {/* Radial depth: #111 at center fades to #0A0A0A at edges — adds depth without visible gradient */}
+      {/* Radial depth: #111 at center fades to #0A0A0A at edges */}
       <div
         className="fixed inset-0 z-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse 80% 70% at 50% 35%, #111111 0%, #0A0A0A 70%)" }}
         aria-hidden="true"
       />
-      <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/40 via-transparent to-[#0A0A0A]/60 z-10" />
-        <img
-          src="/images/greek-hero-bg.png"
-          alt=""
-          className="w-full h-full object-cover opacity-[0.04]"
-          loading="lazy"
-        />
+      {/* CSS noise grain — adds tactile depth without obscuring content */}
+      <div
+        className="fixed inset-0 pointer-events-none select-none"
+        style={{ zIndex: 999, opacity: 0.04 }}
+        aria-hidden="true"
+      >
+        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <filter id="portfolio-grain">
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#portfolio-grain)" />
+        </svg>
       </div>
+      {/* Subtle vertical gradient depth layer */}
+      <div
+        className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-b from-[#0A0A0A]/40 via-transparent to-[#0A0A0A]/60"
+        aria-hidden="true"
+      />
 
       <div className="relative z-10">
 
@@ -796,9 +759,17 @@ export default function Home() {
           ════════════════════════════════════════════════════ */}
           <section
             id="work"
-            className="py-24 md:py-36 px-6 md:px-12 max-w-7xl mx-auto"
+            className="relative overflow-hidden py-24 md:py-36 px-6 md:px-12 max-w-7xl mx-auto"
             aria-labelledby="work-heading"
           >
+            {/* Somoza ghost watermark */}
+            <div
+              className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-white/[0.03] leading-none select-none pointer-events-none"
+              style={{ fontSize: "clamp(120px, 18vw, 220px)" }}
+              aria-hidden="true"
+            >
+              01
+            </div>
             <motion.div
               initial={shouldReduceMotion ? "visible" : "hidden"}
               whileInView="visible"
@@ -827,26 +798,32 @@ export default function Home() {
             <div className="space-y-6">
               {/* Full-width Coffee World */}
               {PROJECTS.filter((p) => p.full).map((project) => (
-                <article key={project.title} className="group reveal-section">
+                <article key={project.title} className="group anim-fade-up relative">
+                  {/* Orange left-border — sweeps up on hover */}
+                  <div
+                    className="absolute left-0 top-0 w-0.5 h-full bg-[#F26C0D] scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500"
+                    aria-hidden="true"
+                  />
                   <a
                     href={project.link}
+                    onClick={(e) => navigateWithTransition(project.link, e)}
                     className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F26C0D]"
                     aria-label={`${project.title} — ${project.description} View case study`}
                   >
                     {/* Image */}
-                    <div className="relative aspect-[21/9] bg-[#111111] overflow-hidden">
+                    <div className="relative aspect-[21/9] bg-[#111111] overflow-hidden ring-1 ring-white/[0.04] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
                       <img
                         src={project.image}
                         alt=""
                         className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.02] grayscale group-hover:grayscale-0"
                         loading="lazy"
                       />
-                      {/* Hover overlay */}
+                      {/* Hover overlay — subtle warm tint, not dominating */}
                       <div
-                        className="absolute inset-0 bg-[#F26C0D]/0 group-hover:bg-[#F26C0D]/90 transition-all duration-500 flex items-center justify-center"
+                        className="absolute inset-0 bg-[#F26C0D]/0 group-hover:bg-[#F26C0D]/[0.08] transition-all duration-500 flex items-center justify-center"
                         aria-hidden="true"
                       >
-                        <span className="text-white text-sm font-geist font-bold tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-3">
+                        <span className="bg-[#0A0A0A]/75 px-5 py-2.5 text-white text-[11px] font-geist font-bold tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-3">
                           View Case Study
                           <ArrowRight className="w-4 h-4" />
                         </span>
@@ -867,7 +844,7 @@ export default function Home() {
                         <span className="block text-[9px] font-geist font-bold text-[#F26C0D] tracking-[0.35em] uppercase">
                           {project.year}
                         </span>
-                        <div className="flex gap-2 flex-wrap justify-end">
+                        <div className="flex gap-2 flex-wrap justify-end transition-all duration-400 translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
                           {project.metrics.map((m) => (
                             <Pill key={m} label={m} />
                           ))}
@@ -881,13 +858,19 @@ export default function Home() {
               {/* Half-width G-MAP + Velocity */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {PROJECTS.filter((p) => !p.full).map((project) => (
-                  <article key={project.title} className="group reveal-section">
+                  <article key={project.title} className="group anim-fade-up relative">
+                    {/* Orange left-border — sweeps up on hover */}
+                    <div
+                      className="absolute left-0 top-0 w-0.5 h-full bg-[#F26C0D] scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500"
+                      aria-hidden="true"
+                    />
                     <a
                       href={project.link}
+                      onClick={(e) => navigateWithTransition(project.link, e)}
                       className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F26C0D]"
                       aria-label={`${project.title} — ${project.description} View case study`}
                     >
-                      <div className="relative aspect-[4/3] bg-[#111111] overflow-hidden">
+                      <div className="relative aspect-[4/3] bg-[#111111] overflow-hidden ring-1 ring-white/[0.04] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
                         <img
                           src={project.image}
                           alt=""
@@ -895,10 +878,10 @@ export default function Home() {
                           loading="lazy"
                         />
                         <div
-                          className="absolute inset-0 bg-[#F26C0D]/0 group-hover:bg-[#F26C0D]/90 transition-all duration-500 flex items-center justify-center"
+                          className="absolute inset-0 bg-[#F26C0D]/0 group-hover:bg-[#F26C0D]/[0.08] transition-all duration-500 flex items-center justify-center"
                           aria-hidden="true"
                         >
-                          <span className="text-white text-sm font-geist font-bold tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-3">
+                          <span className="bg-[#0A0A0A]/75 px-5 py-2.5 text-white text-[11px] font-geist font-bold tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-3">
                             View Case Study
                             <ArrowRight className="w-4 h-4" />
                           </span>
@@ -918,7 +901,7 @@ export default function Home() {
                           {project.year}
                         </span>
                       </div>
-                      <div className="flex gap-2 mt-3 flex-wrap">
+                      <div className="flex gap-2 mt-3 flex-wrap transition-all duration-400 translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
                         {project.metrics.map((m) => (
                           <Pill key={m} label={m} />
                         ))}
@@ -937,9 +920,16 @@ export default function Home() {
           ════════════════════════════════════════════════════ */}
           <section
             id="philosophy"
-            className="py-24 md:py-36 px-6 md:px-12 max-w-7xl mx-auto"
+            className="relative overflow-hidden py-24 md:py-36 px-6 md:px-12 max-w-7xl mx-auto"
             aria-labelledby="philosophy-heading"
           >
+            <div
+              className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-white/[0.03] leading-none select-none pointer-events-none"
+              style={{ fontSize: "clamp(120px, 18vw, 220px)" }}
+              aria-hidden="true"
+            >
+              02
+            </div>
             <motion.div
               initial={shouldReduceMotion ? "visible" : "hidden"}
               whileInView="visible"
@@ -981,12 +971,12 @@ export default function Home() {
                   variants={fadeUp}
                   custom={i}
                   transition={{ delay: i * 0.07 }}
-                  className="group bg-[#0A0A0A] p-8 md:p-10 hover:bg-[#111111] transition-colors duration-500 reveal-section"
+                  className="group bg-[#0A0A0A] p-8 md:p-10 hover:bg-[#111111] transition-colors duration-500"
                   role="listitem"
                 >
-                  {/* Somoza-style bold number */}
+                  {/* Somoza-style bold number — ghost at rest, orange on hover */}
                   <div
-                    className="font-serif font-black leading-none text-white/[0.05] group-hover:text-[#F26C0D]/15 transition-colors duration-500 mb-6 select-none"
+                    className="font-serif font-black leading-none text-white/[0.03] group-hover:text-[#F26C0D]/25 transition-all duration-700 mb-6 select-none"
                     style={{ fontSize: "clamp(72px, 8vw, 108px)" }}
                     aria-hidden="true"
                   >
@@ -1026,9 +1016,16 @@ export default function Home() {
           ════════════════════════════════════════════════════ */}
           <section
             id="process"
-            className="py-24 md:py-36 px-6 md:px-12 max-w-7xl mx-auto overflow-x-hidden"
+            className="relative overflow-hidden py-24 md:py-36 px-6 md:px-12 max-w-7xl mx-auto"
             aria-labelledby="process-heading"
           >
+            <div
+              className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-white/[0.03] leading-none select-none pointer-events-none"
+              style={{ fontSize: "clamp(120px, 18vw, 220px)" }}
+              aria-hidden="true"
+            >
+              03
+            </div>
             <motion.div
               initial={shouldReduceMotion ? "visible" : "hidden"}
               whileInView="visible"
@@ -1063,10 +1060,10 @@ export default function Home() {
               />
 
               <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-12 lg:gap-4">
-                {PROCESS_STEPS.map((step, i) => (
+                {PROCESS_STEPS.map((step) => (
                   <div
                     key={step.num}
-                    className="process-step flex flex-col items-start lg:items-center"
+                    className="anim-step flex flex-col items-start lg:items-center"
                     role="listitem"
                   >
                     {/* Timeline node */}
@@ -1076,7 +1073,7 @@ export default function Home() {
 
                     {/* Large number — lights up on scroll via GSAP */}
                     <div
-                      className="step-number font-serif font-black leading-none tracking-tighter text-white/[0.07] transition-colors duration-500 mb-5 select-none"
+                      className="anim-step-num font-serif font-black leading-none tracking-tighter text-white/[0.07] transition-colors duration-500 mb-5 select-none"
                       style={{ fontSize: "clamp(72px, 8vw, 108px)" }}
                       aria-hidden="true"
                     >
@@ -1085,13 +1082,13 @@ export default function Home() {
 
                     {/* Underline — scales in via GSAP */}
                     <div
-                      className="step-line h-[2px] w-full bg-[#F26C0D] origin-left hidden lg:block mb-5"
+                      className="anim-line-grow h-[2px] w-16 lg:w-full bg-[#F26C0D] origin-left mb-5"
                       style={{ transform: "scaleX(0)" }}
                       aria-hidden="true"
                     />
 
                     {/* Icon */}
-                    <div className="step-icon text-white/30 transition-colors duration-500 mb-3">
+                    <div className="anim-step-icon text-white/30 transition-colors duration-500 mb-3">
                       {step.icon}
                     </div>
 
@@ -1114,13 +1111,20 @@ export default function Home() {
           ════════════════════════════════════════════════════ */}
           <section
             id="contact"
-            className="py-24 md:py-36 px-6 md:px-12 max-w-7xl mx-auto"
+            className="relative overflow-hidden py-24 md:py-36 px-6 md:px-12 max-w-7xl mx-auto"
             aria-labelledby="contact-heading"
           >
+            <div
+              className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-white/[0.03] leading-none select-none pointer-events-none"
+              style={{ fontSize: "clamp(120px, 18vw, 220px)" }}
+              aria-hidden="true"
+            >
+              04
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
 
               {/* Left column */}
-              <div className="space-y-10 reveal-section">
+              <div className="space-y-10 anim-fade-up">
                 <div className="flex items-center gap-4">
                   <span className="h-px w-10 bg-[#0D5EAF]/50" aria-hidden="true" />
                   <span className="text-[#0D5EAF] text-[10px] font-geist font-bold tracking-[0.45em] uppercase" aria-hidden="true">
@@ -1197,8 +1201,7 @@ export default function Home() {
                       aria-hidden="true"
                     />
                     <p className="font-geist text-sm text-[#888888]">
-                      <span className="text-white font-medium">Available</span> for remote &amp;
-                      hybrid engagements
+                      <span className="text-white font-medium">Taking projects</span> — ethical UX, WCAG audits, EU AI Act consulting
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
@@ -1210,14 +1213,14 @@ export default function Home() {
                   <div className="flex items-center gap-3">
                     <Globe className="w-3.5 h-3.5 text-[#888888] flex-shrink-0" aria-hidden="true" />
                     <p className="font-geist text-sm text-[#888888]">
-                      Greek · English · EU-based
+                      EU-based · Greek &amp; English · 48h response
                     </p>
                   </div>
                 </div>
               </div>
 
               {/* Right column — EmailJS form */}
-              <div className="bg-[#111111] border border-white/[0.08] p-8 md:p-10 reveal-section relative group">
+              <div className="bg-[#111111] border border-white/[0.08] p-8 md:p-10 anim-fade-up relative group">
                 {/* Animated left accent line */}
                 <div
                   className="absolute top-0 left-0 w-px h-0 bg-[#F26C0D] group-hover:h-full transition-all duration-700"
