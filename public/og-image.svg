@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <filter id="grain" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.68" numOctaves="3" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="grey"/>
+      <feBlend in="SourceGraphic" in2="grey" mode="overlay" result="blend"/>
+      <feComposite in="blend" in2="SourceGraphic" operator="in"/>
+    </filter>
+    <radialGradient id="depth" cx="38%" cy="44%" r="70%">
+      <stop offset="0%" stop-color="#161616"/>
+      <stop offset="100%" stop-color="#0A0A0A"/>
+    </radialGradient>
+    <clipPath id="left-clip">
+      <rect width="800" height="630"/>
+    </clipPath>
+    <clipPath id="right-clip">
+      <rect x="800" width="400" height="630"/>
+    </clipPath>
+  </defs>
+
+  <!-- ── LEFT PANEL (dark) ─────────────────────────────────── -->
+  <rect width="800" height="630" fill="url(#depth)"/>
+  <rect width="800" height="630" fill="#888888" opacity="0.025" filter="url(#grain)"/>
+
+  <!-- Orange left accent bar -->
+  <rect x="64" y="64" width="3" height="502" fill="#F26C0D" opacity="0.7"/>
+
+  <!-- Ghost watermark — enormous "ETHICAL" -->
+  <text
+    x="820" y="540"
+    font-family="Georgia, serif" font-weight="700" font-size="248"
+    fill="#FFFFFF" opacity="0.025"
+    text-anchor="end" font-style="italic" letter-spacing="-10"
+    clip-path="url(#left-clip)"
+  >ETHICAL</text>
+
+  <!-- Eyebrow -->
+  <text
+    x="100" y="144"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-weight="700" font-size="11" fill="#555555" letter-spacing="5"
+  >SOTIRIS ILIADIS · THESSALONIKI, GREECE</text>
+
+  <!-- Headline line 1 -->
+  <text
+    x="100" y="272"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-weight="700" font-size="96" fill="#FFFFFF" letter-spacing="-4"
+  >AI Ethical</text>
+
+  <!-- Headline line 2 -->
+  <text
+    x="100" y="380"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-weight="700" font-size="96" fill="#F26C0D"
+    font-style="italic" letter-spacing="-4"
+  >Designer.</text>
+
+  <!-- Dual accent rule -->
+  <rect x="100" y="416" width="56" height="1.5" fill="#F26C0D"/>
+  <rect x="164" y="416" width="28" height="1.5" fill="#0D5EAF"/>
+
+  <!-- Descriptor -->
+  <text
+    x="100" y="458"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-weight="300" font-size="17" fill="#666666" letter-spacing="0.4"
+  >EU AI Act · WCAG 2.1 AA · Ethical Design Systems</text>
+
+  <!-- ── DIVIDER ────────────────────────────────────────────── -->
+  <rect x="800" y="0" width="1" height="630" fill="#FFFFFF" opacity="0.08"/>
+
+  <!-- ── RIGHT PANEL (orange) ──────────────────────────────── -->
+  <rect x="800" width="400" height="630" fill="#F26C0D"/>
+  <rect x="800" width="400" height="630" fill="#000000" opacity="0.06" filter="url(#grain)"/>
+
+  <!-- Right panel label -->
+  <text
+    x="840" y="112"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-weight="700" font-size="10" fill="#0A0A0A" opacity="0.55" letter-spacing="5"
+  >CASE STUDIES</text>
+
+  <!-- Metric 1 — Coffee World -->
+  <text
+    x="840" y="215"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-weight="700" font-size="80" fill="#0A0A0A" letter-spacing="-3"
+  >94</text>
+  <text
+    x="947" y="185"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-weight="400" font-size="16" fill="#0A0A0A" opacity="0.5"
+  >/100</text>
+  <text
+    x="840" y="236"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-weight="500" font-size="12" fill="#0A0A0A" opacity="0.6" letter-spacing="1"
+  >COFFEE WORLD</text>
+
+  <!-- Divider 1 -->
+  <rect x="840" y="256" width="320" height="1" fill="#0A0A0A" opacity="0.15"/>
+
+  <!-- Metric 2 — Velocity -->
+  <text
+    x="840" y="348"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-weight="700" font-size="80" fill="#0A0A0A" letter-spacing="-3"
+  >96</text>
+  <text
+    x="947" y="318"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-weight="400" font-size="16" fill="#0A0A0A" opacity="0.5"
+  >/100</text>
+  <text
+    x="840" y="370"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-weight="500" font-size="12" fill="#0A0A0A" opacity="0.6" letter-spacing="1"
+  >VELOCITY</text>
+
+  <!-- Divider 2 -->
+  <rect x="840" y="390" width="320" height="1" fill="#0A0A0A" opacity="0.15"/>
+
+  <!-- Metric 3 — GMap -->
+  <text
+    x="840" y="482"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-weight="700" font-size="80" fill="#0A0A0A" letter-spacing="-3"
+  >91</text>
+  <text
+    x="947" y="452"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-weight="400" font-size="16" fill="#0A0A0A" opacity="0.5"
+  >/100</text>
+  <text
+    x="840" y="503"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-weight="500" font-size="12" fill="#0A0A0A" opacity="0.6" letter-spacing="1"
+  >GMAP REDESIGN</text>
+
+  <!-- Bottom year -->
+  <text
+    x="1160" y="590"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-weight="700" font-size="11" fill="#0A0A0A" opacity="0.35"
+    text-anchor="end" letter-spacing="3"
+  >2026</text>
+
+  <!-- Bottom rule (left panel) -->
+  <rect x="64" y="574" width="720" height="1" fill="#FFFFFF" opacity="0.05"/>
+</svg>
