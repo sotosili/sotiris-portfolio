@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import ClientRouter from 'astro/components/ClientRouter.astro';
 import Cursor from '../components/Cursor';
+import EthicsGrid from '../components/EthicsGrid';
 
 interface Props {
   title?: string;
@@ -58,7 +59,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://sotosili
     />
   </head>
   <body class="bg-[#0A0A0A] text-white font-geist antialiased">
+    <EthicsGrid client:only="react" />
     <Cursor client:only="react" />
-    <slot />
+    <div class="relative z-[1]">
+      <slot />
+    </div>
   </body>
 </html>
