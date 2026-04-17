@@ -61,5 +61,40 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://sotosili
     {Astro.url.pathname === '/' && <EthicsGrid client:only="react" />}
     <Cursor client:only="react" />
     <slot />
+  <script>
+    // Page entry reveal — sweeps the orange curtain off from right to left.
+    // The exit tween (navigateWithTransition) sets scaleX:1 before navigation;
+    // this script reveals the destination by sweeping it back to 0.
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      // Dynamically import GSAP — it is already bundled by the page, so this
+      // resolves from the module cache without a network round-trip.
+      import("gsap").then(({ gsap }) => {
+        let overlay = document.getElementById("page-transition-overlay") as HTMLElement | null;
+        if (!overlay) {
+          overlay = document.createElement("div");
+          overlay.id = "page-transition-overlay";
+          Object.assign(overlay.style, {
+            position: "fixed",
+            inset: "0",
+            backgroundColor: "#F26C0D",
+            zIndex: "99999",
+            pointerEvents: "none",
+          });
+          document.body.appendChild(overlay);
+        }
+
+        // Start fully covering the screen, then sweep off to the left.
+        gsap.set(overlay, { scaleX: 1, transformOrigin: "right center" });
+        gsap.to(overlay, {
+          scaleX: 0,
+          duration: 0.4,
+          ease: "power3.inOut",
+          delay: 0.05,
+        });
+      });
+    });
+  </script>
   </body>
 </html>

@@ -3,7 +3,8 @@
     "allow": [
       "Read(//c/Users/iliso/.claude/skills/**)",
       "Bash(npx tsc:*)",
-      "Read(//c/Users/iliso/.claude/**)"
+      "Read(//c/Users/iliso/.claude/**)",
+      "Bash(npm run *)"
     ]
   }
 }

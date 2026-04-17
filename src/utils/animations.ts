@@ -196,6 +196,57 @@ export function setupHeroCounters(
 }
 
 /**
+ * Animate the case study hero section into view after the page-entry overlay reveal.
+ * Target selectors are scoped to `container` — pass the component root element.
+ *
+ * Expects the following structure (already present in all three case studies):
+ *   - Eyebrow <p> and <h1> inside <header>
+ *   - Hero metrics grid items inside <header>
+ *   - Background <img> inside <header> via .hero-bg-img class
+ *
+ * Fires 0.2s after call, overlapping the overlay sweep for a connected feel.
+ */
+export function setupPageEntry(
+  container: HTMLElement | null,
+  reducedMotion: boolean
+): () => void {
+  if (reducedMotion || !container) return () => {};
+
+  const header = container.querySelector<HTMLElement>("header");
+  if (!header) return () => {};
+
+  const eyebrow = header.querySelector<HTMLElement>("p");
+  const heading = header.querySelector<HTMLElement>("h1");
+  const bgImg   = header.querySelector<HTMLElement>(".hero-bg-img");
+  const metrics = Array.from(
+    header.querySelectorAll<HTMLElement>("[role='listitem']")
+  );
+
+  // Set initial states immediately so elements are invisible on first paint.
+  if (eyebrow) gsap.set(eyebrow, { opacity: 0, y: 32 });
+  if (heading)  gsap.set(heading,  { opacity: 0, y: 32 });
+  if (bgImg)    gsap.set(bgImg,    { opacity: 0, scale: 1.03 });
+  if (metrics.length) gsap.set(metrics, { opacity: 0, y: 16 });
+
+  const tl = gsap.timeline({ delay: 0.2 });
+
+  if (bgImg) {
+    tl.to(bgImg, { opacity: 1, scale: 1, duration: 1.1, ease: "power2.out" }, 0);
+  }
+  if (eyebrow) {
+    tl.to(eyebrow, { opacity: 1, y: 0, duration: 0.9, ease: "expo.out" }, 0.1);
+  }
+  if (heading) {
+    tl.to(heading, { opacity: 1, y: 0, duration: 0.9, ease: "expo.out" }, 0.18);
+  }
+  if (metrics.length) {
+    tl.to(metrics, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out", stagger: 0.1 }, 0.35);
+  }
+
+  return () => { tl.kill(); };
+}
+
+/**
  * Navigate to `href` with an orange-sweep overlay transition.
  * Passes through modifier-key clicks so the browser handles cmd+click / ctrl+click normally.
  */
