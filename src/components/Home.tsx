@@ -5,7 +5,7 @@
  * WCAG 2.1 AA — non-negotiable on every element
  */
 
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import emailjs from "@emailjs/browser";
 import {
@@ -90,133 +90,26 @@ const stagger: Variants = {
   visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
 };
 
-// ── Intro overlay (GSAP — plays once per session) ────────────────
-
-const IntroOverlay = ({ onComplete }: { onComplete: () => void }) => {
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const lineRef = useRef<SVGLineElement>(null);
-
-  useEffect(() => {
-    const overlay = overlayRef.current;
-    const line = lineRef.current;
-    if (!overlay || !line) return;
-
-    const iliadisLetters = overlay.querySelectorAll(".intro-letter-iliadis");
-    const sotirisLetters = overlay.querySelectorAll(".intro-letter-sotiris");
-    const allLetters = overlay.querySelectorAll(".intro-letter");
-    const lineLength = line.getTotalLength();
-
-    gsap.set(line, { strokeDasharray: lineLength, strokeDashoffset: lineLength });
-    gsap.set(iliadisLetters, { opacity: 0, y: 20 });
-    gsap.set(sotirisLetters, { opacity: 0, y: 20 });
-
-    const tl = gsap.timeline({
-      onComplete: () => {
-        sessionStorage.setItem("introPlayed", "true");
-        onComplete();
-      },
-    });
-
-    tl.to(line, { strokeDashoffset: 0, duration: 0.6, ease: "power2.inOut" }, 0)
-      .to(
-        iliadisLetters,
-        { y: 0, opacity: 1, duration: 0.4, stagger: 0.07, ease: "power3.out" },
-        0.5
-      )
-      .to(
-        sotirisLetters,
-        { y: 0, opacity: 1, duration: 0.4, stagger: 0.07, ease: "power3.out" },
-        0.9
-      )
-      .to(line, { strokeDashoffset: -lineLength, duration: 0.4, ease: "power2.inOut" }, 2.0)
-      .to(allLetters, { opacity: 0, duration: 0.3, ease: "power2.out" }, 2.2)
-      .to(overlay, { opacity: 0, duration: 0.3, ease: "power2.inOut" }, 2.5);
-
-    return () => {
-      tl.kill();
-    };
-  }, [onComplete]);
-
-  return (
-    <div
-      ref={overlayRef}
-      className="fixed inset-0 flex items-center justify-center bg-white overflow-hidden"
-      style={{ zIndex: 100 }}
-      role="status"
-      aria-label="Loading portfolio"
-    >
-      <div className="flex flex-col items-center">
-        <span className="flex" style={{ letterSpacing: "0.1em" }}>
-          {"ILIADIS".split("").map((char, i) => (
-            <span
-              key={`i-${i}`}
-              className="intro-letter intro-letter-iliadis text-6xl md:text-8xl font-serif font-bold inline-block"
-              style={{ color: "#F26C0D" }}
-            >
-              {char}
-            </span>
-          ))}
-        </span>
-        <svg
-          className="w-full"
-          height="4"
-          viewBox="0 0 600 4"
-          preserveAspectRatio="none"
-          style={{ margin: "12px 0" }}
-          aria-hidden="true"
-        >
-          <line
-            ref={lineRef}
-            x1="0"
-            y1="2"
-            x2="600"
-            y2="2"
-            stroke="#F26C0D"
-            strokeWidth="1.5"
-          />
-        </svg>
-        <span className="flex" style={{ letterSpacing: "0.1em" }}>
-          {"SOTIRIS".split("").map((char, i) => (
-            <span
-              key={`s-${i}`}
-              className="intro-letter intro-letter-sotiris text-6xl md:text-8xl font-serif font-bold inline-block"
-              style={{ color: "#0D5EAF" }}
-            >
-              {char}
-            </span>
-          ))}
-        </span>
-      </div>
-    </div>
-  );
-};
-
 // ── Hero (5-level hierarchy) ─────────────────────────────────────
 
-const Hero = ({
-  shouldReduceMotion,
-  introComplete,
-}: {
-  shouldReduceMotion: boolean | null;
-  introComplete: boolean;
-}) => {
+const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) => {
   const heroRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  // Hero stays invisible until introComplete — GSAP drives all visibility
+  const manifestoRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // Do not animate until the intro overlay has finished.
-    // On return visits introComplete is already true, so this fires immediately.
-    if (!introComplete) return;
-
     if (shouldReduceMotion) {
       setIsReady(true);
       return;
     }
 
-    // Make section visible then hand off to GSAP
     setIsReady(true);
+
+    const isFirstVisit = sessionStorage.getItem("introPlayed") !== "true";
+    const manifesto = manifestoRef.current;
+    const heading = headingRef.current;
 
     const ctx = gsap.context(() => {
       // ── Initial states ───────────────────────────────────────
@@ -229,28 +122,87 @@ const Hero = ({
           ".animate-subtitle",
           ".animate-cta",
           ".animate-scroll",
-          ".animate-name",
         ],
         { opacity: 0 }
       );
-      // Photo slides in from below — no scale so object-contain is never cropped
       gsap.set(".animate-photo", { y: 50 });
-      gsap.set(".animate-heading", { y: 32 });
+      gsap.set(".hero-photo-img", { filter: "grayscale(1)" });
       gsap.set(".animate-subtitle", { y: 20 });
       gsap.set(".animate-cta", { y: 20 });
       gsap.set(".animate-nav", { y: -20 });
+      gsap.set(".hero-bracket-tl-h", { scaleX: 0, transformOrigin: "left center" });
+      gsap.set(".hero-bracket-tl-v", { scaleY: 0, transformOrigin: "top center" });
+      gsap.set(".hero-bracket-br-h", { scaleX: 0, transformOrigin: "right center" });
+      gsap.set(".hero-bracket-br-v", { scaleY: 0, transformOrigin: "bottom center" });
 
-      // ── Entry sequence ───────────────────────────────────────
-      const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
-      tl
-        .to(".animate-name",    { opacity: 1, duration: 1.4 })
-        .to(".animate-photo",   { y: 0, opacity: 1, duration: 1.4 }, "-=1.2")
-        .to(".animate-heading", { y: 0, opacity: 1, duration: 1.0, ease: "expo.out" }, "-=1.1")
-        .to(".animate-subtitle",{ y: 0, opacity: 1, duration: 0.8 }, "-=0.7")
-        .to(".animate-cta",     { y: 0, opacity: 1, duration: 0.8 }, "-=0.6")
-        .to(".animate-logo",    { opacity: 1, duration: 0.8 }, "-=0.8")
-        .to(".animate-nav",     { y: 0, opacity: 1, stagger: 0.06, duration: 0.6 }, "-=0.6")
-        .to(".animate-scroll",  { opacity: 1, duration: 0.8 }, "-=0.3");
+      if (isFirstVisit && manifesto && heading) {
+        // Read heading position BEFORE any transforms so we get natural layout coords
+        const headingRect = heading.getBoundingClientRect();
+
+        gsap.set(manifesto, {
+          display: "block",
+          xPercent: -50,
+          yPercent: -50,
+          left: "50%",
+          top: "50%",
+        });
+        gsap.set(".manifesto-word", { opacity: 0, y: 40 });
+
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+        tl
+          // Words appear staggered — all visible by ~t=1.2s
+          .to(".manifesto-word", { opacity: 1, y: 0, duration: 0.5, stagger: 0.35 }, 0)
+          // Migrate manifesto to heading's natural position
+          .to(
+            manifesto,
+            {
+              left: headingRect.left,
+              top: headingRect.top,
+              xPercent: 0,
+              yPercent: 0,
+              duration: 0.8,
+              ease: "power3.inOut",
+            },
+            2.0
+          )
+          // Photo enters simultaneously with migration; color blooms in as composition settles
+          .to(".animate-photo", { y: 0, opacity: 1, duration: 1.4, ease: "power4.out" }, 2.0)
+          .to(".hero-photo-img", { filter: "grayscale(0)", duration: 2.8, ease: "power2.inOut" }, 2.4)
+          // Crossfade: manifesto out, real heading in — pixel-perfect swap
+          .to(manifesto, { opacity: 0, duration: 0.25 }, 2.75)
+          .to(".animate-heading", { opacity: 1, duration: 0.25 }, 2.75)
+          // Remaining hero elements enter
+          .to(".animate-subtitle", { y: 0, opacity: 1, duration: 0.8 }, 2.95)
+          .to(".animate-cta",      { y: 0, opacity: 1, duration: 0.8 }, 3.05)
+          .to(".animate-logo",     { opacity: 1, duration: 0.8 }, 2.8)
+          .to(".animate-nav",      { y: 0, opacity: 1, stagger: 0.06, duration: 0.6 }, 2.8)
+          .to(".animate-scroll",   { opacity: 1, duration: 0.8 }, 3.2)
+          .call(() => sessionStorage.setItem("introPlayed", "true"))
+          .to(".hero-bracket-tl-h", { scaleX: 1, duration: 0.3, ease: "power2.out" }, 3.7)
+          .to(".hero-bracket-tl-v", { scaleY: 1, duration: 0.3, ease: "power2.out" }, 3.7)
+          .to(".hero-bracket-br-h", { scaleX: 1, duration: 0.3, ease: "power2.out" }, 3.9)
+          .to(".hero-bracket-br-v", { scaleY: 1, duration: 0.3, ease: "power2.out" }, 3.9);
+      } else {
+        // Return visit — hide manifesto, standard hero entry
+        if (manifesto) gsap.set(manifesto, { display: "none" });
+        gsap.set(".animate-heading", { y: 32 });
+
+        const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+        tl
+          .to(".animate-photo",    { y: 0, opacity: 1, duration: 1.4 })
+          .to(".hero-photo-img",   { filter: "grayscale(0)", duration: 2.2, ease: "power2.inOut" }, "-=1.0")
+          .to(".animate-heading",  { y: 0, opacity: 1, duration: 1.0, ease: "expo.out" }, "-=1.1")
+          .to(".animate-subtitle", { y: 0, opacity: 1, duration: 0.8 }, "-=0.7")
+          .to(".animate-cta",      { y: 0, opacity: 1, duration: 0.8 }, "-=0.6")
+          .to(".animate-logo",     { opacity: 1, duration: 0.8 }, "-=0.8")
+          .to(".animate-nav",      { y: 0, opacity: 1, stagger: 0.06, duration: 0.6 }, "-=0.6")
+          .to(".animate-scroll",   { opacity: 1, duration: 0.8 }, "-=0.3")
+          .to(".hero-bracket-tl-h", { scaleX: 1, duration: 0.3, ease: "power2.out" }, 1.7)
+          .to(".hero-bracket-tl-v", { scaleY: 1, duration: 0.3, ease: "power2.out" }, 1.7)
+          .to(".hero-bracket-br-h", { scaleX: 1, duration: 0.3, ease: "power2.out" }, 1.9)
+          .to(".hero-bracket-br-v", { scaleY: 1, duration: 0.3, ease: "power2.out" }, 1.9);
+      }
 
       // ── Scroll-away parallax ─────────────────────────────────
       ScrollTrigger.create({
@@ -261,7 +213,6 @@ const Hero = ({
         animation: gsap
           .timeline()
           .to(contentRef.current,  { y: -80, opacity: 0, ease: "none" })
-          .to(".animate-name",     { y: -40, opacity: 0, ease: "none" }, 0)
           .to(".animate-photo",    { y: -50, ease: "none" }, 0),
       });
     }, heroRef);
@@ -269,65 +220,97 @@ const Hero = ({
     return () => {
       ctx.revert();
     };
-  }, [shouldReduceMotion, introComplete]);
+  }, [shouldReduceMotion]);
 
   return (
     <section
       ref={heroRef}
-      className={`relative min-h-screen overflow-hidden border-b border-white/10 transition-opacity duration-500 ${
+      className={`relative min-h-screen overflow-hidden border-b border-[#1A1410]/10 transition-opacity duration-500 ${
         !isReady && !shouldReduceMotion ? "opacity-0" : "opacity-100"
       }`}
       aria-label="Introduction"
     >
-      {/* Level 5: Watermark — behind everything */}
+      {/* Manifesto overlay — fixed, centered, first visit only */}
       <div
-        className="animate-name absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0"
+        ref={manifestoRef}
+        style={{
+          position: "fixed",
+          left: "50%",
+          top: "50%",
+          zIndex: 50,
+          pointerEvents: "none",
+          display: "none",
+        }}
         aria-hidden="true"
       >
         <span
-          className="font-serif font-black text-white/[0.028] leading-none whitespace-nowrap tracking-tighter"
-          style={{ fontSize: "clamp(80px, 18vw, 260px)" }}
+          className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter text-[#1A1410]"
+          style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
         >
-          ILIADIS SOTIRIS
+          AI
+        </span>
+        <span
+          className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter italic text-[#F26C0D]"
+          style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
+        >
+          Ethical
+        </span>
+        <span
+          className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter text-[#1A1410]"
+          style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
+        >
+          Designer.
         </span>
       </div>
 
       {/* Level 1: Photo — right half, natural proportions, no crop */}
       <div
-        className="animate-photo absolute top-0 right-0 bottom-0 w-full md:w-[55%] z-10 pointer-events-none bg-[#0A0A0A]"
+        className="animate-photo absolute top-0 right-0 bottom-0 w-full md:w-[55%] z-10 pointer-events-none"
         aria-hidden="true"
       >
         <img
           src="/images/profile.png"
           alt=""
-          className="w-full h-full object-contain object-top"
+          className="hero-photo-img w-full h-full object-contain object-top"
+          style={{
+            maskImage: "linear-gradient(to left, black 70%, transparent 100%), linear-gradient(to bottom, black 60%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to left, black 70%, transparent 100%), linear-gradient(to bottom, black 60%, transparent 100%)",
+            maskComposite: "intersect",
+            WebkitMaskComposite: "destination-in",
+          }}
         />
-        {/* Left-edge dissolve into bg — wider fade for breathing room */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/55 md:via-[#0A0A0A]/20 to-transparent" />
-        {/* Bottom dissolve */}
-        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0A0A0A] to-transparent" />
+        {/* Top-left registration bracket */}
+        <div aria-hidden="true" className="absolute hidden md:block top-3 left-3">
+          <div className="hero-bracket-tl-h absolute top-0 left-0 bg-[#F26C0D]/50" style={{ width: "24px", height: "1.5px" }} />
+          <div className="hero-bracket-tl-v absolute top-0 left-0 bg-[#F26C0D]/50" style={{ width: "1.5px", height: "24px" }} />
+        </div>
+        {/* Bottom-right registration bracket */}
+        <div aria-hidden="true" className="absolute hidden md:block bottom-3 right-3">
+          <div className="hero-bracket-br-h absolute bottom-0 right-0 bg-[#F26C0D]/50" style={{ width: "24px", height: "1.5px" }} />
+          <div className="hero-bracket-br-v absolute bottom-0 right-0 bg-[#F26C0D]/50" style={{ width: "1.5px", height: "24px" }} />
+        </div>
       </div>
 
       {/* Levels 2–4: Text — generous left column */}
       <div
         ref={contentRef}
-        className="relative z-20 min-h-screen flex flex-col justify-center px-8 md:px-16 lg:px-24 pt-28 pb-24"
-        style={{ maxWidth: "min(52%, 760px)" }}
+        className="relative z-20 min-h-screen flex flex-col justify-center px-8 md:px-16 lg:px-24 pt-28 pb-24 md:min-w-[380px]"
+        style={{ maxWidth: "min(60%, 760px)" }}
       >
         {/* Eyebrow */}
-        <p className="animate-subtitle text-[10px] font-geist font-bold tracking-[0.5em] uppercase text-[#888888] mb-8">
-          Sotiris Iliadis — Thessaloniki, Greece
+        <p className="animate-subtitle text-[10px] font-geist font-bold tracking-[0.5em] uppercase text-[#6B6560] mb-8">
+          Available for Projects <span className="text-[#F26C0D]">·</span> 2026
         </p>
 
         {/* Level 2: Headline — colonizes the left canvas */}
-        <div className="animate-heading">
+        <div ref={headingRef} className="animate-heading">
           <h1
             className="font-serif font-bold leading-[0.86] tracking-tighter"
-            style={{ fontSize: "clamp(56px, 7.5vw, 116px)" }}
+            style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
           >
-            <span className="block text-white">AI</span>
+            <span className="block text-[#1A1410]">AI</span>
             <span className="block text-[#F26C0D] italic">Ethical</span>
-            <span className="block text-white">Designer.</span>
+            <span className="block text-[#1A1410]">Designer.</span>
           </h1>
         </div>
 
@@ -337,7 +320,7 @@ const Hero = ({
             <div className="h-px w-12 bg-[#F26C0D]" />
             <div className="h-px w-6 bg-[#0D5EAF]" />
           </div>
-          <p className="font-geist font-light text-base md:text-[17px] leading-relaxed text-[#888888] max-w-[340px]">
+          <p className="font-geist font-light text-sm leading-relaxed text-[#6B6560] max-w-[340px]">
             Designing human-centered AI experiences.{" "}
             <span className="text-[#0D5EAF] font-medium">EU AI Act compliant.</span>
           </p>
@@ -347,17 +330,26 @@ const Hero = ({
         <div className="animate-cta flex flex-col sm:flex-row gap-3 mt-10 md:mt-12">
           <a
             href="#work"
-            className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] bg-[#F26C0D] text-white text-[11px] font-geist font-bold uppercase tracking-[0.32em] hover:bg-white hover:text-[#0A0A0A] transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
+            className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] bg-[#F26C0D] text-white text-[10px] font-geist font-bold uppercase tracking-[0.32em] hover:bg-[#1A1410] hover:text-white transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
           >
             3 Case Studies
             <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
           </a>
           <a
             href="#process"
-            className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] border border-white/25 text-white text-[11px] font-geist font-bold uppercase tracking-[0.32em] hover:border-white hover:bg-white/5 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] border border-[#1A1410]/25 text-[#1A1410] text-[10px] font-geist font-bold uppercase tracking-[0.32em] hover:border-[#1A1410] hover:bg-[#1A1410]/5 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A1410]"
           >
             How I Work
           </a>
+        </div>
+
+        {/* Credibility strip — three facts that answer the client's "why hire you" */}
+        <div className="animate-cta flex items-center gap-4 mt-6">
+          <span className="text-[9px] font-geist font-black text-[#1A1410] tracking-[0.3em] uppercase">13 Yrs</span>
+          <span className="text-[#F26C0D]" aria-hidden="true">·</span>
+          <span className="text-[9px] font-geist font-bold text-[#6B6560] tracking-[0.3em] uppercase">WCAG AA</span>
+          <span className="text-[#F26C0D]" aria-hidden="true">·</span>
+          <span className="text-[9px] font-geist font-bold text-[#6B6560] tracking-[0.3em] uppercase">EU AI Act</span>
         </div>
 
         {/* Scroll indicator */}
@@ -366,14 +358,14 @@ const Hero = ({
             className="animate-scroll absolute bottom-10 left-8 md:left-16 lg:left-24 flex items-center gap-3"
             aria-hidden="true"
           >
-            <div className="h-10 w-px bg-white/15 overflow-hidden">
+            <div className="h-10 w-px bg-[#1A1410]/15 overflow-hidden">
               <motion.div
                 animate={{ y: ["-100%", "100%"] }}
                 transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                 className="h-full w-full bg-[#F26C0D]"
               />
             </div>
-            <span className="text-[8px] font-geist font-bold uppercase tracking-[0.5em] text-[#888888]">
+            <span className="text-[10px] font-geist font-bold uppercase tracking-[0.5em] text-[#6B6560]">
               Scroll
             </span>
           </div>
@@ -495,7 +487,7 @@ const PROCESS_STEPS = [
 // ── Metric pill ──────────────────────────────────────────────────
 
 const Pill = ({ label }: { label: string }) => (
-  <span className="px-2 py-1 text-[9px] font-geist font-bold tracking-widest uppercase bg-white/5 text-[#888888] border border-white/10">
+  <span className="px-2 py-1 text-[10px] font-geist font-bold tracking-widest uppercase bg-[#1A1410]/[0.04] text-[#6B6560] border border-[#1A1410]/[0.08]">
     {label}
   </span>
 );
@@ -504,14 +496,6 @@ const Pill = ({ label }: { label: string }) => (
 
 export default function Home() {
   const shouldReduceMotion = useReducedMotion();
-
-  const [introComplete, setIntroComplete] = useState(() => {
-    if (typeof window === "undefined") return true;
-    return sessionStorage.getItem("introPlayed") === "true";
-  });
-
-  // Stable reference — prevents IntroOverlay's useEffect from re-running on re-renders
-  const handleIntroComplete = useCallback(() => setIntroComplete(true), []);
 
   const [activeSection, setActiveSection] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
@@ -583,9 +567,8 @@ export default function Home() {
     return () => document.removeEventListener("click", onClick);
   }, []);
 
-  // Unified GSAP scroll animations — waits for intro overlay to complete
+  // Unified GSAP scroll animations
   useEffect(() => {
-    if (!introComplete) return;
     let cleanup: (() => void) | undefined;
     const timer = setTimeout(() => {
       cleanup = setupScrollAnimations(document.body, shouldReduceMotion ?? false);
@@ -594,7 +577,7 @@ export default function Home() {
       clearTimeout(timer);
       cleanup?.();
     };
-  }, [introComplete, shouldReduceMotion]);
+  }, [shouldReduceMotion]);
 
   // Logo reveal on hover
   const triggerLogoReveal = (entering: boolean) => {
@@ -633,17 +616,6 @@ export default function Home() {
         Skip to main content
       </a>
 
-      {/* Intro overlay — plays once per session */}
-      {!introComplete && !shouldReduceMotion && (
-        <IntroOverlay onComplete={handleIntroComplete} />
-      )}
-
-      {/* Radial depth: #111 at center fades to #0A0A0A at edges */}
-      <div
-        className="fixed inset-0 z-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse 80% 70% at 50% 35%, #111111 0%, #0A0A0A 70%)" }}
-        aria-hidden="true"
-      />
       {/* CSS noise grain — adds tactile depth without obscuring content */}
       <div
         className="fixed inset-0 pointer-events-none select-none"
@@ -658,19 +630,13 @@ export default function Home() {
           <rect width="100%" height="100%" filter="url(#portfolio-grain)" />
         </svg>
       </div>
-      {/* Subtle vertical gradient depth layer */}
-      <div
-        className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-b from-[#0A0A0A]/40 via-transparent to-[#0A0A0A]/60"
-        aria-hidden="true"
-      />
-
       <div className="relative z-10">
 
         {/* ── Top logo bar ──────────────────────────────────────── */}
         <div
           className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-5 ${
             isScrolled
-              ? "bg-[#0A0A0A]/85 backdrop-blur-md border-b border-white/[0.05]"
+              ? "bg-[#F5F2ED]/90 backdrop-blur-md border-b border-[#1A1410]/[0.05]"
               : ""
           }`}
         >
@@ -683,14 +649,14 @@ export default function Home() {
               onMouseLeave={() => triggerLogoReveal(false)}
               aria-label="Sotiris Iliadis — home"
             >
-              <span className="animate-logo font-serif text-2xl font-bold tracking-tighter text-white hover:text-[#F26C0D] transition-colors select-none">
+              <span className="animate-logo font-serif text-xl font-bold tracking-tighter text-[#1A1410] hover:text-[#F26C0D] transition-colors select-none">
                 IS.
               </span>
               <div className="flex ml-3" aria-hidden="true">
                 {"ILIADIS SOTIRIS".split("").map((char, i) => (
                   <span
                     key={i}
-                    className="reveal-letter opacity-0 inline-block font-serif text-xl font-bold tracking-tighter uppercase text-white"
+                    className="reveal-letter opacity-0 inline-block font-serif text-xl font-bold tracking-tighter uppercase text-[#1A1410]"
                     style={{ transform: "translateX(-10px)" }}
                   >
                     {char === " " ? "\u00A0" : char}
@@ -708,10 +674,10 @@ export default function Home() {
                 <a
                   key={link.label}
                   href={link.href}
-                  className={`text-[8px] font-geist font-bold tracking-[0.3em] uppercase min-h-[44px] flex items-center transition-colors ${
+                  className={`text-[10px] font-geist font-bold tracking-[0.3em] uppercase min-h-[44px] flex items-center transition-colors ${
                     activeSection === link.id
                       ? "text-[#F26C0D]"
-                      : "text-white/35 hover:text-white"
+                      : "text-[#1A1410]/35 hover:text-[#1A1410]"
                   }`}
                 >
                   {link.label}
@@ -731,17 +697,17 @@ export default function Home() {
               key={link.label}
               href={link.href}
               className={`animate-nav pointer-events-auto flex items-center gap-2.5 min-h-[44px] items-center transition-all duration-300 group ${
-                activeSection === link.id ? "text-white" : "text-white/20 hover:text-white/50"
+                activeSection === link.id ? "text-[#1A1410]" : "text-[#1A1410]/20 hover:text-[#1A1410]/60"
               }`}
             >
-              <span className="text-[8px] font-geist font-bold tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-all duration-200 translate-x-2 group-hover:translate-x-0">
+              <span className="text-[10px] font-geist font-bold tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-all duration-200 translate-x-2 group-hover:translate-x-0">
                 {link.label}
               </span>
               <div
                 className={`rounded-full transition-all duration-300 ${
                   activeSection === link.id
                     ? "w-2 h-2 bg-[#F26C0D]"
-                    : "w-1.5 h-1.5 bg-white/20 group-hover:bg-white/50"
+                    : "w-1.5 h-1.5 bg-[#1A1410]/20 group-hover:bg-[#1A1410]/50"
                 }`}
                 aria-hidden="true"
               />
@@ -750,7 +716,7 @@ export default function Home() {
         </nav>
 
         {/* ── Hero ─────────────────────────────────────────────── */}
-        <Hero shouldReduceMotion={shouldReduceMotion} introComplete={introComplete} />
+        <Hero shouldReduceMotion={shouldReduceMotion} />
 
         <main id="main">
 
@@ -764,8 +730,8 @@ export default function Home() {
           >
             {/* Somoza ghost watermark */}
             <div
-              className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-white/[0.03] leading-none select-none pointer-events-none"
-              style={{ fontSize: "clamp(120px, 18vw, 220px)" }}
+              className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-[#1A1410]/[0.06] leading-none select-none pointer-events-none"
+              style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
               aria-hidden="true"
             >
               01
@@ -786,24 +752,19 @@ export default function Home() {
               <motion.h2
                 id="work-heading"
                 variants={fadeUp}
-                className="font-serif font-light leading-[0.88] tracking-tighter text-white"
-                style={{ fontSize: "clamp(44px, 7vw, 96px)" }}
+                className="font-serif font-light leading-[0.88] tracking-tighter text-[#1A1410]"
+                style={{ fontSize: "clamp(44px, 6vw, 80px)" }}
               >
                 Selected
                 <br />
-                <span className="italic text-white/40">Work</span>
+                <span className="italic text-[#1A1410]/40">Work</span>
               </motion.h2>
             </motion.div>
 
             <div className="space-y-6">
               {/* Full-width Coffee World */}
               {PROJECTS.filter((p) => p.full).map((project) => (
-                <article key={project.title} className="group anim-fade-up relative">
-                  {/* Orange left-border — sweeps up on hover */}
-                  <div
-                    className="absolute left-0 top-0 w-0.5 h-full bg-[#F26C0D] scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500"
-                    aria-hidden="true"
-                  />
+                <article key={project.title} className="group anim-fade-up">
                   <a
                     href={project.link}
                     onClick={(e) => navigateWithTransition(project.link, e)}
@@ -811,7 +772,7 @@ export default function Home() {
                     aria-label={`${project.title} — ${project.description} View case study`}
                   >
                     {/* Image */}
-                    <div className="relative aspect-[21/9] bg-[#111111] overflow-hidden ring-1 ring-white/[0.04] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
+                    <div className="relative aspect-[21/9] bg-[#EDE9E3] overflow-hidden ring-1 ring-[#1A1410]/[0.06] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
                       <img
                         src={project.image}
                         alt=""
@@ -823,7 +784,7 @@ export default function Home() {
                         className="absolute inset-0 bg-[#F26C0D]/0 group-hover:bg-[#F26C0D]/[0.08] transition-all duration-500 flex items-center justify-center"
                         aria-hidden="true"
                       >
-                        <span className="bg-[#0A0A0A]/75 px-5 py-2.5 text-white text-[11px] font-geist font-bold tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-3">
+                        <span className="bg-[#1A1410]/80 px-5 py-2.5 text-white text-[10px] font-geist font-bold tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-3">
                           View Case Study
                           <ArrowRight className="w-4 h-4" />
                         </span>
@@ -833,15 +794,15 @@ export default function Home() {
                     {/* Meta row */}
                     <div className="flex items-start justify-between mt-5 gap-4 flex-wrap">
                       <div>
-                        <h3 className="font-serif text-3xl md:text-4xl font-light text-white group-hover:text-[#F26C0D] transition-colors duration-300 leading-none mb-2">
+                        <h3 className="font-serif text-xl font-light text-[#1A1410] group-hover:text-[#F26C0D] transition-colors duration-300 leading-none mb-2">
                           {project.title}
                         </h3>
-                        <p className="font-geist text-sm font-light text-[#888888] max-w-xl">
+                        <p className="font-geist text-sm font-light text-[#6B6560] max-w-xl">
                           {project.description}
                         </p>
                       </div>
                       <div className="flex-shrink-0 text-right space-y-3">
-                        <span className="block text-[9px] font-geist font-bold text-[#F26C0D] tracking-[0.35em] uppercase">
+                        <span className="block text-[10px] font-geist font-bold text-[#F26C0D] tracking-[0.35em] uppercase">
                           {project.year}
                         </span>
                         <div className="flex gap-2 flex-wrap justify-end transition-all duration-400 translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
@@ -858,19 +819,14 @@ export default function Home() {
               {/* Half-width G-MAP + Velocity */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {PROJECTS.filter((p) => !p.full).map((project) => (
-                  <article key={project.title} className="group anim-fade-up relative">
-                    {/* Orange left-border — sweeps up on hover */}
-                    <div
-                      className="absolute left-0 top-0 w-0.5 h-full bg-[#F26C0D] scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500"
-                      aria-hidden="true"
-                    />
+                  <article key={project.title} className="group anim-fade-up">
                     <a
                       href={project.link}
                       onClick={(e) => navigateWithTransition(project.link, e)}
                       className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F26C0D]"
                       aria-label={`${project.title} — ${project.description} View case study`}
                     >
-                      <div className="relative aspect-[4/3] bg-[#111111] overflow-hidden ring-1 ring-white/[0.04] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
+                      <div className="relative aspect-[4/3] bg-[#EDE9E3] overflow-hidden ring-1 ring-[#1A1410]/[0.06] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
                         <img
                           src={project.image}
                           alt=""
@@ -881,7 +837,7 @@ export default function Home() {
                           className="absolute inset-0 bg-[#F26C0D]/0 group-hover:bg-[#F26C0D]/[0.08] transition-all duration-500 flex items-center justify-center"
                           aria-hidden="true"
                         >
-                          <span className="bg-[#0A0A0A]/75 px-5 py-2.5 text-white text-[11px] font-geist font-bold tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-3">
+                          <span className="bg-[#1A1410]/80 px-5 py-2.5 text-white text-[10px] font-geist font-bold tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-3">
                             View Case Study
                             <ArrowRight className="w-4 h-4" />
                           </span>
@@ -890,14 +846,14 @@ export default function Home() {
 
                       <div className="mt-4 flex items-start justify-between gap-4">
                         <div>
-                          <h3 className="font-serif text-2xl md:text-3xl font-light text-white group-hover:text-[#F26C0D] transition-colors duration-300 leading-none mb-2">
+                          <h3 className="font-serif text-xl font-light text-[#1A1410] group-hover:text-[#F26C0D] transition-colors duration-300 leading-none mb-2">
                             {project.title}
                           </h3>
-                          <p className="font-geist text-sm font-light text-[#888888]">
+                          <p className="font-geist text-sm font-light text-[#6B6560]">
                             {project.description}
                           </p>
                         </div>
-                        <span className="text-[9px] font-geist font-bold text-[#F26C0D] tracking-[0.35em] uppercase flex-shrink-0">
+                        <span className="text-[10px] font-geist font-bold text-[#F26C0D] tracking-[0.35em] uppercase flex-shrink-0">
                           {project.year}
                         </span>
                       </div>
@@ -913,7 +869,7 @@ export default function Home() {
             </div>
           </section>
 
-          <div className="h-px bg-white/[0.06] max-w-7xl mx-auto" aria-hidden="true" />
+          <div className="h-px bg-[#1A1410]/[0.08] max-w-7xl mx-auto" aria-hidden="true" />
 
           {/* ════════════════════════════════════════════════════
               02 — PHILOSOPHY
@@ -924,8 +880,8 @@ export default function Home() {
             aria-labelledby="philosophy-heading"
           >
             <div
-              className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-white/[0.03] leading-none select-none pointer-events-none"
-              style={{ fontSize: "clamp(120px, 18vw, 220px)" }}
+              className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-[#1A1410]/[0.06] leading-none select-none pointer-events-none"
+              style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
               aria-hidden="true"
             >
               02
@@ -946,20 +902,20 @@ export default function Home() {
               <motion.h2
                 id="philosophy-heading"
                 variants={fadeUp}
-                className="font-serif font-light leading-[0.88] tracking-tighter text-white"
-                style={{ fontSize: "clamp(44px, 7vw, 96px)" }}
+                className="font-serif font-light leading-[0.88] tracking-tighter text-[#1A1410]"
+                style={{ fontSize: "clamp(44px, 6vw, 80px)" }}
               >
                 Design with
                 <br />
                 <span className="italic text-[#F26C0D]">Intent,</span>
                 <br />
-                <span className="text-white/35">Build with Care</span>
+                <span className="text-[#1A1410]/35">Build with Care</span>
               </motion.h2>
             </motion.div>
 
             {/* 4-column principle grid */}
             <div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.05] border border-white/[0.05] overflow-hidden"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[#1A1410]/[0.06] border border-[#1A1410]/[0.06] overflow-hidden"
               role="list"
             >
               {PRINCIPLES.map((p, i) => (
@@ -971,13 +927,13 @@ export default function Home() {
                   variants={fadeUp}
                   custom={i}
                   transition={{ delay: i * 0.07 }}
-                  className="group bg-[#0A0A0A] p-8 md:p-10 hover:bg-[#111111] transition-colors duration-500"
+                  className="group bg-[#F5F2ED] p-8 md:p-10 hover:bg-[#EDE9E3] transition-colors duration-500"
                   role="listitem"
                 >
                   {/* Somoza-style bold number — ghost at rest, orange on hover */}
                   <div
-                    className="font-serif font-black leading-none text-white/[0.03] group-hover:text-[#F26C0D]/25 transition-all duration-700 mb-6 select-none"
-                    style={{ fontSize: "clamp(72px, 8vw, 108px)" }}
+                    className="font-serif font-black leading-none text-[#1A1410]/[0.06] group-hover:text-[#F26C0D]/25 transition-all duration-700 mb-6 select-none"
+                    style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
                     aria-hidden="true"
                   >
                     {p.num}
@@ -991,10 +947,10 @@ export default function Home() {
                     {p.icon}
                   </div>
 
-                  <h3 className="font-serif text-xl md:text-2xl font-light text-white mb-3 group-hover:text-[#F26C0D] transition-colors duration-500">
+                  <h3 className="font-serif text-xl font-light text-[#1A1410] mb-3 group-hover:text-[#F26C0D] transition-colors duration-500">
                     {p.title}
                   </h3>
-                  <p className="font-geist text-sm text-[#888888] leading-relaxed font-light">
+                  <p className="font-geist text-sm text-[#6B6560] leading-relaxed font-light">
                     {p.desc}
                   </p>
 
@@ -1009,7 +965,7 @@ export default function Home() {
             </div>
           </section>
 
-          <div className="h-px bg-white/[0.06] max-w-7xl mx-auto" aria-hidden="true" />
+          <div className="h-px bg-[#1A1410]/[0.08] max-w-7xl mx-auto" aria-hidden="true" />
 
           {/* ════════════════════════════════════════════════════
               03 — PROCESS
@@ -1020,8 +976,8 @@ export default function Home() {
             aria-labelledby="process-heading"
           >
             <div
-              className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-white/[0.03] leading-none select-none pointer-events-none"
-              style={{ fontSize: "clamp(120px, 18vw, 220px)" }}
+              className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-[#1A1410]/[0.06] leading-none select-none pointer-events-none"
+              style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
               aria-hidden="true"
             >
               03
@@ -1042,8 +998,8 @@ export default function Home() {
               <motion.h2
                 id="process-heading"
                 variants={fadeUp}
-                className="font-serif font-light leading-[0.88] tracking-tighter text-white"
-                style={{ fontSize: "clamp(44px, 7vw, 96px)" }}
+                className="font-serif font-light leading-[0.88] tracking-tighter text-[#1A1410]"
+                style={{ fontSize: "clamp(44px, 6vw, 80px)" }}
               >
                 Design
                 <br />
@@ -1055,7 +1011,7 @@ export default function Home() {
             <div className="relative" role="list" aria-label="Design process steps">
               {/* Horizontal connector (desktop only) */}
               <div
-                className="absolute top-[4.5rem] left-0 right-0 h-px bg-white/[0.06] hidden lg:block"
+                className="absolute top-[4.5rem] left-0 right-0 h-px bg-[#1A1410]/[0.08] hidden lg:block"
                 aria-hidden="true"
               />
 
@@ -1068,13 +1024,13 @@ export default function Home() {
                   >
                     {/* Timeline node */}
                     <div className="relative mb-4 lg:self-center" aria-hidden="true">
-                      <div className="w-3.5 h-3.5 rounded-full border border-white/15 bg-[#0A0A0A] hidden lg:block" />
+                      <div className="w-3.5 h-3.5 rounded-full border border-[#1A1410]/15 bg-[#F5F2ED] hidden lg:block" />
                     </div>
 
                     {/* Large number — lights up on scroll via GSAP */}
                     <div
-                      className="anim-step-num font-serif font-black leading-none tracking-tighter text-white/[0.07] transition-colors duration-500 mb-5 select-none"
-                      style={{ fontSize: "clamp(72px, 8vw, 108px)" }}
+                      className="anim-step-num font-serif font-black leading-none tracking-tighter text-[#1A1410]/[0.10] transition-colors duration-500 mb-5 select-none"
+                      style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
                       aria-hidden="true"
                     >
                       {step.num}
@@ -1082,20 +1038,20 @@ export default function Home() {
 
                     {/* Underline — scales in via GSAP */}
                     <div
-                      className="anim-line-grow h-[2px] w-16 lg:w-full bg-[#F26C0D] origin-left mb-5"
+                      className="anim-line-grow h-[2px] w-16 lg:w-full bg-[#F26C0D] mb-5"
                       style={{ transform: "scaleX(0)" }}
                       aria-hidden="true"
                     />
 
                     {/* Icon */}
-                    <div className="anim-step-icon text-white/30 transition-colors duration-500 mb-3">
+                    <div className="anim-step-icon text-[#1A1410]/30 transition-colors duration-500 mb-3">
                       {step.icon}
                     </div>
 
-                    <h3 className="font-serif text-xl font-light text-white mb-2 lg:text-center">
+                    <h3 className="font-serif text-xl font-light text-[#1A1410] mb-2 lg:text-center">
                       {step.label}
                     </h3>
-                    <p className="font-geist text-xs text-[#888888] leading-relaxed font-light lg:text-center">
+                    <p className="font-geist text-xs text-[#6B6560] leading-relaxed font-light lg:text-center">
                       {step.desc}
                     </p>
                   </div>
@@ -1104,7 +1060,7 @@ export default function Home() {
             </div>
           </section>
 
-          <div className="h-px bg-white/[0.06] max-w-7xl mx-auto" aria-hidden="true" />
+          <div className="h-px bg-[#1A1410]/[0.08] max-w-7xl mx-auto" aria-hidden="true" />
 
           {/* ════════════════════════════════════════════════════
               04 — CONTACT
@@ -1115,8 +1071,8 @@ export default function Home() {
             aria-labelledby="contact-heading"
           >
             <div
-              className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-white/[0.03] leading-none select-none pointer-events-none"
-              style={{ fontSize: "clamp(120px, 18vw, 220px)" }}
+              className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-[#1A1410]/[0.06] leading-none select-none pointer-events-none"
+              style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
               aria-hidden="true"
             >
               04
@@ -1124,7 +1080,7 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
 
               {/* Left column */}
-              <div className="space-y-10 anim-fade-up">
+              <div className="space-y-10 anim-stagger">
                 <div className="flex items-center gap-4">
                   <span className="h-px w-10 bg-[#0D5EAF]/50" aria-hidden="true" />
                   <span className="text-[#0D5EAF] text-[10px] font-geist font-bold tracking-[0.45em] uppercase" aria-hidden="true">
@@ -1134,8 +1090,8 @@ export default function Home() {
 
                 <h2
                   id="contact-heading"
-                  className="font-serif font-bold leading-[0.88] tracking-tighter text-white"
-                  style={{ fontSize: "clamp(44px, 7vw, 96px)" }}
+                  className="font-serif font-bold leading-[0.88] tracking-tighter text-[#1A1410]"
+                  style={{ fontSize: "clamp(44px, 6vw, 80px)" }}
                 >
                   Let's build
                   <br />
@@ -1150,15 +1106,15 @@ export default function Home() {
                 <div className="space-y-4 pt-2">
                   <a
                     href="mailto:ilisotiris@gmail.com"
-                    className="flex items-center gap-3 text-white hover:text-[#F26C0D] transition-colors group w-fit min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
+                    className="flex items-center gap-3 text-[#1A1410] hover:text-[#F26C0D] transition-colors group w-fit min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
                   >
                     <span
-                      className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:border-[#F26C0D] transition-colors flex-shrink-0"
+                      className="w-8 h-8 rounded-full border border-[#1A1410]/20 flex items-center justify-center group-hover:border-[#F26C0D] transition-colors flex-shrink-0"
                       aria-hidden="true"
                     >
                       <ArrowRight className="w-3 h-3 -rotate-45" />
                     </span>
-                    <span className="font-geist font-light text-base">ilisotiris@gmail.com</span>
+                    <span className="font-geist font-light text-sm">ilisotiris@gmail.com</span>
                   </a>
 
                   <div className="flex gap-6 pt-1">
@@ -1166,7 +1122,7 @@ export default function Home() {
                       href="https://github.com/sotosili"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-[#888888] hover:text-white transition-colors group/link min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                      className="flex items-center gap-2 text-[#6B6560] hover:text-[#1A1410] transition-colors group/link min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A1410]"
                     >
                       <GithubIcon
                         className="w-4 h-4 group-hover/link:scale-110 transition-transform flex-shrink-0"
@@ -1180,7 +1136,7 @@ export default function Home() {
                       href="https://www.linkedin.com/in/sotiris-iliadis"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-[#888888] hover:text-white transition-colors group/link min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                      className="flex items-center gap-2 text-[#6B6560] hover:text-[#1A1410] transition-colors group/link min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A1410]"
                     >
                       <LinkedinIcon
                         className="w-4 h-4 group-hover/link:scale-110 transition-transform flex-shrink-0"
@@ -1194,25 +1150,25 @@ export default function Home() {
                 </div>
 
                 {/* Availability */}
-                <div className="border-t border-white/[0.08] pt-8 space-y-3">
+                <div className="border-t border-[#1A1410]/[0.08] pt-8 space-y-3">
                   <div className="flex items-center gap-3">
                     <div
                       className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"
                       aria-hidden="true"
                     />
-                    <p className="font-geist text-sm text-[#888888]">
-                      <span className="text-white font-medium">Taking projects</span> — ethical UX, WCAG audits, EU AI Act consulting
+                    <p className="font-geist text-sm text-[#6B6560]">
+                      <span className="text-[#1A1410] font-medium">Taking projects</span> — ethical UX, WCAG audits, EU AI Act consulting
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <MapPin className="w-3.5 h-3.5 text-[#888888] flex-shrink-0" aria-hidden="true" />
-                    <p className="font-geist text-sm text-[#888888]">
+                    <MapPin className="w-3.5 h-3.5 text-[#6B6560] flex-shrink-0" aria-hidden="true" />
+                    <p className="font-geist text-sm text-[#6B6560]">
                       Thessaloniki, Greece · UTC+3
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Globe className="w-3.5 h-3.5 text-[#888888] flex-shrink-0" aria-hidden="true" />
-                    <p className="font-geist text-sm text-[#888888]">
+                    <Globe className="w-3.5 h-3.5 text-[#6B6560] flex-shrink-0" aria-hidden="true" />
+                    <p className="font-geist text-sm text-[#6B6560]">
                       EU-based · Greek &amp; English · 48h response
                     </p>
                   </div>
@@ -1220,7 +1176,7 @@ export default function Home() {
               </div>
 
               {/* Right column — EmailJS form */}
-              <div className="bg-[#111111] border border-white/[0.08] p-8 md:p-10 anim-fade-up relative group">
+              <div className="bg-[#EDE9E3] border border-[#1A1410]/[0.08] p-8 md:p-10 anim-fade-up relative group">
                 {/* Animated left accent line */}
                 <div
                   className="absolute top-0 left-0 w-px h-0 bg-[#F26C0D] group-hover:h-full transition-all duration-700"
@@ -1252,7 +1208,7 @@ export default function Home() {
                       required
                       value={contactName}
                       onChange={(e) => setContactName(e.target.value)}
-                      className="w-full bg-transparent border-b border-white/15 focus:border-[#F26C0D] outline-none py-3 font-geist font-light text-base text-white placeholder-[#444444] transition-colors"
+                      className="w-full bg-transparent border-b border-[#1A1410]/15 focus:border-[#F26C0D] outline-none py-3 font-geist font-light text-base text-[#1A1410] placeholder-[#B0AAA2] transition-colors"
                       placeholder="Your full name"
                       autoComplete="name"
                     />
@@ -1274,7 +1230,7 @@ export default function Home() {
                       required
                       value={contactEmail}
                       onChange={(e) => setContactEmail(e.target.value)}
-                      className="w-full bg-transparent border-b border-white/15 focus:border-[#F26C0D] outline-none py-3 font-geist font-light text-base text-white placeholder-[#444444] transition-colors"
+                      className="w-full bg-transparent border-b border-[#1A1410]/15 focus:border-[#F26C0D] outline-none py-3 font-geist font-light text-base text-[#1A1410] placeholder-[#B0AAA2] transition-colors"
                       placeholder="hello@example.com"
                       autoComplete="email"
                     />
@@ -1296,7 +1252,7 @@ export default function Home() {
                       required
                       value={contactMessage}
                       onChange={(e) => setContactMessage(e.target.value)}
-                      className="w-full bg-transparent border-b border-white/15 focus:border-[#F26C0D] outline-none py-3 font-geist font-light text-base text-white placeholder-[#444444] transition-colors resize-none"
+                      className="w-full bg-transparent border-b border-[#1A1410]/15 focus:border-[#F26C0D] outline-none py-3 font-geist font-light text-base text-[#1A1410] placeholder-[#B0AAA2] transition-colors resize-none"
                       placeholder="What would you like to discuss?"
                     />
                   </div>
@@ -1304,7 +1260,7 @@ export default function Home() {
                   <button
                     type="submit"
                     disabled={formStatus === "sending"}
-                    className="w-full bg-[#F26C0D] text-white py-5 text-[11px] font-geist font-bold uppercase tracking-[0.35em] hover:bg-white hover:text-[#0A0A0A] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
+                    className="w-full bg-[#F26C0D] text-white py-5 text-[10px] font-geist font-bold uppercase tracking-[0.35em] hover:bg-[#1A1410] hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
                   >
                     {formStatus === "sending" ? (
                       <>
@@ -1352,8 +1308,8 @@ export default function Home() {
         </main>
 
         {/* ── Footer ───────────────────────────────────────────── */}
-        <footer className="py-7 px-6 border-t border-white/[0.06]">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-[9px] font-geist font-bold uppercase tracking-[0.35em] text-[#888888]">
+        <footer className="py-7 px-6 border-t border-[#1A1410]/[0.06]">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-[10px] font-geist font-bold uppercase tracking-[0.35em] text-[#6B6560]">
             <p>© 2026 Sotiris Iliadis</p>
             <p>AI Ethical Designer · Thessaloniki, Greece</p>
           </div>
@@ -1362,7 +1318,7 @@ export default function Home() {
 
       {/* ── Mobile bottom nav ────────────────────────────────────── */}
       <nav
-        className="fixed bottom-0 left-0 right-0 z-50 flex md:hidden items-center justify-around bg-[#0A0A0A]/90 backdrop-blur-xl border-t border-white/[0.06] py-3 px-2"
+        className="fixed bottom-0 left-0 right-0 z-50 flex md:hidden items-center justify-around bg-[#F5F2ED]/90 backdrop-blur-xl border-t border-[#1A1410]/[0.06] py-3 px-2"
         aria-label="Mobile navigation"
       >
         {NAV.map((link) => (
@@ -1370,7 +1326,7 @@ export default function Home() {
             key={link.label}
             href={link.href}
             className={`flex flex-col items-center gap-1 min-w-[56px] min-h-[44px] justify-center transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D] ${
-              activeSection === link.id ? "text-[#F26C0D]" : "text-white/30"
+              activeSection === link.id ? "text-[#F26C0D]" : "text-[#1A1410]/30"
             }`}
           >
             <span className="text-[7px] font-geist font-black tracking-widest uppercase">

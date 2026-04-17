@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
 import { setupScrollAnimations, setupHeroCounters } from "../utils/animations";
+import Footer from "./Footer";
 
 // ── Data ─────────────────────────────────────────────────────────
 
@@ -117,7 +118,7 @@ export default function CaseStudyGMap() {
   }, [shouldReduceMotion]);
 
   return (
-    <div className="bg-[#0A0A0A] text-white min-h-screen overflow-x-hidden selection:bg-[#F26C0D]/20">
+    <div className="relative z-[1] text-[#1A1410] min-h-screen overflow-x-hidden selection:bg-[#F26C0D]/20">
       {/* Skip link */}
       <a
         href="#main"
@@ -155,7 +156,7 @@ export default function CaseStudyGMap() {
         </a>
         <a
           href="/#work"
-          className="group flex items-center gap-2.5 text-[10px] tracking-[0.35em] uppercase font-bold text-white/40 hover:text-white transition-colors duration-300 min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          className="group flex items-center gap-2.5 text-[10px] tracking-[0.35em] uppercase font-bold text-white/70 hover:text-white transition-colors duration-300 min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           <ArrowLeft
             className="w-3 h-3 group-hover:-translate-x-0.5 transition-transform"
@@ -179,8 +180,8 @@ export default function CaseStudyGMap() {
             alt=""
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/60 to-[#0A0A0A]/20" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A]/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0D1117] via-[#0D1117]/60 to-[#0D1117]/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0D1117]/50 to-transparent" />
         </div>
 
         <motion.div
@@ -222,14 +223,14 @@ export default function CaseStudyGMap() {
                   )}
                   {m.sup && (
                     <span
-                      className="text-[#888888] font-normal"
+                      className="text-white/60 font-normal"
                       style={{ fontSize: "0.42em" }}
                     >
                       {m.sup}
                     </span>
                   )}
                 </p>
-                <p className="text-[9px] uppercase tracking-[0.4em] font-bold text-[#888888] mt-3">
+                <p className="text-[9px] uppercase tracking-[0.4em] font-bold text-white/60 mt-3">
                   {m.label}
                 </p>
               </div>
@@ -247,13 +248,13 @@ export default function CaseStudyGMap() {
           className="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto"
           aria-labelledby="problem-heading"
         >
-          <div className="bg-[#111111] border border-[#1E1E1E] p-10 md:p-16 anim-fade-up">
+          <div className="bg-[#EDE9E3] border border-[#D4CFC8] p-10 md:p-16 anim-fade-up">
             <p className="text-[10px] font-bold tracking-[0.45em] uppercase text-[#F26C0D] mb-8">
               01 — The Problem
             </p>
             <h2
               id="problem-heading"
-              className="font-serif font-bold leading-[0.88] tracking-tighter text-white"
+              className="font-serif font-bold leading-[0.88] tracking-tighter text-[#1A1410]"
               style={{ fontSize: "clamp(28px, 4.5vw, 60px)" }}
             >
               Gym beginners face a wall of machines.
@@ -262,28 +263,28 @@ export default function CaseStudyGMap() {
             </h2>
 
             <blockquote className="border-l-2 border-[#0D5EAF] pl-8 mt-12">
-              <p className="font-serif text-xl md:text-2xl italic text-white/70 leading-relaxed">
+              <p className="font-serif text-xl md:text-2xl italic text-[#1A1410]/70 leading-relaxed">
                 "I've been a member for 3 months. I still don't know how to use half the machines."
               </p>
-              <cite className="block mt-5 text-[10px] uppercase tracking-[0.35em] text-[#888888] not-italic">
+              <cite className="block mt-5 text-[10px] uppercase tracking-[0.35em] text-[#6B6560] not-italic">
                 — Participant Eve, user research session
               </cite>
             </blockquote>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
-              <div className="p-6 border border-[#1E1E1E] bg-[#0A0A0A]/60">
+              <div className="p-6 border border-[#D4CFC8] bg-[#EDE9E3]">
                 <p className="text-[10px] uppercase tracking-[0.3em] text-[#0D5EAF] font-bold mb-3">
                   Goal 01
                 </p>
-                <p className="font-serif text-lg text-white leading-snug">
+                <p className="font-serif text-lg text-[#1A1410] leading-snug">
                   Eliminate gym anxiety through immediate machine identification.
                 </p>
               </div>
-              <div className="p-6 border border-[#1E1E1E] bg-[#0A0A0A]/60">
+              <div className="p-6 border border-[#D4CFC8] bg-[#EDE9E3]">
                 <p className="text-[10px] uppercase tracking-[0.3em] text-[#0D5EAF] font-bold mb-3">
                   Goal 02
                 </p>
-                <p className="font-serif text-lg text-white leading-snug">
+                <p className="font-serif text-lg text-[#1A1410] leading-snug">
                   Prioritise safety and form guidance over raw volume metrics.
                 </p>
               </div>
@@ -295,7 +296,7 @@ export default function CaseStudyGMap() {
             02 — SOLUTION
         ══════════════════════════════════════════════════ */}
         <section
-          className="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto border-t border-white/[0.06]"
+          className="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto border-t border-[#1A1410]/[0.06]"
           aria-labelledby="solution-heading"
         >
           <div className="mb-16 md:mb-20">
@@ -304,12 +305,12 @@ export default function CaseStudyGMap() {
             </p>
             <h2
               id="solution-heading"
-              className="font-serif font-bold leading-[0.88] tracking-tighter text-white anim-fade-up"
+              className="font-serif font-bold leading-[0.88] tracking-tighter text-[#1A1410] anim-fade-up"
               style={{ fontSize: "clamp(36px, 6vw, 88px)" }}
             >
               Machine identification,
               <br />
-              <span className="italic text-white/30">instant and safe.</span>
+              <span className="italic text-[#1A1410]/30">instant and safe.</span>
             </h2>
           </div>
 
@@ -323,8 +324,8 @@ export default function CaseStudyGMap() {
                 >
                   {p.num}
                 </div>
-                <h3 className="font-serif text-2xl md:text-3xl text-white mb-4">{p.title}</h3>
-                <p className="text-sm text-[#888888] leading-relaxed">{p.desc}</p>
+                <h3 className="font-serif text-2xl md:text-3xl text-[#1A1410] mb-4">{p.title}</h3>
+                <p className="text-sm text-[#6B6560] leading-relaxed">{p.desc}</p>
               </div>
             ))}
           </div>
@@ -334,7 +335,7 @@ export default function CaseStudyGMap() {
             03 — PROCESS (GSAP scroll activation)
         ══════════════════════════════════════════════════ */}
         <section
-          className="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto border-t border-white/[0.06]"
+          className="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto border-t border-[#1A1410]/[0.06]"
           aria-labelledby="process-heading"
         >
           <div className="mb-16 md:mb-20">
@@ -343,12 +344,12 @@ export default function CaseStudyGMap() {
             </p>
             <h2
               id="process-heading"
-              className="font-serif font-bold leading-[0.88] tracking-tighter text-white anim-fade-up"
+              className="font-serif font-bold leading-[0.88] tracking-tighter text-[#1A1410] anim-fade-up"
               style={{ fontSize: "clamp(36px, 6vw, 88px)" }}
             >
               From scan
               <br />
-              <span className="italic text-white/30">to safe training.</span>
+              <span className="italic text-[#1A1410]/30">to safe training.</span>
             </h2>
           </div>
 
@@ -364,33 +365,53 @@ export default function CaseStudyGMap() {
                 role="listitem"
               >
                 <div
-                  className="anim-step-num font-serif font-black text-white/[0.06] leading-none select-none mb-8 transition-colors duration-700"
+                  className="anim-step-num font-serif font-black text-[#1A1410]/[0.09] leading-none select-none mb-8 transition-colors duration-700"
                   style={{ fontSize: "clamp(64px, 8vw, 104px)" }}
                   aria-hidden="true"
                 >
                   {step.num}
                 </div>
-                <h3 className="font-serif text-xl md:text-2xl text-white mb-4">{step.title}</h3>
-                <p className="text-sm text-[#888888] leading-relaxed">{step.desc}</p>
+                <h3 className="font-serif text-xl md:text-2xl text-[#1A1410] mb-4">{step.title}</h3>
+                <p className="text-sm text-[#6B6560] leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
 
-          {/* Field evidence */}
-          <figure className="mt-16 md:mt-20 anim-fade-up">
-            <div className="relative overflow-hidden">
-              <img
-                src="/images/gmap-testing.jpg"
-                alt="G-MAP usability testing — participant scanning gym equipment with the prototype app"
-                className="w-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                style={{ maxHeight: "420px", objectPosition: "center" }}
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/60 to-transparent pointer-events-none" />
+          {/* Field evidence — editorial portrait layout */}
+          <figure className="mt-16 md:mt-24 anim-fade-up" aria-label="Field testing evidence">
+            <div className="grid grid-cols-1 md:grid-cols-[5fr_7fr] items-stretch border border-[#D4CFC8]">
+              {/* Portrait photo — full device-in-hand visible */}
+              <div className="relative overflow-hidden bg-[#EDE9E3] aspect-[3/4] md:aspect-auto">
+                <img
+                  src="/images/case-studies/gmap-testing.jpg"
+                  alt="G-MAP usability testing — participant scanning gym equipment with the prototype app"
+                  className="absolute inset-0 w-full h-full object-cover object-center"
+                  loading="lazy"
+                />
+                <div className="absolute bottom-0 left-0 w-px h-12 bg-[#F26C0D]" aria-hidden="true" />
+                <div className="absolute bottom-0 left-0 w-12 h-px bg-[#F26C0D]" aria-hidden="true" />
+              </div>
+
+              {/* Editorial context panel */}
+              <div className="bg-[#EDE9E3] p-8 md:p-12 flex flex-col justify-between gap-8">
+                <div>
+                  <p className="text-[10px] font-bold tracking-[0.45em] uppercase text-[#F26C0D] mb-8">
+                    Field Evidence
+                  </p>
+                  <blockquote className="border-l-2 border-[#0D5EAF] pl-6">
+                    <p className="font-serif text-lg md:text-xl italic text-[#1A1410]/70 leading-relaxed">
+                      "I pointed my phone and it just... found the exercise. That felt like magic."
+                    </p>
+                    <cite className="block mt-4 text-[10px] uppercase tracking-[0.35em] text-[#6B6560] not-italic">
+                      — Eve · Usability testing participant
+                    </cite>
+                  </blockquote>
+                </div>
+                <figcaption className="text-[10px] uppercase tracking-[0.35em] font-bold text-[#6B6560] border-t border-[#D4CFC8] pt-6">
+                  Usability testing — participants Eve &amp; Theodora · 2026
+                </figcaption>
+              </div>
             </div>
-            <figcaption className="mt-4 text-[10px] uppercase tracking-[0.35em] font-bold text-[#888888]">
-              Usability testing — participants Eve &amp; Theodora · 2026
-            </figcaption>
           </figure>
         </section>
 
@@ -398,7 +419,7 @@ export default function CaseStudyGMap() {
             04 — ETHICAL PRINCIPLES
         ══════════════════════════════════════════════════ */}
         <section
-          className="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto border-t border-white/[0.06]"
+          className="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto border-t border-[#1A1410]/[0.06]"
           aria-labelledby="ethics-heading"
         >
           <div className="mb-16 md:mb-20">
@@ -407,7 +428,7 @@ export default function CaseStudyGMap() {
             </p>
             <h2
               id="ethics-heading"
-              className="font-serif font-bold leading-[0.88] tracking-tighter text-white anim-fade-up"
+              className="font-serif font-bold leading-[0.88] tracking-tighter text-[#1A1410] anim-fade-up"
               style={{ fontSize: "clamp(36px, 6vw, 88px)" }}
             >
               Technology that
@@ -420,7 +441,7 @@ export default function CaseStudyGMap() {
             {ETHICAL_PRINCIPLES.map((p, i) => (
               <div
                 key={i}
-                className="bg-[#111111] border border-[#1E1E1E] p-8 md:p-10 flex gap-6 group hover:bg-[#141414] transition-colors duration-300"
+                className="bg-[#EDE9E3] border border-[#D4CFC8] p-8 md:p-10 flex gap-6 group hover:bg-[#E4E0DA] transition-colors duration-300"
                 style={{ borderLeft: "4px solid #0D5EAF" }}
               >
                 <ShieldCheck
@@ -428,10 +449,10 @@ export default function CaseStudyGMap() {
                   aria-hidden="true"
                 />
                 <div>
-                  <h3 className="font-serif text-xl text-white mb-3 group-hover:text-[#F26C0D] transition-colors duration-300">
+                  <h3 className="font-serif text-xl text-[#1A1410] mb-3 group-hover:text-[#F26C0D] transition-colors duration-300">
                     {p.title}
                   </h3>
-                  <p className="text-sm text-[#888888] leading-relaxed">{p.desc}</p>
+                  <p className="text-sm text-[#6B6560] leading-relaxed">{p.desc}</p>
                 </div>
               </div>
             ))}
@@ -451,7 +472,7 @@ export default function CaseStudyGMap() {
             </p>
             <h2
               id="results-heading"
-              className="font-serif font-bold leading-[0.88] tracking-tighter text-white anim-fade-up"
+              className="font-serif font-bold leading-[0.88] tracking-tighter text-[#1A1410] anim-fade-up"
               style={{ fontSize: "clamp(36px, 6vw, 88px)" }}
             >
               Measured impact.
@@ -466,7 +487,7 @@ export default function CaseStudyGMap() {
             {RESULTS.map((r, i) => (
               <div key={i} role="listitem">
                 <p
-                  className="font-bold text-white leading-none tabular-nums"
+                  className="font-bold text-[#1A1410] leading-none tabular-nums"
                   style={{ fontSize: "clamp(56px, 9vw, 120px)" }}
                 >
                   {r.countable ? (
@@ -476,7 +497,7 @@ export default function CaseStudyGMap() {
                   )}
                   {r.sup && (
                     <span
-                      className="text-[#888888] font-normal"
+                      className="text-[#6B6560] font-normal"
                       style={{ fontSize: "0.42em" }}
                     >
                       {r.sup}
@@ -484,7 +505,7 @@ export default function CaseStudyGMap() {
                   )}
                 </p>
                 <div className="h-px w-full bg-[#F26C0D]/40 my-4" aria-hidden="true" />
-                <p className="text-[9px] uppercase tracking-[0.4em] font-bold text-[#888888]">
+                <p className="text-[9px] uppercase tracking-[0.4em] font-bold text-[#6B6560]">
                   {r.label}
                 </p>
               </div>
@@ -492,7 +513,7 @@ export default function CaseStudyGMap() {
           </div>
 
           {/* The Lesson */}
-          <div className="mt-20 p-10 md:p-16 bg-[#111111] border border-[#1E1E1E] relative overflow-hidden anim-fade-up">
+          <div className="mt-20 p-10 md:p-16 bg-[#EDE9E3] border border-[#D4CFC8] relative overflow-hidden anim-fade-up">
             <div
               className="absolute -top-12 -right-12 font-serif italic text-[#F26C0D]/[0.04] select-none leading-none pointer-events-none"
               style={{ fontSize: "clamp(120px, 18vw, 240px)" }}
@@ -501,10 +522,10 @@ export default function CaseStudyGMap() {
               GM
             </div>
             <div className="relative z-10 max-w-2xl">
-              <h3 className="font-serif text-2xl md:text-4xl text-white mb-6">The Lesson</h3>
-              <p className="text-lg text-[#888888] leading-relaxed">
+              <h3 className="font-serif text-2xl md:text-4xl text-[#1A1410] mb-6">The Lesson</h3>
+              <p className="text-lg text-[#6B6560] leading-relaxed">
                 The scan-to-program flow is the core differentiator. That it tested as immediately intuitive confirmed:{" "}
-                <span className="text-white italic">
+                <span className="text-[#1A1410] italic font-semibold">
                   bridging physical and digital worlds requires minimal friction
                 </span>
                 , not more features.
@@ -520,18 +541,18 @@ export default function CaseStudyGMap() {
       </main>
 
       {/* ── Footer navigation ── */}
-      <footer className="py-16 border-t border-white/[0.06]">
+      <footer className="py-16 border-t border-[#1A1410]/[0.06]">
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-8">
           <a
             href="/work/coffee-world"
             className="group flex items-center gap-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F26C0D]"
             aria-label="Previous case study: Coffee World"
           >
-            <div className="w-14 h-14 rounded-full border border-white/15 flex items-center justify-center group-hover:border-[#F26C0D] group-hover:scale-110 transition-all duration-300 flex-shrink-0">
+            <div className="w-14 h-14 rounded-full border border-[#1A1410]/30 flex items-center justify-center group-hover:border-[#F26C0D] group-hover:scale-110 transition-all duration-300 flex-shrink-0">
               <ArrowLeft className="w-5 h-5" aria-hidden="true" />
             </div>
             <span
-              className="font-serif font-light text-white/25 group-hover:text-[#F26C0D] transition-colors duration-500 leading-none"
+              className="font-serif font-light text-[#6B6560] group-hover:text-[#F26C0D] transition-colors duration-500 leading-none"
               style={{ fontSize: "clamp(24px, 4vw, 56px)" }}
             >
               Coffee World
@@ -543,17 +564,18 @@ export default function CaseStudyGMap() {
             aria-label="Next case study: Velocity"
           >
             <span
-              className="font-serif font-light text-white/25 group-hover:text-[#F26C0D] transition-colors duration-500 leading-none"
+              className="font-serif font-light text-[#6B6560] group-hover:text-[#F26C0D] transition-colors duration-500 leading-none"
               style={{ fontSize: "clamp(32px, 6vw, 72px)" }}
             >
               Velocity
             </span>
-            <div className="w-14 h-14 rounded-full border border-white/15 flex items-center justify-center group-hover:border-[#F26C0D] group-hover:scale-110 transition-all duration-300 flex-shrink-0">
+            <div className="w-14 h-14 rounded-full border border-[#1A1410]/30 flex items-center justify-center group-hover:border-[#F26C0D] group-hover:scale-110 transition-all duration-300 flex-shrink-0">
               <ArrowRight className="w-5 h-5" aria-hidden="true" />
             </div>
           </a>
         </div>
       </footer>
+      <Footer />
     </div>
   );
 }

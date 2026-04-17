@@ -9,14 +9,21 @@
 
 /* ── Design token CSS custom properties ────────────────────────── */
 :root {
-  --background: #0A0A0A;
-  --foreground: #FFFFFF;
+  --background: #F5F2ED;
+  --foreground: #1A1410;
   --primary: #F26C0D;
   --primary-rgb: 242, 108, 13;
   --accent: #0D5EAF;
-  --muted-foreground: #666666;
-  --border: #222222;
-  --secondary: #111111;
+  --muted-foreground: #6B6560;
+  --border: #D4CFC8;
+  --secondary: #EDE9E3;
+}
+
+/* Fallback bg — matches canvas radial gradient centre colour */
+@layer base {
+  body {
+    background: radial-gradient(ellipse 80% 70% at 50% 38%, #F0ECE6 0%, #F5F2ED 70%) fixed;
+  }
 }
 
 /* ── Tailwind utility mappings for semantic tokens ──────────────── */
