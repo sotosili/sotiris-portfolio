@@ -172,11 +172,15 @@ export function setupHeroCounters(
   delay = 1300
 ): () => void {
   if (reducedMotion) return () => {};
+  // Hide counters immediately — before the timeout — so raw HTML values
+  // are never visible during the 1300ms intro animation window.
+  document.querySelectorAll<HTMLElement>(".anim-hero-count").forEach((el) => {
+    gsap.set(el, { opacity: 0 });
+  });
   const timer = setTimeout(() => {
     document.querySelectorAll<HTMLElement>(".anim-hero-count").forEach((el) => {
       const target = parseFloat(el.dataset.target ?? "0");
       const counter = { val: 0 };
-      gsap.set(el, { opacity: 0 });
       gsap.to(el, { opacity: 1, duration: 0.15, ease: "none" });
       gsap.to(counter, {
         val: target,

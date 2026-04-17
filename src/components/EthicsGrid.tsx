@@ -9,6 +9,11 @@
  * On cursor  : two nearest crosshairs within 120px pulse (scale 1→1.6,
  *              color #444444→#F26C0D) via GSAP quickTo
  * Reduced motion: static grid at full opacity, no cursor effect, no draw-in
+ *
+ * Architecture note: the canvas fills with a #0D1117→#0F0A1F gradient each
+ * frame so it acts as the page's background layer, not a transparent overlay.
+ * Grid lines are always visible regardless of what page elements do with their
+ * own backgrounds.
  */
 
 import { useEffect, useRef } from "react";
@@ -19,14 +24,11 @@ import gsap from "gsap";
 const COLS = 12;
 const ROWS = 8;
 
-// Extra rows drawn above the viewport to prevent gaps during parallax.
-// At 0.15× factor, 10 extra rows covers ~10 × (vh/8) / 0.15 ≈ 8× viewport
-// heights of scroll — enough for any portfolio page length.
+// Extra rows above/below viewport prevent blank edges during parallax scroll.
+// 10 rows above covers ~10 × (vh/8) / 0.15 ≈ 8 viewport heights of scroll.
 const EXTRA_ABOVE = 10;
 const EXTRA_BELOW = 2;
 
-// Crosshair grid positions as exact col/row intersection fractions.
-// Chosen to land near the four main section anchor points.
 const CROSSHAIR_DEFS = [
   { cf: 3 / COLS,  rf: 2 / ROWS },   // hero — left
   { cf: 9 / COLS,  rf: 2 / ROWS },   // hero — right
@@ -34,17 +36,17 @@ const CROSSHAIR_DEFS = [
   { cf: 10 / COLS, rf: 7 / ROWS },   // contact zone
 ] as const;
 
-const PROXIMITY_RADIUS = 120; // px — cursor distance to activate a crosshair
-const ARM_BASE = 8;           // px — crosshair arm length at scale 1
+const PROXIMITY_RADIUS = 120; // px — cursor distance to activate
+const ARM_BASE = 8;           // px — crosshair arm at scale 1
 const ACTIVE_SCALE = 1.6;
 
-// ── Color helpers ────────────────────────────────────────────────────────────
+// ── Color helper ─────────────────────────────────────────────────────────────
 
-// t=0 → #444444 (cold grey),  t=1 → #F26C0D (orange)
+// t=0 → #C0BAB3 (warm neutral grey)   t=1 → #F26C0D (orange)
 function lerpColor(t: number): string {
-  const r = Math.round(0x44 + (0xf2 - 0x44) * t);
-  const g = Math.round(0x44 + (0x6c - 0x44) * t);
-  const b = Math.round(0x44 + (0x0d - 0x44) * t);
+  const r = Math.round(0xC0 + (0xf2 - 0xC0) * t);
+  const g = Math.round(0xBA + (0x6c - 0xBA) * t);
+  const b = Math.round(0xB3 + (0x0d - 0xB3) * t);
   return `rgb(${r},${g},${b})`;
 }
 
@@ -56,21 +58,20 @@ export default function EthicsGrid() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+
+    // Non-null assertion: getContext("2d") always succeeds on a real canvas element.
+    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // ── Mutable state (read each rAF frame) ─────────────────────────────────
+    // ── Mutable state — mutated by GSAP / events, read each rAF tick ─────────
     const prog = { h: reduced ? 1 : 0, v: reduced ? 1 : 0 };
     let scrollY = 0;
     let cellW = 0;
     let cellH = 0;
     let rafId = 0;
 
-    // ── Crosshair proxies ───────────────────────────────────────────────────
-    // GSAP animates `proxy.color` (0→1) and `proxy.scale` (1→ACTIVE_SCALE).
-    // The rAF loop reads these values each frame when drawing.
+    // ── Per-crosshair animated proxies ───────────────────────────────────────
     const crosshairs = CROSSHAIR_DEFS.map(({ cf, rf }) => ({
       cf,
       rf,
@@ -82,49 +83,50 @@ export default function EthicsGrid() {
 
     if (!reduced) {
       for (const ch of crosshairs) {
-        ch.quickColor = gsap.quickTo(ch.proxy, "color", {
-          duration: 0.4,
-          ease: "power2.out",
-        });
-        ch.quickScale = gsap.quickTo(ch.proxy, "scale", {
-          duration: 0.25,
-          ease: "power2.out",
-        });
+        ch.quickColor = gsap.quickTo(ch.proxy, "color", { duration: 0.4, ease: "power2.out" });
+        ch.quickScale = gsap.quickTo(ch.proxy, "scale", { duration: 0.25, ease: "power2.out" });
       }
     }
 
-    // ── Resize ──────────────────────────────────────────────────────────────
-    function resize() {
+    // ── Arrow functions inherit the narrowed canvas / ctx from the closure ────
+
+    const resize = () => {
       const dpr = Math.min(window.devicePixelRatio, 2);
       const W = window.innerWidth;
       const H = window.innerHeight;
-      canvas.width = W * dpr;
+      canvas.width  = W * dpr;
       canvas.height = H * dpr;
-      canvas.style.width = `${W}px`;
+      canvas.style.width  = `${W}px`;
       canvas.style.height = `${H}px`;
       cellW = W / COLS;
       cellH = H / ROWS;
-    }
+    };
 
-    // ── Draw loop ────────────────────────────────────────────────────────────
-    function draw() {
+    const draw = () => {
       const W = window.innerWidth;
       const H = window.innerHeight;
       const dpr = Math.min(window.devicePixelRatio, 2);
       const parallaxY = -scrollY * 0.15;
 
-      // Clear using physical pixel dimensions (before any transform)
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       ctx.save();
-      ctx.scale(dpr, dpr);       // work in logical (CSS) pixel space
-      ctx.translate(0, parallaxY); // scroll parallax
+      ctx.scale(dpr, dpr); // logical (CSS) pixel space
 
-      // ── Grid lines ─────────────────────────────────────────────────────
-      ctx.strokeStyle = "rgba(255,255,255,0.025)";
-      ctx.lineWidth = 0.5;
+      // ── Background ────────────────────────────────────────────────────────
+      // Radial depth: slightly warmer at the optical centre (where the eye
+      // rests on the hero), cooler at the edges — warm parchment light-mode.
+      const bg = ctx.createRadialGradient(W / 2, H * 0.38, 0, W / 2, H * 0.38, Math.max(W, H) * 0.9);
+      bg.addColorStop(0, "#F0ECE6"); // warm centre
+      bg.addColorStop(1, "#F5F2ED"); // cool-light edges
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
 
-      // Horizontal: draw from x=0 to x=W*prog.h (wipe left→right)
+      ctx.translate(0, parallaxY); // scroll parallax (applied after bg fill)
+
+      // ── Grid lines ────────────────────────────────────────────────────────
+      ctx.strokeStyle = "rgba(26,20,16,0.07)"; // subtle dark lines on light
+      ctx.lineWidth = 1;
+
+      // Horizontal — wipe left→right via prog.h
       const hRight = W * prog.h;
       for (let r = -EXTRA_ABOVE; r <= ROWS + EXTRA_BELOW; r++) {
         const y = r * cellH;
@@ -134,8 +136,8 @@ export default function EthicsGrid() {
         ctx.stroke();
       }
 
-      // Vertical: draw from yTop to yTop + totalHeight*prog.v (wipe top→bottom)
-      const yTop = -EXTRA_ABOVE * cellH;
+      // Vertical — wipe top→bottom via prog.v
+      const yTop   = -EXTRA_ABOVE * cellH;
       const totalH = (ROWS + EXTRA_ABOVE + EXTRA_BELOW) * cellH;
       for (let c = 0; c <= COLS; c++) {
         const x = c * cellW;
@@ -145,10 +147,10 @@ export default function EthicsGrid() {
         ctx.stroke();
       }
 
-      // ── Crosshairs ─────────────────────────────────────────────────────
+      // ── Crosshairs ────────────────────────────────────────────────────────
       for (const ch of crosshairs) {
-        const x = ch.cf * W;
-        const y = ch.rf * H;
+        const x   = ch.cf * W;
+        const y   = ch.rf * H;
         const arm = ARM_BASE * ch.proxy.scale;
 
         ctx.strokeStyle = lerpColor(ch.proxy.color);
@@ -168,26 +170,23 @@ export default function EthicsGrid() {
       ctx.restore();
 
       rafId = requestAnimationFrame(draw);
-    }
+    };
 
-    // ── Event handlers ───────────────────────────────────────────────────────
-    function onScroll() {
+    const onScroll = () => {
       scrollY = Math.max(0, window.scrollY);
-    }
+    };
 
-    function onMouseMove(e: MouseEvent) {
+    const onMouseMove = (e: MouseEvent) => {
       if (reduced) return;
 
       const W = window.innerWidth;
       const H = window.innerHeight;
       const parallaxY = -scrollY * 0.15;
 
-      // Rank crosshairs by distance to cursor (accounting for parallax offset)
       const ranked = crosshairs
         .map((ch) => {
           const cx = ch.cf * W;
-          // Crosshair's screen-space y shifts with parallax
-          const cy = ch.rf * H + parallaxY;
+          const cy = ch.rf * H + parallaxY; // screen-space y of crosshair
           return { ch, dist: Math.hypot(e.clientX - cx, e.clientY - cy) };
         })
         .sort((a, b) => a.dist - b.dist);
@@ -200,31 +199,29 @@ export default function EthicsGrid() {
           ch.quickScale?.(nowActive ? ACTIVE_SCALE : 1);
         }
       });
-    }
+    };
 
-    // ── Bootstrap ────────────────────────────────────────────────────────────
+    // ── Bootstrap ─────────────────────────────────────────────────────────────
     resize();
     draw();
 
-    window.addEventListener("resize", resize);
-    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize",    resize);
+    window.addEventListener("scroll",    onScroll,    { passive: true });
     window.addEventListener("mousemove", onMouseMove);
 
     if (!reduced) {
-      gsap.to(prog, { h: 1, duration: 1.2, ease: "power3.out", delay: 0.2 });
+      gsap.to(prog, { h: 1, duration: 1.2, ease: "power3.out", delay: 0.2  });
       gsap.to(prog, { v: 1, duration: 1.2, ease: "power3.out", delay: 0.35 });
     }
 
-    // ── Cleanup ──────────────────────────────────────────────────────────────
+    // ── Cleanup ───────────────────────────────────────────────────────────────
     return () => {
       cancelAnimationFrame(rafId);
-      window.removeEventListener("resize", resize);
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize",    resize);
+      window.removeEventListener("scroll",    onScroll);
       window.removeEventListener("mousemove", onMouseMove);
       gsap.killTweensOf(prog);
-      for (const ch of crosshairs) {
-        gsap.killTweensOf(ch.proxy);
-      }
+      for (const ch of crosshairs) gsap.killTweensOf(ch.proxy);
     };
   }, []);
 
