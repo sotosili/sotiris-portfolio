@@ -5,10 +5,10 @@
  * WCAG 2.1 AA — non-negotiable
  */
 
-import { useEffect } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
-import { setupScrollAnimations, setupHeroCounters } from "../utils/animations";
+import { setupScrollAnimations, setupHeroCounters, setupPageEntry, navigateWithTransition } from "../utils/animations";
 import Footer from "./Footer";
 
 // ── Data ─────────────────────────────────────────────────────────
@@ -90,6 +90,7 @@ const RESULTS = [
 
 export default function CaseStudyVelocity() {
   const shouldReduceMotion = useReducedMotion();
+  const rootRef = useRef<HTMLDivElement>(null);
 
   // Scroll to top
   useEffect(() => {
@@ -98,6 +99,14 @@ export default function CaseStudyVelocity() {
       window.history.scrollRestoration = "manual";
     }
   }, []);
+
+  // Hero entry — coordinates with page-entry overlay reveal
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setupPageEntry(rootRef.current, shouldReduceMotion ?? false);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [shouldReduceMotion]);
 
   // Unified GSAP scroll animations
   useEffect(() => {
@@ -118,7 +127,7 @@ export default function CaseStudyVelocity() {
   }, [shouldReduceMotion]);
 
   return (
-    <div className="relative z-[1] text-[#1A1410] min-h-screen overflow-x-hidden selection:bg-[#F26C0D]/20">
+    <div ref={rootRef} className="relative z-[1] text-[#1A1410] min-h-screen overflow-x-hidden selection:bg-[#F26C0D]/20">
       {/* Skip link */}
       <a
         href="#main"
@@ -149,6 +158,7 @@ export default function CaseStudyVelocity() {
       >
         <a
           href="/"
+          onClick={(e) => navigateWithTransition("/", e)}
           className="font-serif text-2xl font-bold tracking-tighter text-white hover:text-[#F26C0D] transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
           aria-label="Sotiris Iliadis — home"
         >
@@ -156,6 +166,7 @@ export default function CaseStudyVelocity() {
         </a>
         <a
           href="/#work"
+          onClick={(e) => navigateWithTransition("/#work", e)}
           className="group flex items-center gap-2.5 text-[10px] tracking-[0.35em] uppercase font-bold text-white/70 hover:text-white transition-colors duration-300 min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           <ArrowLeft
@@ -178,18 +189,13 @@ export default function CaseStudyVelocity() {
           <img
             src="/images/velocity-mockup.png"
             alt=""
-            className="w-full h-full object-cover"
+            className="hero-bg-img w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0D1117] via-[#0D1117]/60 to-[#0D1117]/20" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0D1117]/50 to-transparent" />
         </div>
 
-        <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-          className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full"
-        >
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full">
           {/* Eyebrow */}
           <p className="text-[10px] font-bold tracking-[0.5em] uppercase text-[#F26C0D] mb-8">
             Case Study — 2026
@@ -236,7 +242,7 @@ export default function CaseStudyVelocity() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </header>
 
       <main id="main">
@@ -557,6 +563,7 @@ export default function CaseStudyVelocity() {
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-8">
           <a
             href="/work/gmap"
+            onClick={(e) => navigateWithTransition("/work/gmap", e)}
             className="group flex items-center gap-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F26C0D]"
             aria-label="Previous case study: G-MAP"
           >
@@ -572,6 +579,7 @@ export default function CaseStudyVelocity() {
           </a>
           <a
             href="/work/coffee-world"
+            onClick={(e) => navigateWithTransition("/work/coffee-world", e)}
             className="group flex items-center gap-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F26C0D]"
             aria-label="Next case study: Coffee World"
           >
