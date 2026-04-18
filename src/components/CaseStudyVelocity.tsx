@@ -399,12 +399,23 @@ export default function CaseStudyVelocity() {
           <figure className="mt-16 md:mt-24 anim-fade-up" aria-label="Field testing evidence">
             <div className="grid grid-cols-1 md:grid-cols-[5fr_7fr] items-stretch border border-[#D4CFC8]">
               {/* Portrait photo — full device-in-hand visible */}
-              <div className="relative overflow-hidden bg-[#EDE9E3] aspect-[3/4] md:aspect-auto">
+              <div className="relative overflow-hidden bg-[#1A1410] aspect-[3/4] md:aspect-auto">
                 <img
                   src="/images/case-studies/velocity-testing.png"
                   alt="Velocity usability testing — participants George and Alex reviewing the transfer flow"
-                  className="absolute inset-0 w-full h-full object-cover object-center"
+                  className="absolute inset-0 w-full h-full object-cover grayscale contrast-[1.25] brightness-75"
+                  style={{ objectPosition: "50% 65%" }}
                   loading="lazy"
+                />
+                {/* Film grain — makes candid photography read as intentional documentary */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+                    opacity: 0.08,
+                    mixBlendMode: "overlay" as const,
+                  }}
+                  aria-hidden="true"
                 />
                 <div className="absolute bottom-0 left-0 w-px h-12 bg-[#F26C0D]" aria-hidden="true" />
                 <div className="absolute bottom-0 left-0 w-12 h-px bg-[#F26C0D]" aria-hidden="true" />

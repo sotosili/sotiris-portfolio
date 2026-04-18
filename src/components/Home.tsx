@@ -499,6 +499,7 @@ export default function Home() {
 
   const workSectionRef = useRef<HTMLElement>(null);
   const workTrackRef = useRef<HTMLDivElement>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
 
   const [activeSection, setActiveSection] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
@@ -597,10 +598,15 @@ export default function Home() {
           trigger: section,
           start: "top top",
           end: () => `+=${track.scrollWidth - window.innerWidth}`,
-          scrub: 1,
+          scrub: 0.4,
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            if (progressBarRef.current) {
+              gsap.set(progressBarRef.current, { scaleX: self.progress });
+            }
+          },
         },
       });
     });
@@ -751,67 +757,67 @@ export default function Home() {
           {/* ════════════════════════════════════════════════════
               01 — WORK
           ════════════════════════════════════════════════════ */}
+
+          {/* Heading — normal flow, above the pinned gallery */}
+          <div className="relative pt-24 md:pt-36 pb-12 md:pb-16 px-6 md:px-12 max-w-7xl mx-auto">
+            <div
+              className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-[#1A1410]/[0.06] leading-none select-none pointer-events-none"
+              style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
+              aria-hidden="true"
+            >
+              01
+            </div>
+            <motion.div
+              initial={shouldReduceMotion ? "visible" : "hidden"}
+              whileInView="visible"
+              viewport={{ once: true, margin: "-8%" }}
+              variants={stagger}
+            >
+              <motion.div variants={fadeUp} className="flex items-center gap-4 mb-5">
+                <span className="h-px w-10 bg-[#F26C0D]/50" aria-hidden="true" />
+                <span className="text-[#F26C0D] text-[10px] font-geist font-bold tracking-[0.45em] uppercase" aria-hidden="true">
+                  01
+                </span>
+              </motion.div>
+              <motion.h2
+                id="work-heading"
+                variants={fadeUp}
+                className="font-serif font-light leading-[0.88] tracking-tighter text-[#1A1410]"
+                style={{ fontSize: "clamp(44px, 6vw, 80px)" }}
+              >
+                Selected
+                <br />
+                <span className="italic text-[#1A1410]/40">Work</span>
+              </motion.h2>
+            </motion.div>
+          </div>
+
+          {/* Pinned horizontal gallery — h-screen, cards fill full height */}
           <section
             ref={workSectionRef}
             id="work"
-            className="relative overflow-hidden py-24 md:py-36"
+            className="relative h-screen overflow-hidden"
             aria-labelledby="work-heading"
           >
-            {/* Heading + ghost num — constrained width */}
-            <div className="relative px-6 md:px-12 max-w-7xl mx-auto">
-              {/* Somoza ghost watermark */}
-              <div
-                className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-[#1A1410]/[0.06] leading-none select-none pointer-events-none"
-                style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
-                aria-hidden="true"
-              >
-                01
-              </div>
-              <motion.div
-                initial={shouldReduceMotion ? "visible" : "hidden"}
-                whileInView="visible"
-                viewport={{ once: true, margin: "-8%" }}
-                variants={stagger}
-                className="mb-16 md:mb-20"
-              >
-                <motion.div variants={fadeUp} className="flex items-center gap-4 mb-5">
-                  <span className="h-px w-10 bg-[#F26C0D]/50" aria-hidden="true" />
-                  <span className="text-[#F26C0D] text-[10px] font-geist font-bold tracking-[0.45em] uppercase" aria-hidden="true">
-                    01
-                  </span>
-                </motion.div>
-                <motion.h2
-                  id="work-heading"
-                  variants={fadeUp}
-                  className="font-serif font-light leading-[0.88] tracking-tighter text-[#1A1410]"
-                  style={{ fontSize: "clamp(44px, 6vw, 80px)" }}
-                >
-                  Selected
-                  <br />
-                  <span className="italic text-[#1A1410]/40">Work</span>
-                </motion.h2>
-              </motion.div>
-            </div>
-
-            {/* Horizontal scroll track — stacks vertically on mobile, horizontal on desktop */}
+            {/* Card track — flex-col on mobile, flex-row scrub on desktop */}
             <div
               ref={workTrackRef}
-              className="flex flex-col md:flex-row gap-6 px-6 md:pl-12 md:pr-0"
+              className="flex flex-col md:flex-row h-full gap-6 px-6 md:pl-12 md:pr-0 py-6 md:py-8"
             >
               {/* Coffee World — wide card */}
               {PROJECTS.filter((p) => p.full).map((project) => (
-                <article key={project.title} className="group anim-fade-up w-full md:flex-shrink-0 md:w-[78vw]">
+                <article key={project.title} className="group w-full md:flex-shrink-0 md:w-[80vw]">
                   <a
                     href={project.link}
                     onClick={(e) => navigateWithTransition(project.link, e)}
                     className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F26C0D]"
                     aria-label={`${project.title} — ${project.description} View case study`}
                   >
-                    <div className="relative aspect-[21/9] bg-[#EDE9E3] overflow-hidden ring-1 ring-[#1A1410]/[0.06] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
+                    <div className="relative h-[68vh] bg-[#EDE9E3] overflow-hidden ring-1 ring-[#1A1410]/[0.06] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
                       <img
                         src={project.image}
                         alt=""
-                        className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.02] grayscale group-hover:grayscale-0"
+                        className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.02] grayscale group-hover:grayscale-0"
                         loading="lazy"
                       />
                       <div
@@ -824,7 +830,7 @@ export default function Home() {
                         </span>
                       </div>
                     </div>
-                    <div className="flex items-start justify-between mt-5 gap-4 flex-wrap">
+                    <div className="flex items-start justify-between mt-4 gap-4 flex-wrap">
                       <div>
                         <h3 className="font-serif text-xl font-light text-[#1A1410] group-hover:text-[#F26C0D] transition-colors duration-300 leading-none mb-2">
                           {project.title}
@@ -850,18 +856,18 @@ export default function Home() {
 
               {/* G-MAP + Velocity — narrower cards */}
               {PROJECTS.filter((p) => !p.full).map((project) => (
-                <article key={project.title} className="group anim-fade-up w-full md:flex-shrink-0 md:w-[52vw]">
+                <article key={project.title} className="group w-full md:flex-shrink-0 md:w-[58vw]">
                   <a
                     href={project.link}
                     onClick={(e) => navigateWithTransition(project.link, e)}
                     className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F26C0D]"
                     aria-label={`${project.title} — ${project.description} View case study`}
                   >
-                    <div className="relative aspect-[4/3] bg-[#EDE9E3] overflow-hidden ring-1 ring-[#1A1410]/[0.06] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
+                    <div className="relative h-[68vh] bg-[#EDE9E3] overflow-hidden ring-1 ring-[#1A1410]/[0.06] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
                       <img
                         src={project.image}
                         alt=""
-                        className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.02] grayscale group-hover:grayscale-0"
+                        className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.02] grayscale group-hover:grayscale-0"
                         loading="lazy"
                       />
                       <div
@@ -896,8 +902,17 @@ export default function Home() {
                 </article>
               ))}
 
-              {/* Trailing spacer so last card clears viewport edge */}
+              {/* Trailing spacer */}
               <div className="hidden md:block flex-shrink-0 w-12" aria-hidden="true" />
+            </div>
+
+            {/* Orange scroll progress bar — bottom edge of pinned section */}
+            <div className="absolute bottom-0 left-0 h-[2px] w-full bg-[#F26C0D]/15" aria-hidden="true">
+              <div
+                ref={progressBarRef}
+                className="h-full bg-[#F26C0D] origin-left"
+                style={{ transform: "scaleX(0)" }}
+              />
             </div>
           </section>
 
