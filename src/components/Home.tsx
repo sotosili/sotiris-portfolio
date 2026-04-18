@@ -497,6 +497,9 @@ const Pill = ({ label }: { label: string }) => (
 export default function Home() {
   const shouldReduceMotion = useReducedMotion();
 
+  const workSectionRef = useRef<HTMLElement>(null);
+  const workTrackRef = useRef<HTMLDivElement>(null);
+
   const [activeSection, setActiveSection] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -577,6 +580,31 @@ export default function Home() {
       clearTimeout(timer);
       cleanup?.();
     };
+  }, [shouldReduceMotion]);
+
+  // Horizontal scroll scrub — Work section (desktop only)
+  useEffect(() => {
+    if (shouldReduceMotion) return;
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 768px)", () => {
+      const section = workSectionRef.current;
+      const track = workTrackRef.current;
+      if (!section || !track) return;
+      gsap.to(track, {
+        x: () => -(track.scrollWidth - window.innerWidth),
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${track.scrollWidth - window.innerWidth}`,
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+    });
+    return () => mm.revert();
   }, [shouldReduceMotion]);
 
   // Logo reveal on hover
@@ -724,54 +752,61 @@ export default function Home() {
               01 — WORK
           ════════════════════════════════════════════════════ */}
           <section
+            ref={workSectionRef}
             id="work"
-            className="relative overflow-hidden py-24 md:py-36 px-6 md:px-12 max-w-7xl mx-auto"
+            className="relative overflow-hidden py-24 md:py-36"
             aria-labelledby="work-heading"
           >
-            {/* Somoza ghost watermark */}
-            <div
-              className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-[#1A1410]/[0.06] leading-none select-none pointer-events-none"
-              style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
-              aria-hidden="true"
-            >
-              01
-            </div>
-            <motion.div
-              initial={shouldReduceMotion ? "visible" : "hidden"}
-              whileInView="visible"
-              viewport={{ once: true, margin: "-8%" }}
-              variants={stagger}
-              className="mb-16 md:mb-20"
-            >
-              <motion.div variants={fadeUp} className="flex items-center gap-4 mb-5">
-                <span className="h-px w-10 bg-[#F26C0D]/50" aria-hidden="true" />
-                <span className="text-[#F26C0D] text-[10px] font-geist font-bold tracking-[0.45em] uppercase" aria-hidden="true">
-                  01
-                </span>
-              </motion.div>
-              <motion.h2
-                id="work-heading"
-                variants={fadeUp}
-                className="font-serif font-light leading-[0.88] tracking-tighter text-[#1A1410]"
-                style={{ fontSize: "clamp(44px, 6vw, 80px)" }}
+            {/* Heading + ghost num — constrained width */}
+            <div className="relative px-6 md:px-12 max-w-7xl mx-auto">
+              {/* Somoza ghost watermark */}
+              <div
+                className="absolute -top-6 -left-4 md:-left-10 font-serif font-black text-[#1A1410]/[0.06] leading-none select-none pointer-events-none"
+                style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
+                aria-hidden="true"
               >
-                Selected
-                <br />
-                <span className="italic text-[#1A1410]/40">Work</span>
-              </motion.h2>
-            </motion.div>
+                01
+              </div>
+              <motion.div
+                initial={shouldReduceMotion ? "visible" : "hidden"}
+                whileInView="visible"
+                viewport={{ once: true, margin: "-8%" }}
+                variants={stagger}
+                className="mb-16 md:mb-20"
+              >
+                <motion.div variants={fadeUp} className="flex items-center gap-4 mb-5">
+                  <span className="h-px w-10 bg-[#F26C0D]/50" aria-hidden="true" />
+                  <span className="text-[#F26C0D] text-[10px] font-geist font-bold tracking-[0.45em] uppercase" aria-hidden="true">
+                    01
+                  </span>
+                </motion.div>
+                <motion.h2
+                  id="work-heading"
+                  variants={fadeUp}
+                  className="font-serif font-light leading-[0.88] tracking-tighter text-[#1A1410]"
+                  style={{ fontSize: "clamp(44px, 6vw, 80px)" }}
+                >
+                  Selected
+                  <br />
+                  <span className="italic text-[#1A1410]/40">Work</span>
+                </motion.h2>
+              </motion.div>
+            </div>
 
-            <div className="space-y-6">
-              {/* Full-width Coffee World */}
+            {/* Horizontal scroll track — stacks vertically on mobile, horizontal on desktop */}
+            <div
+              ref={workTrackRef}
+              className="flex flex-col md:flex-row gap-6 px-6 md:pl-12 md:pr-0"
+            >
+              {/* Coffee World — wide card */}
               {PROJECTS.filter((p) => p.full).map((project) => (
-                <article key={project.title} className="group anim-fade-up">
+                <article key={project.title} className="group anim-fade-up w-full md:flex-shrink-0 md:w-[78vw]">
                   <a
                     href={project.link}
                     onClick={(e) => navigateWithTransition(project.link, e)}
                     className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F26C0D]"
                     aria-label={`${project.title} — ${project.description} View case study`}
                   >
-                    {/* Image */}
                     <div className="relative aspect-[21/9] bg-[#EDE9E3] overflow-hidden ring-1 ring-[#1A1410]/[0.06] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
                       <img
                         src={project.image}
@@ -779,7 +814,6 @@ export default function Home() {
                         className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.02] grayscale group-hover:grayscale-0"
                         loading="lazy"
                       />
-                      {/* Hover overlay — subtle warm tint, not dominating */}
                       <div
                         className="absolute inset-0 bg-[#F26C0D]/0 group-hover:bg-[#F26C0D]/[0.08] transition-all duration-500 flex items-center justify-center"
                         aria-hidden="true"
@@ -790,8 +824,6 @@ export default function Home() {
                         </span>
                       </div>
                     </div>
-
-                    {/* Meta row */}
                     <div className="flex items-start justify-between mt-5 gap-4 flex-wrap">
                       <div>
                         <h3 className="font-serif text-xl font-light text-[#1A1410] group-hover:text-[#F26C0D] transition-colors duration-300 leading-none mb-2">
@@ -816,56 +848,56 @@ export default function Home() {
                 </article>
               ))}
 
-              {/* Half-width G-MAP + Velocity */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {PROJECTS.filter((p) => !p.full).map((project) => (
-                  <article key={project.title} className="group anim-fade-up">
-                    <a
-                      href={project.link}
-                      onClick={(e) => navigateWithTransition(project.link, e)}
-                      className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F26C0D]"
-                      aria-label={`${project.title} — ${project.description} View case study`}
-                    >
-                      <div className="relative aspect-[4/3] bg-[#EDE9E3] overflow-hidden ring-1 ring-[#1A1410]/[0.06] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
-                        <img
-                          src={project.image}
-                          alt=""
-                          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.02] grayscale group-hover:grayscale-0"
-                          loading="lazy"
-                        />
-                        <div
-                          className="absolute inset-0 bg-[#F26C0D]/0 group-hover:bg-[#F26C0D]/[0.08] transition-all duration-500 flex items-center justify-center"
-                          aria-hidden="true"
-                        >
-                          <span className="bg-[#1A1410]/80 px-5 py-2.5 text-white text-[10px] font-geist font-bold tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-3">
-                            View Case Study
-                            <ArrowRight className="w-4 h-4" />
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="mt-4 flex items-start justify-between gap-4">
-                        <div>
-                          <h3 className="font-serif text-xl font-light text-[#1A1410] group-hover:text-[#F26C0D] transition-colors duration-300 leading-none mb-2">
-                            {project.title}
-                          </h3>
-                          <p className="font-geist text-sm font-light text-[#6B6560]">
-                            {project.description}
-                          </p>
-                        </div>
-                        <span className="text-[10px] font-geist font-bold text-[#F26C0D] tracking-[0.35em] uppercase flex-shrink-0">
-                          {project.year}
+              {/* G-MAP + Velocity — narrower cards */}
+              {PROJECTS.filter((p) => !p.full).map((project) => (
+                <article key={project.title} className="group anim-fade-up w-full md:flex-shrink-0 md:w-[52vw]">
+                  <a
+                    href={project.link}
+                    onClick={(e) => navigateWithTransition(project.link, e)}
+                    className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F26C0D]"
+                    aria-label={`${project.title} — ${project.description} View case study`}
+                  >
+                    <div className="relative aspect-[4/3] bg-[#EDE9E3] overflow-hidden ring-1 ring-[#1A1410]/[0.06] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
+                      <img
+                        src={project.image}
+                        alt=""
+                        className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.02] grayscale group-hover:grayscale-0"
+                        loading="lazy"
+                      />
+                      <div
+                        className="absolute inset-0 bg-[#F26C0D]/0 group-hover:bg-[#F26C0D]/[0.08] transition-all duration-500 flex items-center justify-center"
+                        aria-hidden="true"
+                      >
+                        <span className="bg-[#1A1410]/80 px-5 py-2.5 text-white text-[10px] font-geist font-bold tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-3">
+                          View Case Study
+                          <ArrowRight className="w-4 h-4" />
                         </span>
                       </div>
-                      <div className="flex gap-2 mt-3 flex-wrap transition-all duration-400 translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                        {project.metrics.map((m) => (
-                          <Pill key={m} label={m} />
-                        ))}
+                    </div>
+                    <div className="mt-4 flex items-start justify-between gap-4">
+                      <div>
+                        <h3 className="font-serif text-xl font-light text-[#1A1410] group-hover:text-[#F26C0D] transition-colors duration-300 leading-none mb-2">
+                          {project.title}
+                        </h3>
+                        <p className="font-geist text-sm font-light text-[#6B6560]">
+                          {project.description}
+                        </p>
                       </div>
-                    </a>
-                  </article>
-                ))}
-              </div>
+                      <span className="text-[10px] font-geist font-bold text-[#F26C0D] tracking-[0.35em] uppercase flex-shrink-0">
+                        {project.year}
+                      </span>
+                    </div>
+                    <div className="flex gap-2 mt-3 flex-wrap transition-all duration-400 translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                      {project.metrics.map((m) => (
+                        <Pill key={m} label={m} />
+                      ))}
+                    </div>
+                  </a>
+                </article>
+              ))}
+
+              {/* Trailing spacer so last card clears viewport edge */}
+              <div className="hidden md:block flex-shrink-0 w-12" aria-hidden="true" />
             </div>
           </section>
 
