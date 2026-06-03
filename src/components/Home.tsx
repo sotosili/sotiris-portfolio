@@ -245,27 +245,27 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
       >
         <span
           className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter text-[#1A1410]"
-          style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
+          style={{ fontSize: "clamp(44px, 10vw, 140px)" }}
         >
           AI
         </span>
         <span
           className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter italic text-[#F26C0D]"
-          style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
+          style={{ fontSize: "clamp(44px, 10vw, 140px)" }}
         >
           Ethical
         </span>
         <span
           className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter text-[#1A1410]"
-          style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
+          style={{ fontSize: "clamp(44px, 10vw, 140px)" }}
         >
           Designer.
         </span>
       </div>
 
-      {/* Level 1: Photo — right half, natural proportions, no crop */}
+      {/* Level 1: Photo — right half on desktop, top band on mobile */}
       <div
-        className="animate-photo absolute top-0 right-0 bottom-0 w-full md:w-[55%] z-10 pointer-events-none"
+        className="animate-photo relative md:absolute md:top-0 md:right-0 md:bottom-0 w-full md:w-[55%] h-[40vh] md:h-auto z-10 pointer-events-none"
         aria-hidden="true"
       >
         <img
@@ -294,8 +294,7 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
       {/* Levels 2–4: Text — generous left column */}
       <div
         ref={contentRef}
-        className="relative z-20 min-h-screen flex flex-col justify-center px-8 md:px-16 lg:px-24 pt-28 pb-24 md:min-w-[380px]"
-        style={{ maxWidth: "min(60%, 760px)" }}
+        className="relative z-20 md:min-h-screen flex flex-col justify-center px-8 md:px-16 lg:px-24 pt-10 pb-20 md:pt-28 md:pb-24 md:min-w-[380px] max-w-full md:max-w-[min(60%,760px)]"
       >
         {/* Eyebrow */}
         <p className="animate-subtitle text-[10px] font-geist font-bold tracking-[0.5em] uppercase text-[#6B6560] mb-8">
@@ -306,7 +305,7 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
         <div ref={headingRef} className="animate-heading">
           <h1
             className="font-serif font-bold leading-[0.86] tracking-tighter"
-            style={{ fontSize: "clamp(72px, 10vw, 140px)" }}
+            style={{ fontSize: "clamp(44px, 10vw, 140px)" }}
           >
             <span className="block text-[#1A1410]">AI</span>
             <span className="block text-[#F26C0D] italic">Ethical</span>
@@ -355,7 +354,7 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
         {/* Scroll indicator */}
         {!shouldReduceMotion && (
           <div
-            className="animate-scroll absolute bottom-10 left-8 md:left-16 lg:left-24 flex items-center gap-3"
+            className="animate-scroll absolute bottom-10 left-8 md:left-16 lg:left-24 hidden md:flex items-center gap-3"
             aria-hidden="true"
           >
             <div className="h-10 w-px bg-[#1A1410]/15 overflow-hidden">
@@ -372,10 +371,15 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
         )}
       </div>
 
-      {/* Mobile: photo below fold — pull it behind the text on small screens */}
+      {/* Mobile: photo becomes a top band — cover-crop with a clean bottom fade */}
       <style>{`
         @media (max-width: 767px) {
-          .hero-photo-mobile { position: relative !important; width: 100% !important; height: 55vw !important; }
+          .hero-photo-img {
+            object-fit: cover !important;
+            object-position: top center !important;
+            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%) !important;
+            mask-image: linear-gradient(to bottom, black 60%, transparent 100%) !important;
+          }
         }
       `}</style>
     </section>
