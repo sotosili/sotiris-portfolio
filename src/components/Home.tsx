@@ -796,17 +796,17 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* Pinned horizontal gallery — h-screen, cards fill full height */}
+          {/* Pinned horizontal gallery on desktop; natural vertical stack on mobile */}
           <section
             ref={workSectionRef}
             id="work"
-            className="relative h-screen overflow-hidden"
+            className="relative md:h-screen md:overflow-hidden"
             aria-labelledby="work-heading"
           >
             {/* Card track — flex-col on mobile, flex-row scrub on desktop */}
             <div
               ref={workTrackRef}
-              className="flex flex-col md:flex-row h-full gap-6 px-6 md:pl-12 md:pr-0 py-6 md:py-8"
+              className="flex flex-col md:flex-row md:h-full gap-6 px-6 md:pl-12 md:pr-0 py-6 md:py-8"
             >
               {/* Coffee World — wide card */}
               {PROJECTS.filter((p) => p.full).map((project) => (
@@ -817,7 +817,7 @@ export default function Home() {
                     className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F26C0D]"
                     aria-label={`${project.title} — ${project.description} View case study`}
                   >
-                    <div className="relative h-[68vh] bg-[#EDE9E3] overflow-hidden ring-1 ring-[#1A1410]/[0.06] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
+                    <div className="relative h-[52vh] md:h-[68vh] bg-[#EDE9E3] overflow-hidden ring-1 ring-[#1A1410]/[0.06] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
                       <img
                         src={project.image}
                         alt=""
@@ -867,7 +867,7 @@ export default function Home() {
                     className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F26C0D]"
                     aria-label={`${project.title} — ${project.description} View case study`}
                   >
-                    <div className="relative h-[68vh] bg-[#EDE9E3] overflow-hidden ring-1 ring-[#1A1410]/[0.06] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
+                    <div className="relative h-[52vh] md:h-[68vh] bg-[#EDE9E3] overflow-hidden ring-1 ring-[#1A1410]/[0.06] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
                       <img
                         src={project.image}
                         alt=""
@@ -911,7 +911,7 @@ export default function Home() {
             </div>
 
             {/* Orange scroll progress bar — bottom edge of pinned section */}
-            <div className="absolute bottom-0 left-0 h-[2px] w-full bg-[#F26C0D]/15" aria-hidden="true">
+            <div className="absolute bottom-0 left-0 h-[2px] w-full bg-[#F26C0D]/15 hidden md:block" aria-hidden="true">
               <div
                 ref={progressBarRef}
                 className="h-full bg-[#F26C0D] origin-left"
