@@ -244,16 +244,16 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
         aria-hidden="true"
       >
         <span
-          className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter text-[#1A1410]"
+          className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter italic text-[#F26C0D]"
           style={{ fontSize: "clamp(44px, 10vw, 140px)" }}
         >
           AI
         </span>
         <span
-          className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter italic text-[#F26C0D]"
+          className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter text-[#1A1410]"
           style={{ fontSize: "clamp(44px, 10vw, 140px)" }}
         >
-          Ethical
+          Web
         </span>
         <span
           className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter text-[#1A1410]"
@@ -307,8 +307,8 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
             className="font-serif font-bold leading-[0.86] tracking-tighter"
             style={{ fontSize: "clamp(44px, 10vw, 140px)" }}
           >
-            <span className="block text-[#1A1410]">AI</span>
-            <span className="block text-[#F26C0D] italic">Ethical</span>
+            <span className="block text-[#F26C0D] italic">AI</span>
+            <span className="block text-[#1A1410]">Web</span>
             <span className="block text-[#1A1410]">Designer.</span>
           </h1>
         </div>
@@ -320,7 +320,7 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
             <div className="h-px w-6 bg-[#0D5EAF]" />
           </div>
           <p className="font-geist font-light text-sm leading-relaxed text-[#6B6560] max-w-[340px]">
-            Designing human-centered AI experiences.{" "}
+            Designing responsible, accessible AI experiences.{" "}
             <span className="text-[#0D5EAF] font-medium">EU AI Act compliant.</span>
           </p>
         </div>
@@ -1362,7 +1362,7 @@ export default function Home() {
         <footer className="py-7 px-6 border-t border-[#1A1410]/[0.06]">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-[10px] font-geist font-bold uppercase tracking-[0.35em] text-[#6B6560]">
             <p>© 2026 Sotiris Iliadis</p>
-            <p>AI Ethical Designer · Thessaloniki, Greece</p>
+            <p>AI Web Designer · Thessaloniki, Greece</p>
           </div>
         </footer>
       </div>
