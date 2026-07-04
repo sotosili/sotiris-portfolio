@@ -1,0 +1,194 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout
+  title="The accountable layer - Sotiris Iliadis"
+  description="Why I built the Article 50 UI Pattern Kit. The EU AI Act's transparency rules are a design problem, not just a legal one - and the human-accountable layer is interface work."
+>
+  <article class="mx-auto max-w-[680px] px-6 pt-28 pb-24">
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 text-[10px] font-geist font-bold uppercase tracking-[0.3em] text-[#6B6560] hover:text-[#1A1410] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A1410]"
+    >
+      ← Sotiris Iliadis
+    </a>
+
+    <p class="mt-12 text-[10px] font-geist font-bold uppercase tracking-[0.4em] text-[#6B6560]">
+      Essay · 2026
+    </p>
+    <h1 class="mt-4 font-serif font-bold leading-[0.95] tracking-tight text-[#1A1410]" style="font-size: clamp(40px, 7vw, 68px)">
+      The <span class="italic text-[#C85A0C]">accountable</span> layer
+    </h1>
+    <p class="mt-6 font-geist font-light text-lg leading-relaxed text-[#6B6560]">
+      Why I built the Article 50 UI Pattern Kit - and why the EU AI Act's transparency rules are a
+      design problem, not just a legal one.
+    </p>
+    <p class="mt-5 text-[11px] font-geist font-bold uppercase tracking-[0.25em] text-[#6B6560]">
+      By Sotiris Iliadis · 4 min read
+    </p>
+
+    <hr class="mt-8 border-t border-[#1A1410]/10" />
+
+    <div class="prose-body mt-10 font-geist text-[#1A1410]">
+      <p>
+        On 2 August 2026, the transparency rules of the EU AI Act - Article 50 - become enforceable.
+        Most teams I talk to are treating that as a legal problem: a policy to write, a box to tick, a
+        risk for someone else to own. I think that reading is wrong, and I think it is wrong in a way
+        that matters for anyone who designs software.
+      </p>
+      <p>
+        Article 50 does not live in a policy document. It lives in the interface. It is the moment a
+        person needs to know they are talking to an AI and not a human. The moment a piece of content
+        has to be marked as generated. The moment a system that reads emotion has to say so, before it
+        acts. The moment an automated decision still has to pass through a person who can say no. Those
+        are not clauses. They are buttons, labels, notices, and review steps - and someone has to design
+        and build them.
+      </p>
+      <p>
+        So I did. The Article 50 UI Pattern Kit is four accessible React components for the parts of the
+        Act that live in the UI. Open-source, MIT, WCAG 2.1 AA. This is the thinking behind each one,
+        because the decisions are the interesting part.
+      </p>
+
+      <h2>AI disclosure that does not disappear</h2>
+      <p>
+        The easy version of "tell people it is AI" is a toast that shows once and slides away. That
+        fails the moment the user scrolls, refreshes, or arrives mid-conversation. So the disclosure
+        badge is persistent, and the full sentence is always available to a screen reader even when the
+        visible label is shortened to a chip. Meaning never depends on the icon or the colour alone.
+        Disclosure that a blind user cannot reach is not disclosure.
+      </p>
+
+      <h2>A label people and machines can read</h2>
+      <p>
+        Article 50(4) has no transition period for new content, which makes labelling generated media
+        the most time-sensitive pattern in the kit. But a label a human can see is only half the job.
+        The content label is also machine-readable - it carries a data attribute other software can
+        detect - so provenance survives the screenshot, the repost, and the scrape. Visible for people,
+        structured for machines.
+      </p>
+
+      <h2>An emotion notice that keeps its promise</h2>
+      <p>
+        If a system estimates how you feel, you are owed a notice before it acts on you - and the duty
+        to inform does not end the second you dismiss it. So the emotion-recognition notice is a
+        labelled region, never a modal that traps your focus, and when you acknowledge it, it collapses
+        into a small persistent indicator rather than vanishing. You are told, and you stay told.
+      </p>
+
+      <h2>A gate where a human is the final authority</h2>
+      <p>
+        This is the ethical centre of the kit. AI proposes; a named human decides. The review gate holds
+        an AI-suggested action until a person approves, edits, or rejects it. Confidence is shown as a
+        number and a bar - never colour alone - and a low-confidence result is flagged with an icon and
+        the words, so the handoff to human judgement is legible instead of buried under a fluent
+        sentence.
+      </p>
+
+      <h2>Watching the four work as one</h2>
+      <p>
+        Patterns in isolation are easy to nod at. So I built a live demo where they run together as a
+        single feature: a tone reader you can actually type into. It streams its reasoning before it
+        commits, shows how sure it is, sends the uncertain calls to the gate, and - the part I am most
+        attached to - refuses to answer when the input is nonsense, instead of fabricating a confident
+        guess.
+      </p>
+    </div>
+
+    <!-- Live embed, broken slightly wider than the reading measure -->
+    <figure class="mt-10 -mx-6 md:-mx-16">
+      <div class="rounded-xl overflow-hidden ring-1 ring-[#1A1410]/[0.10] bg-[#F5F2ED] shadow-[0_20px_60px_-24px_rgba(26,20,16,0.35)]">
+        <div class="flex items-center gap-2 px-4 py-2.5 border-b border-[#1A1410]/[0.08] bg-[#EDE9E3]">
+          <span class="flex gap-1.5" aria-hidden="true">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#1A1410]/15"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-[#1A1410]/15"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-[#F26C0D]/50"></span>
+          </span>
+          <span class="ml-2 text-[9px] md:text-[10px] font-geist font-bold tracking-[0.22em] uppercase text-[#6B6560] truncate">
+            Live · article50-kit.pages.dev/demo
+          </span>
+        </div>
+        <iframe
+          src="https://article50-kit.pages.dev/embed"
+          title="Live demo: Article 50 Tone Read - an accountable AI tone reader you can try"
+          loading="lazy"
+          class="w-full h-[560px] md:h-[640px] bg-[#F5F2ED] block"
+        ></iframe>
+      </div>
+      <figcaption class="mt-3 px-6 md:px-0 text-sm font-geist text-[#6B6560]">
+        The live demo. Type a message, or try a sample - nothing you type leaves the page.
+      </figcaption>
+    </figure>
+
+    <div class="prose-body mt-12 font-geist text-[#1A1410]">
+      <p>
+        The model behind it is a small, deterministic classifier, not a live LLM, so every state
+        including refusal can be shown on demand, at zero cost, with nothing leaving your browser.
+        Swapping in a real model changes one function; the interface does not move.
+      </p>
+
+      <h2>Accessibility is not the decoration</h2>
+      <p>
+        Here is the part I will not soften: "accessible AI" that fails a contrast check is just a
+        slogan. So I ran a real accessibility audit against the kit, it found genuine bugs, and I fixed
+        every one - including a contrast failure the automated tool missed on a gradient background,
+        which I only caught by doing the maths by hand. Zero violations, verified. If the pitch is that
+        AI should be accountable and inclusive, the artifact has to survive the same test it asks
+        everyone else to pass.
+      </p>
+
+      <h2>Where this leaves us</h2>
+      <p>
+        I keep landing on the same idea. AI does not remove the need for a human-accountable layer. It
+        makes that layer the product - the surface where trust is either earned or quietly skipped. And
+        that layer is interface work: disclosure, labelling, oversight, the honest refusal. It is
+        exactly where a designer who codes should be standing.
+      </p>
+      <p>The kit is free. Take the patterns, ship them, and tell me what breaks.</p>
+    </div>
+
+    <div class="mt-10 flex flex-wrap gap-3">
+      <a
+        href="https://article50-kit.pages.dev"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center gap-2.5 px-7 py-[13px] bg-[#F26C0D] text-[#1A1410] text-[10px] font-geist font-bold uppercase tracking-[0.3em] hover:bg-[#1A1410] hover:text-white transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
+      >
+        Open the Kit
+        <span aria-hidden="true">↗</span>
+      </a>
+      <a
+        href="https://article50-kit.pages.dev/demo"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center gap-2.5 px-7 py-[13px] border border-[#1A1410]/25 text-[#1A1410] text-[10px] font-geist font-bold uppercase tracking-[0.3em] hover:border-[#1A1410] hover:bg-[#1A1410]/5 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A1410]"
+      >
+        Try the live demo
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </article>
+
+  <style>
+    .prose-body p {
+      font-size: 1.125rem;
+      line-height: 1.75;
+      font-weight: 300;
+      margin-top: 1.35rem;
+    }
+    .prose-body h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: clamp(1.6rem, 3.4vw, 2rem);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: #1a1410;
+      margin-top: 2.8rem;
+      margin-bottom: 0.25rem;
+    }
+    .prose-body p:first-child {
+      margin-top: 0;
+    }
+  </style>
+</Layout>
