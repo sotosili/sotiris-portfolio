@@ -244,22 +244,16 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
         aria-hidden="true"
       >
         <span
-          className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter italic text-[#F26C0D]"
-          style={{ fontSize: "clamp(44px, 10vw, 140px)" }}
-        >
-          AI
-        </span>
-        <span
-          className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter text-[#1A1410]"
-          style={{ fontSize: "clamp(44px, 10vw, 140px)" }}
-        >
-          Web
-        </span>
-        <span
           className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter text-[#1A1410]"
           style={{ fontSize: "clamp(44px, 10vw, 140px)" }}
         >
           Designer.
+        </span>
+        <span
+          className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter italic text-[#F26C0D]"
+          style={{ fontSize: "clamp(44px, 10vw, 140px)" }}
+        >
+          Who codes.
         </span>
       </div>
 
@@ -307,9 +301,8 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
             className="font-serif font-bold leading-[0.86] tracking-tighter"
             style={{ fontSize: "clamp(44px, 10vw, 140px)" }}
           >
-            <span className="block text-[#F26C0D] italic">AI</span>
-            <span className="block text-[#1A1410]">Web</span>
             <span className="block text-[#1A1410]">Designer.</span>
+            <span className="block text-[#F26C0D] italic">Who codes.</span>
           </h1>
         </div>
 
@@ -319,9 +312,9 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
             <div className="h-px w-12 bg-[#F26C0D]" />
             <div className="h-px w-6 bg-[#0D5EAF]" />
           </div>
-          <p className="font-geist font-light text-sm leading-relaxed text-[#6B6560] max-w-[340px]">
-            Designing responsible, accessible AI experiences.{" "}
-            <span className="text-[#0D5EAF] font-medium">EU AI Act compliant.</span>
+          <p className="font-geist font-light text-sm leading-relaxed text-[#6B6560] max-w-[360px]">
+            Product designer &amp; design engineer. I build{" "}
+            <span className="text-[#0D5EAF] font-medium">accountable, accessible AI interfaces.</span>
           </p>
         </div>
 
@@ -329,26 +322,29 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
         <div className="animate-cta flex flex-col sm:flex-row gap-3 mt-10 md:mt-12">
           <a
             href="#work"
-            className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] bg-[#F26C0D] text-white text-[10px] font-geist font-bold uppercase tracking-[0.32em] hover:bg-[#1A1410] hover:text-white transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
+            className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] bg-[#F26C0D] text-[#1A1410] text-[10px] font-geist font-bold uppercase tracking-[0.32em] hover:bg-[#1A1410] hover:text-white transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
           >
-            3 Case Studies
+            See the Work
             <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
           </a>
           <a
-            href="#process"
+            href="https://article50-kit.pages.dev"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] border border-[#1A1410]/25 text-[#1A1410] text-[10px] font-geist font-bold uppercase tracking-[0.32em] hover:border-[#1A1410] hover:bg-[#1A1410]/5 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A1410]"
           >
-            How I Work
+            The Article 50 Kit
+            <ArrowRight className="w-3 h-3 -rotate-45" aria-hidden="true" />
           </a>
         </div>
 
         {/* Credibility strip — three facts that answer the client's "why hire you" */}
         <div className="animate-cta flex items-center gap-4 mt-6">
-          <span className="text-[9px] font-geist font-black text-[#1A1410] tracking-[0.3em] uppercase">13 Yrs</span>
+          <span className="text-[9px] font-geist font-black text-[#1A1410] tracking-[0.3em] uppercase">13 Yrs Design</span>
+          <span className="text-[#F26C0D]" aria-hidden="true">·</span>
+          <span className="text-[9px] font-geist font-bold text-[#6B6560] tracking-[0.3em] uppercase">Ships Code</span>
           <span className="text-[#F26C0D]" aria-hidden="true">·</span>
           <span className="text-[9px] font-geist font-bold text-[#6B6560] tracking-[0.3em] uppercase">WCAG AA</span>
-          <span className="text-[#F26C0D]" aria-hidden="true">·</span>
-          <span className="text-[9px] font-geist font-bold text-[#6B6560] tracking-[0.3em] uppercase">EU AI Act</span>
         </div>
 
         {/* Scroll indicator */}
@@ -759,6 +755,89 @@ export default function Home() {
         <main id="main">
 
           {/* ════════════════════════════════════════════════════
+              00 — FLAGSHIP · ARTICLE 50 KIT (live embed)
+          ════════════════════════════════════════════════════ */}
+          <section
+            id="kit"
+            aria-labelledby="kit-heading"
+            className="relative overflow-hidden pt-28 md:pt-36 pb-20 md:pb-28 px-6 md:px-12 max-w-7xl mx-auto"
+          >
+            <div className="flex items-center gap-4 mb-6">
+              <span className="h-px w-10 bg-[#F26C0D]/50" aria-hidden="true" />
+              <span className="text-[#F26C0D] text-[10px] font-geist font-bold tracking-[0.45em] uppercase">
+                Shipped · Open source · Live
+              </span>
+            </div>
+
+            <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-10 lg:gap-16 items-center">
+              {/* Copy */}
+              <div>
+                <h2
+                  id="kit-heading"
+                  className="font-serif font-light leading-[0.9] tracking-tighter text-[#1A1410]"
+                  style={{ fontSize: "clamp(40px, 5vw, 68px)" }}
+                >
+                  The Article 50
+                  <br />
+                  <span className="italic text-[#F26C0D]">Kit</span>
+                </h2>
+                <p className="font-geist font-light text-[#6B6560] leading-relaxed mt-6 max-w-md">
+                  Accessible React patterns for the parts of the EU AI Act that live in the
+                  interface - AI disclosure, content labelling, an emotion-recognition notice, and a
+                  human-in-the-loop review gate. Open-source, MIT, WCAG 2.1 AA.
+                </p>
+                <p className="font-geist text-sm text-[#1A1410] leading-relaxed mt-5 max-w-md">
+                  The demo is the real thing, running live. Type a message and watch the accountable
+                  loop: it streams its reasoning, shows its confidence, sends low-confidence calls to a
+                  human, and refuses to guess on nonsense.
+                </p>
+                <div className="flex flex-wrap gap-3 mt-8">
+                  <a
+                    href="https://article50-kit.pages.dev"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2.5 px-7 py-[13px] bg-[#F26C0D] text-[#1A1410] text-[10px] font-geist font-bold uppercase tracking-[0.3em] hover:bg-[#1A1410] hover:text-white transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
+                  >
+                    Open the Kit
+                    <ArrowRight className="w-3 h-3 -rotate-45" aria-hidden="true" />
+                  </a>
+                  <a
+                    href="https://github.com/sotosili/article50-kit"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2.5 px-7 py-[13px] border border-[#1A1410]/25 text-[#1A1410] text-[10px] font-geist font-bold uppercase tracking-[0.3em] hover:border-[#1A1410] hover:bg-[#1A1410]/5 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A1410]"
+                  >
+                    View Source
+                    <ArrowRight className="w-3 h-3 -rotate-45" aria-hidden="true" />
+                  </a>
+                </div>
+              </div>
+
+              {/* Live embed — framed as a small browser window */}
+              <div className="rounded-xl overflow-hidden ring-1 ring-[#1A1410]/[0.10] bg-[#F5F2ED] shadow-[0_20px_60px_-24px_rgba(26,20,16,0.35)]">
+                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[#1A1410]/[0.08] bg-[#EDE9E3]">
+                  <span className="flex gap-1.5" aria-hidden="true">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#1A1410]/15" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#1A1410]/15" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#F26C0D]/50" />
+                  </span>
+                  <span className="ml-2 text-[9px] md:text-[10px] font-geist font-bold tracking-[0.22em] uppercase text-[#6B6560] truncate">
+                    Live · article50-kit.pages.dev/demo
+                  </span>
+                </div>
+                <iframe
+                  src="https://article50-kit.pages.dev/embed"
+                  title="Live demo: Article 50 Tone Read - an accountable AI tone reader you can try"
+                  loading="lazy"
+                  className="w-full h-[540px] md:h-[660px] bg-[#F5F2ED] block"
+                />
+              </div>
+            </div>
+          </section>
+
+          <div className="h-px bg-[#1A1410]/[0.08] max-w-7xl mx-auto" aria-hidden="true" />
+
+          {/* ════════════════════════════════════════════════════
               01 — WORK
           ════════════════════════════════════════════════════ */}
 
@@ -808,6 +887,61 @@ export default function Home() {
               ref={workTrackRef}
               className="flex flex-col md:flex-row md:h-full gap-6 px-6 md:pl-12 md:pr-0 py-6 md:py-8"
             >
+              {/* Article 50 Kit — flagship, links out to the live project */}
+              <article className="group w-full md:flex-shrink-0 md:w-[80vw]">
+                <a
+                  href="https://article50-kit.pages.dev"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F26C0D]"
+                  aria-label="Article 50 UI Pattern Kit — open-source, WCAG AA React components for the EU AI Act, with a live demo. Opens the live project in a new tab."
+                >
+                  <div className="relative h-[52vh] md:h-[68vh] bg-[#EDE9E3] overflow-hidden ring-1 ring-[#1A1410]/[0.06] group-hover:ring-[#F26C0D]/25 transition-all duration-500">
+                    <img
+                      src="/images/article50-kit.png"
+                      alt=""
+                      className="absolute inset-0 w-full h-full object-cover object-top transition-all duration-700 group-hover:scale-[1.02] grayscale group-hover:grayscale-0"
+                      loading="lazy"
+                    />
+                    {/* Live badge */}
+                    <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 bg-[#1A1410] px-2.5 py-1 text-white text-[9px] font-geist font-bold tracking-[0.28em] uppercase">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#F26C0D]" aria-hidden="true" />
+                      Live · Open source
+                    </span>
+                    <div
+                      className="absolute inset-0 bg-[#F26C0D]/0 group-hover:bg-[#F26C0D]/[0.08] transition-all duration-500 flex items-center justify-center"
+                      aria-hidden="true"
+                    >
+                      <span className="bg-[#1A1410]/80 px-5 py-2.5 text-white text-[10px] font-geist font-bold tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-3">
+                        Open Live Project
+                        <ArrowRight className="w-4 h-4 -rotate-45" />
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-start justify-between mt-4 gap-4 flex-wrap">
+                    <div>
+                      <h3 className="font-serif text-xl font-light text-[#1A1410] group-hover:text-[#F26C0D] transition-colors duration-300 leading-none mb-2">
+                        Article 50 UI Pattern Kit
+                      </h3>
+                      <p className="font-geist text-sm font-light text-[#6B6560] max-w-xl">
+                        Open-source React components for EU AI Act Article 50 transparency, plus a live
+                        demo of the accountable AI loop. Built and shipped in code, WCAG 2.1 AA.
+                      </p>
+                    </div>
+                    <div className="flex-shrink-0 text-right space-y-3">
+                      <span className="block text-[10px] font-geist font-bold text-[#F26C0D] tracking-[0.35em] uppercase">
+                        2026
+                      </span>
+                      <div className="flex gap-2 flex-wrap justify-end transition-all duration-400 translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                        <Pill label="Open Source" />
+                        <Pill label="WCAG AA" />
+                        <Pill label="Live Demo" />
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </article>
+
               {/* Coffee World — wide card */}
               {PROJECTS.filter((p) => p.full).map((project) => (
                 <article key={project.title} className="group w-full md:flex-shrink-0 md:w-[80vw]">
@@ -1208,7 +1342,7 @@ export default function Home() {
                       aria-hidden="true"
                     />
                     <p className="font-geist text-sm text-[#6B6560]">
-                      <span className="text-[#1A1410] font-medium">Taking projects</span> — ethical UX, WCAG audits, EU AI Act consulting
+                      <span className="text-[#1A1410] font-medium">Taking projects</span> - accessible AI interfaces, design engineering, WCAG audits
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
@@ -1311,7 +1445,7 @@ export default function Home() {
                   <button
                     type="submit"
                     disabled={formStatus === "sending"}
-                    className="w-full bg-[#F26C0D] text-white py-5 text-[10px] font-geist font-bold uppercase tracking-[0.35em] hover:bg-[#1A1410] hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
+                    className="w-full bg-[#F26C0D] text-[#1A1410] py-5 text-[10px] font-geist font-bold uppercase tracking-[0.35em] hover:bg-[#1A1410] hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
                   >
                     {formStatus === "sending" ? (
                       <>
@@ -1362,7 +1496,7 @@ export default function Home() {
         <footer className="py-7 px-6 border-t border-[#1A1410]/[0.06]">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-[10px] font-geist font-bold uppercase tracking-[0.35em] text-[#6B6560]">
             <p>© 2026 Sotiris Iliadis</p>
-            <p>AI Web Designer · Thessaloniki, Greece</p>
+            <p>Product Designer &amp; Design Engineer · Thessaloniki, Greece</p>
           </div>
         </footer>
       </div>
