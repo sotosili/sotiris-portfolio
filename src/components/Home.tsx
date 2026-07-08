@@ -259,7 +259,7 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
 
       {/* Level 1: Photo — right half on desktop, top band on mobile */}
       <div
-        className="animate-photo relative md:absolute md:top-0 md:right-0 md:bottom-0 w-full md:w-[55%] h-[40vh] md:h-auto z-10 pointer-events-none"
+        className="animate-photo relative md:absolute md:top-0 md:right-0 md:bottom-0 w-full md:w-[55%] h-[34vh] md:h-auto z-10 pointer-events-none"
         aria-hidden="true"
       >
         <img
@@ -509,6 +509,9 @@ export default function Home() {
   const [contactEmail, setContactEmail] = useState("");
   const [contactMessage, setContactMessage] = useState("");
   const [formStatus, setFormStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+
+  // Live-embed skeleton — the flagship proof must never read as a blank box while it loads
+  const [embedLoaded, setEmbedLoaded] = useState(false);
 
   // EmailJS — existing credentials preserved
   const handleSendEmail = async () => {
@@ -825,12 +828,27 @@ export default function Home() {
                     Live · article50-kit.pages.dev/demo
                   </span>
                 </div>
-                <iframe
-                  src="https://article50-kit.pages.dev/embed"
-                  title="Live demo: Article 50 Tone Read - an accountable AI tone reader you can try"
-                  loading="lazy"
-                  className="w-full h-[540px] md:h-[660px] bg-[#F5F2ED] block"
-                />
+                <div className="relative w-full h-[540px] md:h-[660px]">
+                  {/* Skeleton — holds the frame until the live demo paints, so it never reads as empty */}
+                  <div
+                    className={`absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#F5F2ED] transition-opacity duration-500 ${
+                      embedLoaded ? "opacity-0 pointer-events-none" : "opacity-100"
+                    }`}
+                    aria-hidden="true"
+                  >
+                    <Loader2 className={`w-6 h-6 text-[#F26C0D] ${shouldReduceMotion ? "" : "animate-spin"}`} />
+                    <span className="text-[10px] font-geist font-bold tracking-[0.3em] uppercase text-[#6B6560]">
+                      Loading the live demo
+                    </span>
+                  </div>
+                  <iframe
+                    src="https://article50-kit.pages.dev/embed"
+                    title="Live demo: Article 50 Tone Read - an accountable AI tone reader you can try"
+                    loading="eager"
+                    onLoad={() => setEmbedLoaded(true)}
+                    className="relative w-full h-full bg-[#F5F2ED] block"
+                  />
+                </div>
               </div>
             </div>
           </section>
@@ -870,7 +888,7 @@ export default function Home() {
               >
                 Selected
                 <br />
-                <span className="italic text-[#1A1410]/40">Work</span>
+                <span className="italic text-[#1A1410]/55">Work</span>
               </motion.h2>
             </motion.div>
           </div>
@@ -1094,7 +1112,7 @@ export default function Home() {
                 <br />
                 <span className="italic text-[#F26C0D]">Intent,</span>
                 <br />
-                <span className="text-[#1A1410]/35">Build with Care</span>
+                <span className="text-[#1A1410]/55">Build with Care</span>
               </motion.h2>
             </motion.div>
 
