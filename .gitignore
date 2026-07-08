@@ -16,6 +16,46 @@ pnpm-debug.log*
 # environment variables
 .env
 .env.production
+.env.local
+
+# secrets (API keys - never commit)
+secrets.local.md
+
+# personal application data - never commit (phone, email, answer bank, CV path)
+apply/profile.json
+# generated job-radar state/output
+radar/seen.json
+radar/out/
+# apply-assistant sent/unsent ledger
+apply/log.json
+# generated autofill bookmarklet (embeds personal data: phone, answer bank)
+apply/bookmarklet.txt
+apply/bookmarklet.dev.js
+# per-application cover letters (personal application material)
+apply/cover-letters/
+
+# operations & strategy docs - personal/business data, never commit to this PUBLIC repo
+# (leads files contain third-party names/phones; briefs contain personal financial context)
+LEADS*.md
+TODAY.md
+DO-THIS-TOMORROW.md
+APPLY-TOMORROW-*.md
+SESSION-HANDOFF-*.md
+START-HERE.md
+THE-MAP.md
+OPPORTUNITIES.md
+PIPELINE-PLAN.md
+CLIENT-ACQUISITION-CONTEXT.md
+DYPA-FINDINGS-*.md
+STRATEGY-BRIEF-*.md
+REPOSITION-PLAN.md
+UPWORK-PROFILE.md
+CONTRA-OPERATOR-PROMPT.md
+COWORK-AUTOAPPLY-PLAYBOOK.md
+OVERNIGHT-SCOUT-PROMPT.md
+GREEK-LOCAL-AUTOMATION.md
+GEMINI-SPEND.md
+MORNING-BRIEF.md
 
 # macOS-specific files
 .DS_Store
