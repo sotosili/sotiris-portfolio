@@ -35,6 +35,12 @@ const PROBE = ({ scale, unit, inks, stroke, radius, families }) => {
     const own = Array.from(el.childNodes)
       .filter((n) => n.nodeType === 3).map((n) => n.textContent.trim()).join('');
 
+    // A declared ink at reduced opacity is still that ink - a scrim over a photograph is the
+    // same colour doing a different job, not a sixth colour. Compare the rgb triple, drop alpha.
+    const rgb = (v) => {
+      const m = String(v).match(/\d+/g);
+      return m ? `rgb(${m[0]}, ${m[1]}, ${m[2]})` : v;
+    };
     if (own.length) {
       const size = Math.round(parseFloat(s.fontSize));
       measuredSizes++;
@@ -43,7 +49,7 @@ const PROBE = ({ scale, unit, inks, stroke, radius, families }) => {
       seenFaces.add(fam);
       if (!families.includes(fam)) offFace.push(fam);
       measuredColours++;
-      if (!inks.includes(s.color)) offInk.push(`text ${s.color}`);
+      if (!inks.includes(rgb(s.color))) offInk.push(`text ${s.color}`);
     }
 
     // Spacing: every declared padding/margin/gap must be a multiple of the one unit.
@@ -59,7 +65,7 @@ const PROBE = ({ scale, unit, inks, stroke, radius, families }) => {
     const bg = s.backgroundColor;
     if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
       measuredColours++;
-      if (!inks.includes(bg)) offInk.push(`bg ${bg}`);
+      if (!inks.includes(rgb(bg))) offInk.push(`bg ${bg}`);
     }
 
     for (const prop of ['borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth']) {

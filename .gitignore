@@ -97,6 +97,7 @@ covers/*
 !covers/pipeline-diverge.mjs
 !covers/pipeline-build.mjs
 !covers/pipeline-ecosystem.mjs
+!covers/pipeline-press.mjs
 
 # Working assets: 80 files of debug renders and candidate crops, plus
 # content-assets/pinterest/ - reference images saved from Pinterest. Those are
