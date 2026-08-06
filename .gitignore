@@ -56,9 +56,50 @@ OVERNIGHT-SCOUT-PROMPT.md
 GREEK-LOCAL-AUTOMATION.md
 GEMINI-SPEND.md
 MORNING-BRIEF.md
+# channel strategy docs - pricing strategy, DYPA benefit status, competitor analysis,
+# "0 reviews" admissions, a client's name. All were sitting UNTRACKED in this public repo,
+# one `git add .` away from being published. Added 2026-07-31.
+CONTRA-*.md
+LINKEDIN-*.md
+DAILY.md
+
+# retired assets moved out of public/ - working material, not for this PUBLIC repo.
+# Added 2026-08-04 when 43 Replit workspace leftovers were found being served at the domain
+# root, including 5 .txt files containing design prompts. Nothing secret, but nothing that
+# belongs on a portfolio either.
+archive/
 
 # macOS-specific files
 .DS_Store
 
 # jetbrains setting folder
 .idea/
+
+# ---------------------------------------------------------------------------
+# DESIGN PIPELINE - explicit ALLOWLIST, added 2026-08-05.
+# covers/ is 82 files. Three of them (cover-letter.mjs, email-letter.mjs,
+# email-preview.html) carry a real email address, and the rest are personal
+# build scripts - favicons, party posters, Dispatch covers. None of that is
+# the open-source contribution. The contribution is the ENGINE: the renderer,
+# the deterministic floor, the coherence gate, the selector and the grid.
+# Deny the folder, then name what may leave. A denylist would have to predict
+# every future personal file; an allowlist cannot leak one by omission.
+covers/*
+!covers/_coherence.mjs
+!covers/_contact-sheet.mjs
+!covers/_critique.mjs
+!covers/_fonts.mjs
+!covers/_grid.mjs
+!covers/_judge.mjs
+!covers/_render.mjs
+!covers/_select.mjs
+!covers/_system.mjs
+!covers/pipeline-diverge.mjs
+!covers/pipeline-build.mjs
+!covers/pipeline-ecosystem.mjs
+
+# Working assets: 80 files of debug renders and candidate crops, plus
+# content-assets/pinterest/ - reference images saved from Pinterest. Those are
+# third-party works with no licence and no attribution, so they must never be
+# redistributed from a public repo. They are a private swipe file, not an asset.
+content-assets/
