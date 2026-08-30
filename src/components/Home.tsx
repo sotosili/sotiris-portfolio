@@ -27,7 +27,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 import { setupScrollAnimations, navigateWithTransition } from "../utils/animations";
-import TimeTravel from "./TimeTravel";
+import PierianScene from "./PierianScene";
 
 // ── Brand icons (not in lucide-react v1.x) ──────────────────────
 
@@ -258,11 +258,11 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
         </span>
       </div>
 
-      {/* Level 1: the time-travel plate — right half on desktop, top band on
-          mobile. Not aria-hidden and not pointer-events-none any more: it now
-          holds real controls that have to be reachable. */}
-      <div className="relative md:absolute md:top-0 md:right-0 md:bottom-0 w-full md:w-[52%] h-auto md:h-auto z-10 flex items-center">
-        <TimeTravel shouldReduceMotion={shouldReduceMotion} />
+      {/* Level 1: the place itself, full bleed. Scrolling moves it from 1998
+          to 2026 — the sky grades, the coast lights come on, the boy on the
+          wall becomes the man on the wall. */}
+      <div className="absolute inset-0 z-0">
+        <PierianScene shouldReduceMotion={shouldReduceMotion} />
       </div>
 
       {/* Levels 2–4: Text — generous left column */}
@@ -271,8 +271,8 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
         className="relative z-20 md:min-h-screen flex flex-col justify-center px-8 md:px-16 lg:px-24 pt-10 pb-20 md:pt-28 md:pb-24 md:min-w-[380px] max-w-full md:max-w-[min(60%,760px)]"
       >
         {/* Eyebrow */}
-        <p className="animate-subtitle text-[10px] font-geist font-bold tracking-[0.5em] uppercase text-[#6B6560] mb-8">
-          Available for Projects <span className="text-[#1A1410]">·</span> 2026
+        <p className="animate-subtitle text-[10px] font-geist font-bold tracking-[0.5em] uppercase text-[#B9B3AA] mb-8">
+          Available for Projects <span className="text-[#F2EFE9]">·</span> 2026
         </p>
 
         {/* Level 2: Headline — colonizes the left canvas */}
@@ -281,7 +281,7 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
             className="font-verdict leading-[0.84] tracking-[-0.045em]"
             style={{ fontSize: "clamp(38px, 7.2vw, 96px)", fontWeight: 800 }}
           >
-            <span className="block text-[#1A1410]">Designer.</span>
+            <span className="block text-[#F2EFE9]">Designer.</span>
             {/* The accent is ink, not coloured text: a plane with the type
                 pressed into it. #1A1410 on #F26C0D computes 5.97:1. */}
             <span className="ink-band block px-[0.14em] pb-[0.06em]" style={{ width: "fit-content", whiteSpace: "nowrap" }}>Who codes.</span>
@@ -291,18 +291,18 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
         {/* The measurement, drawn. The page shows its evidence rather than
             asserting it — Neurath, not a badge. */}
         <div className="animate-subtitle mt-7 flex items-center gap-3" aria-hidden="true">
-          <span className="font-machine text-[9px] font-bold tracking-[0.3em] uppercase text-[#6B6560]">
+          <span className="font-machine text-[9px] font-bold tracking-[0.3em] uppercase text-[#B9B3AA]">
             Contrast
           </span>
-          <div className="relative h-[7px] w-[190px] bg-[#1A1410]/[0.07]">
+          <div className="relative h-[7px] w-[190px] bg-[#F2EFE9]/20">
             {/* AA floor at 4.5:1, plotted on a 0–21 scale */}
-            <div className="absolute top-[-4px] bottom-[-4px] w-px bg-[#1A1410]/40" style={{ left: "21.4%" }} />
-            <div className="absolute inset-y-0 left-0 bg-[#1A1410]" style={{ width: "77.8%" }} />
+            <div className="absolute top-[-4px] bottom-[-4px] w-px bg-[#F2EFE9]/60" style={{ left: "21.4%" }} />
+            <div className="absolute inset-y-0 left-0 bg-[#F2EFE9]" style={{ width: "77.8%" }} />
           </div>
-          <span className="font-machine text-[10px] font-bold tracking-[0.16em] text-[#1A1410]">
+          <span className="font-machine text-[10px] font-bold tracking-[0.16em] text-[#F2EFE9]">
             16.3:1
           </span>
-          <span className="font-machine text-[9px] tracking-[0.24em] uppercase text-[#6B6560]">
+          <span className="font-machine text-[9px] tracking-[0.24em] uppercase text-[#B9B3AA]">
             measured, not claimed
           </span>
         </div>
@@ -310,12 +310,12 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
         {/* Level 3: Accent lines + descriptor */}
         <div className="animate-subtitle mt-10 md:mt-12">
           <div className="flex items-center gap-2 mb-5" aria-hidden="true">
-            <div className="h-px w-12 bg-[#1A1410]" />
-            <div className="h-px w-6 bg-[#1A1410]/35" />
+            <div className="h-px w-12 bg-[#F2EFE9]" />
+            <div className="h-px w-6 bg-[#F2EFE9]/35" />
           </div>
-          <p className="font-geist font-light text-sm leading-relaxed text-[#6B6560] max-w-[360px]">
+          <p className="font-geist font-light text-sm leading-relaxed text-[#B9B3AA] max-w-[360px]">
             Product designer &amp; design engineer. I build{" "}
-            <span className="text-[#1A1410] font-semibold">accountable, accessible AI interfaces.</span>
+            <span className="text-[#F2EFE9] font-semibold">accountable, accessible AI interfaces.</span>
           </p>
         </div>
 
@@ -323,7 +323,7 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
         <div className="animate-cta flex flex-col sm:flex-row gap-3 mt-10 md:mt-12">
           <a
             href="#work"
-            className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] bg-[#1A1410] text-[#F5F2ED] text-[10px] font-machine font-bold uppercase tracking-[0.32em] hover:bg-[#F26C0D] hover:text-[#1A1410] transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A1410]"
+            className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] bg-[#F2EFE9] text-[#F5F2ED] text-[10px] font-machine font-bold uppercase tracking-[0.32em] hover:bg-[#F26C0D] hover:text-[#F2EFE9] transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F2A03D]"
           >
             See the Work
             <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -332,7 +332,7 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
             href="https://article50-kit.pages.dev"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] border border-[#1A1410]/25 text-[#1A1410] text-[10px] font-geist font-bold uppercase tracking-[0.32em] hover:border-[#1A1410] hover:bg-[#1A1410]/5 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A1410]"
+            className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] border border-[#F2EFE9]/45 text-[#F2EFE9] text-[10px] font-geist font-bold uppercase tracking-[0.32em] hover:border-[#1A1410] hover:bg-[#F2EFE9]/5 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F2A03D]"
           >
             The Article 50 Kit
             <ArrowRight className="w-3 h-3 -rotate-45" aria-hidden="true" />
@@ -356,17 +356,17 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
                 aria-hidden="true"
                 className={
                   i >= 11
-                    ? "block w-[5px] h-[26px] bg-[#1A1410]"
-                    : "block w-[5px] h-[16px] bg-[#1A1410]/30"
+                    ? "block w-[5px] h-[26px] bg-[#F2EFE9]"
+                    : "block w-[5px] h-[16px] bg-[#F2EFE9]/35"
                 }
               />
             ))}
           </div>
           <div className="mt-2.5 flex items-center gap-3">
-            <span className="font-machine text-[9px] font-bold tracking-[0.28em] uppercase text-[#1A1410]">
+            <span className="font-machine text-[9px] font-bold tracking-[0.28em] uppercase text-[#F2EFE9]">
               13 years design
             </span>
-            <span className="font-machine text-[9px] tracking-[0.28em] uppercase text-[#6B6560]">
+            <span className="font-machine text-[9px] tracking-[0.28em] uppercase text-[#B9B3AA]">
               2 in UX
             </span>
           </div>
@@ -378,14 +378,14 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
             className="animate-scroll absolute bottom-10 left-8 md:left-16 lg:left-24 hidden md:flex items-center gap-3"
             aria-hidden="true"
           >
-            <div className="h-10 w-px bg-[#1A1410]/15 overflow-hidden">
+            <div className="h-10 w-px bg-[#F2EFE9]/15 overflow-hidden">
               <motion.div
                 animate={{ y: ["-100%", "100%"] }}
                 transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                 className="h-full w-full bg-[#F26C0D]"
               />
             </div>
-            <span className="text-[10px] font-geist font-bold uppercase tracking-[0.5em] text-[#6B6560]">
+            <span className="text-[10px] font-geist font-bold uppercase tracking-[0.5em] text-[#B9B3AA]">
               Scroll
             </span>
           </div>
