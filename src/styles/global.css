@@ -1,10 +1,75 @@
 @import "tailwindcss";
 
+/* ── THE TYPE CASE ─────────────────────────────────────────────────
+   Display and metadata faces, from design-system/colors_and_type.css.
+   --face-verdict (Bricolage) and --face-machine (Archivo Narrow) were
+   already declared there; they had just never been loaded by the app. */
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  src: url('/fonts/bricolage-grotesque-latin-400-normal.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  src: url('/fonts/bricolage-grotesque-latin-800-normal.woff2') format('woff2');
+  font-weight: 800; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Archivo Narrow';
+  src: url('/fonts/archivo-narrow-latin-600-normal.woff2') format('woff2');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Archivo Narrow';
+  src: url('/fonts/archivo-narrow-latin-700-normal.woff2') format('woff2');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+
 @theme {
   --font-geist: 'Geist', sans-serif;
   --font-serif: 'Playfair Display', Georgia, serif;
+  --font-verdict: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  --font-machine: 'Archivo Narrow', 'Helvetica Neue', Arial, sans-serif;
   --color-brand-orange: #F26C0D;
   --color-brand-blue: #0D5EAF;
+}
+
+/* ── The printed grid ──────────────────────────────────────────────
+   Müller-Brockmann prints his grid in red rather than hiding it; the
+   type case IS a grid. So the construction stays visible. Decorative
+   only — it carries no meaning a screen reader needs. */
+.type-case-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(26, 21, 18, 0.055) 1px, transparent 1px);
+  background-size: calc(100% / 12) 100%;
+  mask-image: linear-gradient(to bottom, black 0%, black 78%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 78%, transparent 100%);
+}
+
+/* Crop marks, as on a press sheet. */
+.crop-mark { position: absolute; width: 22px; height: 22px; }
+.crop-mark::before,
+.crop-mark::after {
+  content: ""; position: absolute; background: rgba(26, 21, 18, 0.32);
+}
+.crop-mark::before { width: 100%; height: 1px; top: 0; left: 0; }
+.crop-mark::after  { width: 1px; height: 100%; top: 0; left: 0; }
+
+/* ── The ink band ──────────────────────────────────────────────────
+   The accent is INK: a plane with dark type pressed into it, never
+   thin coloured text. That is the Swiss-poster move from Lane A, and
+   it is also what makes it legible — ink #1A1512 on #F26C0D is
+   5.97:1, where the same orange AS text on paper is 2.72:1 and fails
+   even the large-text bar. Same colour, correct job. */
+.ink-band {
+  background: #F26C0D;
+  color: #1A1512;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 /* ── Design token CSS custom properties ────────────────────────── */

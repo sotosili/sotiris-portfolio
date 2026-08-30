@@ -27,6 +27,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 import { setupScrollAnimations, navigateWithTransition } from "../utils/animations";
+import TimeTravel from "./TimeTravel";
 
 // ── Brand icons (not in lucide-react v1.x) ──────────────────────
 
@@ -244,45 +245,24 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
         aria-hidden="true"
       >
         <span
-          className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter text-[#1A1410]"
-          style={{ fontSize: "clamp(44px, 10vw, 140px)" }}
+          className="manifesto-word block font-verdict leading-[0.84] tracking-[-0.045em] text-[#1A1410]"
+          style={{ fontSize: "clamp(38px, 7.2vw, 96px)", fontWeight: 800 }}
         >
           Designer.
         </span>
         <span
-          className="manifesto-word block font-serif font-bold leading-[0.86] tracking-tighter italic text-[#F26C0D]"
-          style={{ fontSize: "clamp(44px, 10vw, 140px)" }}
+          className="manifesto-word ink-band block px-[0.14em] pb-[0.06em] font-verdict leading-[0.84] tracking-[-0.045em]"
+          style={{ fontSize: "clamp(38px, 7.2vw, 96px)", fontWeight: 800, width: "fit-content", whiteSpace: "nowrap" }}
         >
           Who codes.
         </span>
       </div>
 
-      {/* Level 1: Photo — right half on desktop, top band on mobile */}
-      <div
-        className="animate-photo relative md:absolute md:top-0 md:right-0 md:bottom-0 w-full md:w-[55%] h-[40vh] md:h-auto z-10 pointer-events-none"
-        aria-hidden="true"
-      >
-        <img
-          src="/images/profile.png"
-          alt=""
-          className="hero-photo-img w-full h-full object-contain object-top"
-          style={{
-            maskImage: "linear-gradient(to left, black 70%, transparent 100%), linear-gradient(to bottom, black 60%, transparent 100%)",
-            WebkitMaskImage: "linear-gradient(to left, black 70%, transparent 100%), linear-gradient(to bottom, black 60%, transparent 100%)",
-            maskComposite: "intersect",
-            WebkitMaskComposite: "destination-in",
-          }}
-        />
-        {/* Top-left registration bracket */}
-        <div aria-hidden="true" className="absolute hidden md:block top-3 left-3">
-          <div className="hero-bracket-tl-h absolute top-0 left-0 bg-[#F26C0D]/50" style={{ width: "24px", height: "1.5px" }} />
-          <div className="hero-bracket-tl-v absolute top-0 left-0 bg-[#F26C0D]/50" style={{ width: "1.5px", height: "24px" }} />
-        </div>
-        {/* Bottom-right registration bracket */}
-        <div aria-hidden="true" className="absolute hidden md:block bottom-3 right-3">
-          <div className="hero-bracket-br-h absolute bottom-0 right-0 bg-[#F26C0D]/50" style={{ width: "24px", height: "1.5px" }} />
-          <div className="hero-bracket-br-v absolute bottom-0 right-0 bg-[#F26C0D]/50" style={{ width: "1.5px", height: "24px" }} />
-        </div>
+      {/* Level 1: the time-travel plate — right half on desktop, top band on
+          mobile. Not aria-hidden and not pointer-events-none any more: it now
+          holds real controls that have to be reachable. */}
+      <div className="relative md:absolute md:top-0 md:right-0 md:bottom-0 w-full md:w-[52%] h-auto md:h-auto z-10 flex items-center">
+        <TimeTravel shouldReduceMotion={shouldReduceMotion} />
       </div>
 
       {/* Levels 2–4: Text — generous left column */}
@@ -292,29 +272,50 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
       >
         {/* Eyebrow */}
         <p className="animate-subtitle text-[10px] font-geist font-bold tracking-[0.5em] uppercase text-[#6B6560] mb-8">
-          Available for Projects <span className="text-[#F26C0D]">·</span> 2026
+          Available for Projects <span className="text-[#1A1410]">·</span> 2026
         </p>
 
         {/* Level 2: Headline — colonizes the left canvas */}
         <div ref={headingRef} className="animate-heading">
           <h1
-            className="font-serif font-bold leading-[0.86] tracking-tighter"
-            style={{ fontSize: "clamp(44px, 10vw, 140px)" }}
+            className="font-verdict leading-[0.84] tracking-[-0.045em]"
+            style={{ fontSize: "clamp(38px, 7.2vw, 96px)", fontWeight: 800 }}
           >
             <span className="block text-[#1A1410]">Designer.</span>
-            <span className="block text-[#F26C0D] italic">Who codes.</span>
+            {/* The accent is ink, not coloured text: a plane with the type
+                pressed into it. #1A1410 on #F26C0D computes 5.97:1. */}
+            <span className="ink-band block px-[0.14em] pb-[0.06em]" style={{ width: "fit-content", whiteSpace: "nowrap" }}>Who codes.</span>
           </h1>
+        </div>
+
+        {/* The measurement, drawn. The page shows its evidence rather than
+            asserting it — Neurath, not a badge. */}
+        <div className="animate-subtitle mt-7 flex items-center gap-3" aria-hidden="true">
+          <span className="font-machine text-[9px] font-bold tracking-[0.3em] uppercase text-[#6B6560]">
+            Contrast
+          </span>
+          <div className="relative h-[7px] w-[190px] bg-[#1A1410]/[0.07]">
+            {/* AA floor at 4.5:1, plotted on a 0–21 scale */}
+            <div className="absolute top-[-4px] bottom-[-4px] w-px bg-[#1A1410]/40" style={{ left: "21.4%" }} />
+            <div className="absolute inset-y-0 left-0 bg-[#1A1410]" style={{ width: "77.8%" }} />
+          </div>
+          <span className="font-machine text-[10px] font-bold tracking-[0.16em] text-[#1A1410]">
+            16.3:1
+          </span>
+          <span className="font-machine text-[9px] tracking-[0.24em] uppercase text-[#6B6560]">
+            measured, not claimed
+          </span>
         </div>
 
         {/* Level 3: Accent lines + descriptor */}
         <div className="animate-subtitle mt-10 md:mt-12">
           <div className="flex items-center gap-2 mb-5" aria-hidden="true">
-            <div className="h-px w-12 bg-[#F26C0D]" />
-            <div className="h-px w-6 bg-[#0D5EAF]" />
+            <div className="h-px w-12 bg-[#1A1410]" />
+            <div className="h-px w-6 bg-[#1A1410]/35" />
           </div>
           <p className="font-geist font-light text-sm leading-relaxed text-[#6B6560] max-w-[360px]">
             Product designer &amp; design engineer. I build{" "}
-            <span className="text-[#0D5EAF] font-medium">accountable, accessible AI interfaces.</span>
+            <span className="text-[#1A1410] font-semibold">accountable, accessible AI interfaces.</span>
           </p>
         </div>
 
@@ -322,7 +323,7 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
         <div className="animate-cta flex flex-col sm:flex-row gap-3 mt-10 md:mt-12">
           <a
             href="#work"
-            className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] bg-[#F26C0D] text-[#1A1410] text-[10px] font-geist font-bold uppercase tracking-[0.32em] hover:bg-[#1A1410] hover:text-white transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26C0D]"
+            className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] bg-[#1A1410] text-[#F5F2ED] text-[10px] font-machine font-bold uppercase tracking-[0.32em] hover:bg-[#F26C0D] hover:text-[#1A1410] transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A1410]"
           >
             See the Work
             <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -339,12 +340,36 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
         </div>
 
         {/* Credibility strip — three facts that answer the client's "why hire you" */}
-        <div className="animate-cta flex items-center gap-4 mt-6">
-          <span className="text-[9px] font-geist font-black text-[#1A1410] tracking-[0.3em] uppercase">13 Yrs Design</span>
-          <span className="text-[#F26C0D]" aria-hidden="true">·</span>
-          <span className="text-[9px] font-geist font-bold text-[#6B6560] tracking-[0.3em] uppercase">Ships Code</span>
-          <span className="text-[#F26C0D]" aria-hidden="true">·</span>
-          <span className="text-[9px] font-geist font-bold text-[#6B6560] tracking-[0.3em] uppercase">WCAG AA</span>
+        {/* Isotype, not a badge: one mark per year. Neurath showed quantity
+            by repeating a unit, never by writing the number. The two solid
+            marks are the ~2 years in UX — the distinction the copy has to
+            keep making in words is simply drawn here instead. */}
+        <div className="animate-cta mt-7">
+          <div
+            className="flex items-end gap-[5px]"
+            role="img"
+            aria-label="Thirteen years in design, of which the two most recent are in UX and accessibility."
+          >
+            {Array.from({ length: 13 }).map((_, i) => (
+              <span
+                key={i}
+                aria-hidden="true"
+                className={
+                  i >= 11
+                    ? "block w-[5px] h-[26px] bg-[#1A1410]"
+                    : "block w-[5px] h-[16px] bg-[#1A1410]/30"
+                }
+              />
+            ))}
+          </div>
+          <div className="mt-2.5 flex items-center gap-3">
+            <span className="font-machine text-[9px] font-bold tracking-[0.28em] uppercase text-[#1A1410]">
+              13 years design
+            </span>
+            <span className="font-machine text-[9px] tracking-[0.28em] uppercase text-[#6B6560]">
+              2 in UX
+            </span>
+          </div>
         </div>
 
         {/* Scroll indicator */}
@@ -664,6 +689,10 @@ export default function Home() {
           <rect width="100%" height="100%" filter="url(#portfolio-grain)" />
         </svg>
       </div>
+      {/* The printed grid — the construction stays visible, like the red
+          rules Müller-Brockmann prints over his own spreads. */}
+      <div className="type-case-grid hidden md:block" aria-hidden="true" />
+
       <div className="relative z-10">
 
         {/* ── Top logo bar ──────────────────────────────────────── */}
