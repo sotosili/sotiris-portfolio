@@ -24,6 +24,31 @@ difference between a warning and an instruction.
 
 ## 2026-09-01
 
+**Pencil retired as the design surface.** Dropped 2026-09-01 - it did not earn its place.
+Removed from the Stack line in `AGENTS.md`; marked RETIRED in `HERMES.md` (tools table) and in
+`CLAUDE-DESIGN-PIPELINE.md`; added to `RETIRED` in `ops/stale.py`.
+
+*Scoping note worth keeping:* the first attempt retired the bare name **"Pencil"**, which collided
+with the pencil *tool* in drawing code and flagged p5js and infographic references that have
+nothing to do with the app. Retired names must be specific enough not to collide - the entries are
+now `Pencil MCP`, `design surface is now Pencil`, and `Pencil (primary design tool)`.
+`archive/` and `RESEARCH-*.md` were added to `ALLOW`: both are records, not instructions.
+
+**Still open after this pass, and each needs a decision rather than an edit:**
+- `DIRECTION.md` - its entire thesis is *"Pencil becomes the design surface."* One line cannot fix
+  a document whose title is the dead claim. It probably belongs in `archive/`.
+- Hermes skill `creative/paper-pencil-mcp/` - covers Paper **and** Pencil. Deleting it would take
+  Paper with it; scoping it to Paper only is the likely fix.
+- `CLAUDE-DESIGN-PIPELINE.md` line 17 - a comparison table row. Arguably a record of the
+  comparison, arguably an instruction. Left as-is pending a call.
+
+**The canvas question is open again.** tldraw is the candidate: infinite canvas, agents create and
+edit shapes, live multiplayer, canvas state streamed back. Its official MCP App was Cursor-only as
+of 2026-09-01 with Claude support announced but unshipped, and its SDK licence is unverified for
+commercial use. Verify at source before it enters the stack.
+
+---
+
 **`soul.md` restored to `sotiris-Index/soul.md`.** It was missing from every path `AGENTS.md`
 names, so `soul` loaded nothing on **both** Claude Code and Hermes - the skill that carries the
 taste was silently a no-op. The copy placed here is the condensed version from the Obsidian vault
