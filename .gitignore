@@ -23,3 +23,8 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 secrets.local.md
+
+# Consent-held source photography. The 2006 frame has four identifiable
+# people in it and the hold has not been lifted; the pipeline skill says
+# these stay on this machine. Force-add deliberately if that ever changes.
+public/hero/
