@@ -1,0 +1,85 @@
+[
+  {
+    "ts": "2026-07-01T23:16:20.082Z",
+    "company": "synthesia",
+    "url": "https://jobs.ashbyhq.com/synthesia/4721d2c3-3d94-45d3-b9f7-ea5e1f549ce2",
+    "status": "unsent",
+    "mode": "auto-submit",
+    "verifiedBy": "on-page-confirmation"
+  },
+  {
+    "ts": "2026-07-01T23:16:57.426Z",
+    "company": "linear",
+    "url": "https://jobs.ashbyhq.com/linear/ba8a41d2-4198-481a-a7f4-e09c5364ff7f",
+    "status": "unsent",
+    "mode": "auto-submit",
+    "verifiedBy": "on-page-confirmation"
+  },
+  {
+    "ts": "2026-07-01T23:17:34.086Z",
+    "company": "granola",
+    "url": "https://jobs.ashbyhq.com/granola/77cf40dd-0a11-4b23-ab9d-ff9d9d1e5f41",
+    "status": "unsent",
+    "mode": "auto-submit",
+    "verifiedBy": "on-page-confirmation"
+  },
+  {
+    "ts": "2026-07-01T23:18:10.990Z",
+    "company": "elevenlabs",
+    "url": "https://jobs.ashbyhq.com/elevenlabs/89da00ec-11b0-4359-913b-c3a89c1013bc",
+    "status": "unsent",
+    "mode": "auto-submit",
+    "verifiedBy": "on-page-confirmation"
+  },
+  {
+    "ts": "2026-07-01T23:18:48.181Z",
+    "company": "gitlab",
+    "url": "https://job-boards.greenhouse.io/gitlab/jobs/8475077002",
+    "status": "unsent",
+    "mode": "auto-submit",
+    "verifiedBy": "on-page-confirmation"
+  },
+  {
+    "ts": "2026-07-01T23:21:27.106Z",
+    "company": "synthesia",
+    "url": "https://jobs.ashbyhq.com/synthesia/4721d2c3-3d94-45d3-b9f7-ea5e1f549ce2",
+    "status": "unsent",
+    "mode": "auto-submit",
+    "verifiedBy": "on-page-confirmation"
+  },
+  {
+    "ts": "2026-07-01T23:27:08.991Z",
+    "company": "synthesia",
+    "url": "https://jobs.ashbyhq.com/synthesia/4721d2c3-3d94-45d3-b9f7-ea5e1f549ce2",
+    "status": "unsent",
+    "mode": "auto-submit",
+    "verifiedBy": "on-page-confirmation"
+  },
+  {
+    "ts": "2026-07-22T16:10:00.000Z",
+    "company": "maze",
+    "url": "https://jobs.ashbyhq.com/mazehq/b8b9ba92-de27-4c49-a4a6-820c9c414a71/application",
+    "role": "Product Designer, Remote Europe",
+    "status": "sent",
+    "mode": "manual-submit",
+    "verifiedBy": "sotiris-hand-submit"
+  },
+  {
+    "ts": "2026-07-22T16:38:00.000Z",
+    "company": "supabase",
+    "url": "https://jobs.ashbyhq.com/supabase/97fe8e68-28c5-42db-a763-60113f0b31fd/application",
+    "role": "Product Designer, Remote (posted 1d)",
+    "status": "sent",
+    "mode": "manual-submit",
+    "verifiedBy": "sotiris-hand-submit"
+  },
+  {
+    "ts": "2026-07-22T16:47:00.000Z",
+    "company": "poolside",
+    "url": "https://jobs.ashbyhq.com/poolside/7fb2ceb5-6ace-497f-9c8b-124a9317f789/application",
+    "role": "Member of Engineering (Design Engineer, Product), Remote EMEA",
+    "status": "prepped",
+    "mode": "manual-submit",
+    "verifiedBy": "pending-sotiris-submit"
+  }
+]

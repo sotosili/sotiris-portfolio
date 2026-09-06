@@ -1,0 +1,74 @@
+{
+  "_note": "Your canonical application data + reusable answer bank. fill.mjs uses this to auto-fill job forms. Fill the TODOs. Edit any answer anytime — it updates everywhere.",
+  "fields": {
+    "name": "Sotiris Iliadis",
+    "firstName": "Sotiris",
+    "lastName": "Iliadis",
+    "email": "ilisotiris@gmail.com",
+    "phone": "+30 6972196303",
+    "location": "Thessaloniki, Greece",
+    "portfolio": "https://sotiris-portfolio.pages.dev",
+    "linkedin": "https://linkedin.com/in/sotiris-iliadis",
+    "github": "https://github.com/sotosili",
+    "instagram": "https://www.instagram.com/swtiris_iliadis/",
+    "resumePath": "C:/Users/iliso/Downloads/Cv Iliadis Sotiris.pdf"
+  },
+  "bio": {
+    "one_liner": "Product Designer / Design Engineer with 13 years of craft - I design and ship AI products that feel clear, trustworthy, and accessible.",
+    "short": "I'm a Product Designer / Design Engineer with 13 years of craft, working AI-native - I design in Figma and ship in code (React, Tailwind, Astro), with Claude and Cursor as native tools, on a spine of accessibility and responsible AI (WCAG 2.2 AA, EU AI Act). Recent proof I shipped myself: the Article 50 UI Pattern Kit, an open-source (MIT) React library of accessible components for EU AI Act transparency, plus a live demo of the human-in-the-loop 'accountable AI' loop - both public and running at article50-kit.pages.dev.",
+    "medium": "Sotiris Iliadis is a Thessaloniki-based Product Designer / Design Engineer with 13 years of craft. He began in graphic and brand design - community identity, packaging, and marketing assets for companies across Greece - and built a deep eye for typography, hierarchy, and visual restraint. After the Google UX Design Certificate he moved into UX/UI and, now, AI-native product design: he designs in Figma and ships in code (React, Tailwind, Astro), with AI tools (Claude, Cursor) native to the process. His work carries a responsible-AI and accessibility spine - WCAG 2.2 AA and EU AI Act transparency built into the design, not bolted on. Recent proof he built and shipped himself: the Article 50 UI Pattern Kit (open-source, MIT) - accessible React components for EU AI Act Article 50 transparency - and a live 'accountable AI' demo where a model discloses itself, streams its reasoning, shows a real confidence meter, and routes low-confidence decisions to a human, all WCAG 2.2 AA. He designs the hard part of AI products: making generative, non-deterministic experiences feel clear, trustworthy, and inclusive."
+  },
+  "whereHeard": "Directly on your careers board, while researching AI-native companies I'd genuinely want to design for.",
+  "answers": [
+    {
+      "key": "async_remote",
+      "match": ["async", "remote environment", "remote work", "distributed"],
+      "text": "I've worked remote-first for years as an independent designer in Thessaloniki, with clients across timezones. What works for me is writing things down - async only holds up if decisions live in a document, not in someone's memory. So I over-communicate context (the why behind a design, not just the what), keep a visible trail, and ship in small increments so feedback comes early instead of at one big reveal. I hand off annotated Figma and written specs an engineer in another timezone can build from without waiting on me. The honest challenge is momentum and isolation - remote removes the ambient signal of a room. I handle it by setting tight personal loops and treating my AI tooling (Claude, Cursor) as an always-on collaborator between human syncs. Working across Greek and English also taught me to write plainly and confirm understanding rather than assume it."
+    },
+    {
+      "key": "sets_apart",
+      "match": ["set you apart", "average designer", "different from", "stand out", "unique"],
+      "text": "Three things, and it's the combination that's rare. First, I came up through 13 years of visual and brand craft before moving into UX - so I bring a level of typographic and compositional restraint most product designers never built. Second, I design and ship in code (React, Tailwind, Astro), so I don't hand off static screens; I take an idea to a working, accessible interface myself. Third, I use AI (Claude, Cursor) as a native part of my process. The proof isn't a claim - it's public: I designed and shipped the Article 50 UI Pattern Kit, an open-source (MIT) React component library for EU AI Act transparency, plus a live demo of the accountable human-in-the-loop AI loop. Most designers have one or two of these; the overlap - deep visual craft, code fluency, an AI-native workflow, and shipped open-source proof - is where I'm different."
+    },
+    {
+      "key": "good_at_teach",
+      "match": ["extremely good", "teach the team", "teach us", "best at", "superpower"],
+      "text": "I'm extremely good at taking something complex or messy and making it feel calm, legible, and obvious - the reductive work of deciding what to remove, not what to add, from 13 years of visual craft. What I could teach a team: accessibility as craft, not compliance (WCAG-level rigor and EU AI Act transparency built into the design itself - I turned this into an open-source component kit, so it's a method I can hand over, not just a principle), and a practical AI-native workflow - how I use Claude and Cursor to prototype and ship real interfaces faster without losing craft."
+    },
+    {
+      "key": "open_source",
+      "match": ["open source", "open-source", "contribution", "github contribution"],
+      "text": "I ship in the open. My clearest piece of public proof is the Article 50 UI Pattern Kit - an open-source (MIT) React component library I designed and built for EU AI Act Article 50 transparency: an AI-disclosure badge, a content label, an emotion-recognition notice, and a human-in-the-loop review gate, every component WCAG 2.1 AA with a passing axe audit. It's on GitHub (github.com/sotosili/article50-kit) and running live with a working demo of the accountable-AI loop (article50-kit.pages.dev). I build entirely on the open-source stack (Astro, Tailwind, React, shadcn/ui), and this is the direction I'm taking my design-engineering work - solving a real, unglamorous compliance problem in reusable, accessible code that anyone can adopt."
+    },
+    {
+      "key": "why_us",
+      "match": ["why do you want", "why are you interested", "why this", "excited about", "want to work here", "interests you", "why "],
+      "text": "I'm a product designer and design engineer who ships in code - 13+ years in design, now building interfaces in React/Tailwind with Claude and Cursor as native tools, on a responsible-AI and accessibility spine (WCAG AA, EU AI Act). I design the hard part of AI UX: making generative, non-deterministic products feel clear and trustworthy. Recent proof I shipped myself: the open-source Article 50 UI Pattern Kit and a live demo of the accountable human-in-the-loop AI loop (article50-kit.pages.dev), plus a bilingual PWA at 94 Lighthouse with zero accessibility violations. (TAILOR ME per company - name the specific product/problem I want to work on.)"
+    },
+    {
+      "key": "first_project",
+      "match": ["first design project", "what would it be", "projects would you like", "what would you design", "what would you work on"],
+      "text": "The problem I most want to design is the human-in-the-loop moment - when an AI proposes a change and a person reviews and approves it in one keystroke, with no friction and no anxiety. I cared about it enough to build a working prototype of exactly that: a review gate where a low-confidence AI decision is handed to a person to approve, override, or reject (article50-kit.pages.dev/demo). Keeping the human in control as AI does more, without adding weight, is the interaction I think about most. (TAILOR ME per company to a concrete first project.)"
+    },
+    {
+      "key": "brand_for_devs",
+      "match": ["which brand", "nailed design", "design for developers", "brand nailed"],
+      "text": "Stripe. They treat documentation as a product and design the developer's understanding, not just the UI - progressive disclosure, runnable examples, and a visual language calm enough that a dense API feels approachable. Linear is the other one: relentless craft and restraint, where nothing on screen is unnecessary. (TAILOR the second half per company - what could THEY specifically borrow.)"
+    },
+    {
+      "key": "availability",
+      "match": ["notice period", "when can you start", "availability", "start date", "how soon"],
+      "text": "I work independently, so I'm available to start immediately or on short notice."
+    },
+    {
+      "key": "one_liner",
+      "match": ["one line", "in one sentence", "absolutely know about you", "tell us about yourself in", "one thing we should know"],
+      "text": "An AI-native product designer with 13 years of craft who designs and ships in code - I make AI products feel clear, trustworthy, and accessible."
+    },
+    {
+      "key": "socials",
+      "match": ["relevant socials", "socials", "instagram", "social media", "twitter", " x ", "social profiles"],
+      "text": "https://www.instagram.com/swtiris_iliadis/"
+    }
+  ]
+}
