@@ -4,8 +4,28 @@
 method, not the subject of it. Everything here applies to a café menu, an NGO site, a client
 audit, or a poster.
 
-For what is true about *him* specifically - the pitch, the claims, the palette - see
-`POSITIONING.md` and `BRAND.md`. This file is the machine, not the message.
+This file is the **machine**. It does not hold the message, the taste, or the pitch - those have
+their own homes, and each is canonical in exactly one place.
+
+## The map - four files, no overlap
+
+| File | Holds | Answers |
+| --- | --- | --- |
+| **`METHOD.md`** (this) | The machine | *How does work get made and handed over?* |
+| **`soul.md`** | Manifesto, taste, refusals, the three EU gates | *What is good, and what will I not do?* |
+| **`BRAND.md`** | What is true, how it sounds, what is free, the two Figma doors | *What may be claimed, and in whose voice?* |
+| **`POSITIONING.md`** | The pitch, the headline, the two buyer vocabularies | *What is being sold, and to whom?* |
+
+Plus two that report state rather than direction: **`ops/CHANGELOG.md`** (what changed, read it
+first, always) and **`.claude/SKILLS.md`** (what skills exist).
+
+**Read order for a design job:** `ops/CHANGELOG.md` → this file → `soul.md` → `BRAND.md`.
+Add `POSITIONING.md` the moment a client-facing or application-facing word is being written.
+
+**If two of them disagree, the more specific one wins** - `BRAND.md` beats this file on a claim,
+`soul.md` beats it on taste, this file beats them on process. Say out loud when you hit a
+disagreement rather than silently picking; a contradiction between these four is a bug in the
+files, and it should be fixed, not navigated.
 
 ---
 
