@@ -337,6 +337,15 @@ const Hero = ({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) =>
             The Article 50 Kit
             <ArrowRight className="w-3 h-3 -rotate-45" aria-hidden="true" />
           </a>
+          <a
+            href="https://github.com/sotosili"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2.5 px-8 py-[14px] border border-[#F2EFE9]/45 text-[#F2EFE9] text-[10px] font-geist font-bold uppercase tracking-[0.32em] hover:border-[#1A1410] hover:bg-[#F2EFE9]/5 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F2A03D]"
+          >
+            GitHub
+            <GithubIcon className="w-3.5 h-3.5" aria-hidden="true" />
+          </a>
         </div>
 
         {/* Credibility strip — three facts that answer the client's "why hire you" */}
@@ -414,34 +423,37 @@ const PROJECTS = [
     title: "Coffee World",
     description:
       "Premium QR-code digital menu for a luxury Thessaloniki café. Bilingual Greek/English, dark aesthetic, zero PDF friction.",
-    metrics: ["94/100 Lighthouse", "WCAG AA", "Bilingual"],
+    metrics: ["94/100 Lighthouse", "WCAG 2.2 AA", "Bilingual"],
     image: "/images/coffee-world-mockup.png",
     link: "/work/coffee-world",
     year: "2026",
     category: "UX/UI & Frontend",
     full: true,
+    badge: "Real Client",
   },
   {
     title: "G-MAP",
     description:
       "Gym machine scanner that connects equipment to personalized programs. Tested with gym-goers who understood it without explanation.",
-    metrics: ["91/100 Lighthouse", "WCAG AA", "48h prototype"],
+    metrics: ["91/100 Lighthouse", "WCAG 2.2 AA", "48h prototype"],
     image: "/images/gmap-mockup.png",
     link: "/work/gmap",
     year: "2026",
     category: "UX/UI Design",
     full: false,
+    badge: "Concept",
   },
   {
     title: "Velocity",
     description:
       "Ethics-first European cross-border payment app. Both test participants independently called it more ethical than alternatives they use.",
-    metrics: ["96/100 Lighthouse", "WCAG AA", "0 dark patterns"],
+    metrics: ["96/100 Lighthouse", "WCAG 2.2 AA", "0 dark patterns"],
     image: "/images/velocity-mockup.png",
     link: "/work/velocity",
     year: "2026",
     category: "Research & UX",
     full: false,
+    badge: "Concept",
   },
 ];
 
@@ -999,9 +1011,20 @@ export default function Home() {
                     </div>
                     <div className="flex items-start justify-between mt-4 gap-4 flex-wrap">
                       <div>
-                        <h3 className="font-serif text-xl font-light text-[#1A1410] group-hover:text-[#F26C0D] transition-colors duration-300 leading-none mb-2">
-                          {project.title}
-                        </h3>
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-serif text-xl font-light text-[#1A1410] group-hover:text-[#F26C0D] transition-colors duration-300 leading-none">
+                            {project.title}
+                          </h3>
+                          {project.badge && (
+                            <span className={`text-[9px] font-geist font-bold tracking-[0.2em] uppercase px-2 py-0.5 ${
+                              project.badge === "Real Client"
+                                ? "bg-emerald-500/15 text-emerald-700 border border-emerald-500/30"
+                                : "bg-amber-500/15 text-amber-700 border border-amber-500/30"
+                            }`}>
+                              {project.badge}
+                            </span>
+                          )}
+                        </div>
                         <p className="font-geist text-sm font-light text-[#6B6560] max-w-xl">
                           {project.description}
                         </p>
@@ -1049,9 +1072,20 @@ export default function Home() {
                     </div>
                     <div className="mt-4 flex items-start justify-between gap-4">
                       <div>
-                        <h3 className="font-serif text-xl font-light text-[#1A1410] group-hover:text-[#F26C0D] transition-colors duration-300 leading-none mb-2">
-                          {project.title}
-                        </h3>
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-serif text-xl font-light text-[#1A1410] group-hover:text-[#F26C0D] transition-colors duration-300 leading-none">
+                            {project.title}
+                          </h3>
+                          {project.badge && (
+                            <span className={`text-[9px] font-geist font-bold tracking-[0.2em] uppercase px-2 py-0.5 ${
+                              project.badge === "Real Client"
+                                ? "bg-emerald-500/15 text-emerald-700 border border-emerald-500/30"
+                                : "bg-amber-500/15 text-amber-700 border border-amber-500/30"
+                            }`}>
+                              {project.badge}
+                            </span>
+                          )}
+                        </div>
                         <p className="font-geist text-sm font-light text-[#6B6560]">
                           {project.description}
                         </p>
