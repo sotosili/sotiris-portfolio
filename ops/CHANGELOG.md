@@ -24,6 +24,16 @@ difference between a warning and an instruction.
 
 ## 2026-09-07
 
+**`METHOD.md` is new, at the repo root, and it is the project-agnostic one.** Four rooms - brief,
+morgue, workshop, loading dock - and the rule that every failure happens at a door between them,
+not inside one. It holds the machine; `POSITIONING.md` and `BRAND.md` hold the message. Written
+deliberately so it applies to a client project, an NGO site or a poster, not only to this
+portfolio: the method travels, the taste defaults do not.
+
+*Read it before design work on anything.* `STUDIO.md` covers adjacent ground but is orphaned -
+nothing references it and it cites `BRAND-KIT.md` and other superseded files. Not deleted, not
+authoritative. If the two disagree, `METHOD.md` is newer.
+
 **HERMES, READ THIS ONE. The anti-slop machinery already existed and no skill knew about it.**
 `refs/` in this repo holds 16 tools, ~130 curated images across 10 sets, a taste database, an
 embedding cache and a ranker. Audited 2026-09-07: **not one skill in either store - Claude Code's
